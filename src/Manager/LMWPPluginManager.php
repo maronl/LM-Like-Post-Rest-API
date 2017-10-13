@@ -137,9 +137,11 @@ class LMWPPluginManager {
     private function define_register_activation_hook() {
         $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
+        $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
 
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $likePostRepository, 'createDBStructure' ) );
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $savedPostRepository, 'createDBStructure' ) );
+        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $followerRepository, 'createDBStructure' ) );
     }
 
     /**
