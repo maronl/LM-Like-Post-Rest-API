@@ -49,3 +49,41 @@ function run_LMWPPluginManager()
 
 // Call the above function to begin execution of the plugin.
 run_LMWPPluginManager();
+
+
+/**
+ * NOW JUST CODE TO TEST REST API CUSTOMIZATION
+ */
+function register_like_counter_rest_api() {
+    register_rest_field( 'post',
+        'lm_like_counter',
+        array(
+            'get_callback'    => 'get_like_counter_rest_api',
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+function get_like_counter_rest_api( $object, $field_name, $request ) {
+    $res = get_post_meta( $object[ 'id' ], 'lm-like-counter', true );
+    if(empty($res)) return 0;
+    return $res;
+}
+add_action( 'rest_api_init', 'register_like_counter_rest_api' );
+
+function register_saved_counter_rest_api() {
+    register_rest_field( 'post',
+        'lm_saved_counter',
+        array(
+            'get_callback'    => 'get_saved_counter_rest_api',
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+function get_saved_counter_rest_api( $object, $field_name, $request ) {
+    $res = get_post_meta( $object[ 'id' ], 'lm-saved-counter', true );
+    if(empty($res)) return 0;
+    return $res;
+}
+add_action( 'rest_api_init', 'register_saved_counter_rest_api' );

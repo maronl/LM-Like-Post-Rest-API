@@ -52,9 +52,11 @@ class LMWPPluginLoader {
      * Registers the actions with WordPress and the respective objects and
      * their methods.
      *
-     * @param  string    $hook        The name of the WordPress hook to which we're registering a callback.
-     * @param  object    $component   The object that contains the method to be called when the hook is fired.
-     * @param  string    $callback    The function that resides on the specified component.
+     * @param  string $hook The name of the WordPress hook to which we're registering a callback.
+     * @param  object $component The object that contains the method to be called when the hook is fired.
+     * @param  string $callback The function that resides on the specified component.
+     * @param int $priority
+     * @param int $accepted_args
      */
     public function add_action( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
         $this->actions = $this->add( $this->actions, $hook, $component, $callback, $priority, $accepted_args );

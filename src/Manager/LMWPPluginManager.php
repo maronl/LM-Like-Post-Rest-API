@@ -3,7 +3,9 @@
 namespace LM\WPPostLikeRestApi\Manager;
 
 
+use LM\WPPostLikeRestApi\Repository\LMFollowerWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMLikePostWordpressRepository;
+use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
 use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
 use LM\WPPostLikeRestApi\Service\LMSavedPostWordpressService;
 
@@ -67,6 +69,10 @@ class LMWPPluginManager {
      * plugin dependencies, and will leverage the Single_Post_Meta_Loader for
      * registering the hooks and the callback functions used throughout the
      * plugin.
+     * @param LMWPPluginLoader $loader
+     * @param $pluginSlug
+     * @param $pluginVersion
+     * @param $pluginOptions
      */
     public function __construct(LMWPPluginLoader $loader, $pluginSlug, $pluginVersion, $pluginOptions) {
 
@@ -110,13 +116,17 @@ class LMWPPluginManager {
     private function define_public_hooks() {
         $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
+        $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
         $likePostService = new LMLikePostWordpressService($likePostRepository);
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
+        $followerService = new LMFollowerWordpressService($followerRepository);
 
         $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);
         $savedPublic = new LMWPSavedPostPublicManager( $this->plugin_slug, $this->version, $savedPostService);
+        $followerPublic = new LMWPFollowerPublicManager( $this->plugin_slug, $this->version, $followerService);
         $this->loader->add_action('rest_api_init', $likePublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $savedPublic, 'add_api_routes');
+        $this->loader->add_action('rest_api_init', $followerPublic, 'add_api_routes');
     }
 
     /**

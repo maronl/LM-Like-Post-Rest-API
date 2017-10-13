@@ -9,7 +9,7 @@
 namespace LM\WPPostLikeRestApi\Repository;
 
 
-class LMLikePostWordpressRepository implements LMLikePostRepository
+class LMFollowerWordpressRepository implements LMFollowerRepository
 {
     private $table;
     /**
@@ -27,13 +27,13 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
         $this->version = $version;
     }
 
-    public function saveLike($userId, $postId)
+    public function saveFollower($followerId, $followingId)
     {
         global $wpdb;
 
         $data = array(
-            'user_id' => $userId,
-            'post_id' => $postId,
+            'follower_id' => $followerId,
+            'following_id' => $followingId,
             'created_at' => date('Y-m-d H:i:s')
         );
 
@@ -42,13 +42,13 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
         return $wpdb->replace($this->table, $data, $format);
     }
 
-    public function deleteLike($userId, $postId)
+    public function deleteFollower($followerId, $followingId)
     {
         global $wpdb;
 
         $data = array(
-            'user_id' => $userId,
-            'post_id' => $postId
+            'follower_id' => $followerId,
+            'following_id' => $followingId
         );
 
         $format = array('%d', '%d');
@@ -56,14 +56,28 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
         return $wpdb->delete($this->table, $data, $format);
     }
 
-    public function findLike($userId, $postId)
+    public function findFollowers($userId)
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE post_id = %d AND user_id = %d", $postId, $userId);
+        $sql = $wpdb->prepare("SELECT u.*
+            FROM pld_lm_followers AS f 
+              INNER JOIN pld_users as u
+                ON f.follower_id = u.ID AND f.following_id = %d;", $userId);
 
-        return $wpdb->get_var($sql);
+        return $wpdb->get_results($sql);
     }
+
+    public function findFollowings($userId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT u.*
+            FROM pld_lm_followers AS f 
+              INNER JOIN pld_users as u
+                ON f.following_id = u.ID AND f.follower_id = %d;", $userId);
+
+        return $wpdb->get_results($sql);    }
 
     public function getTableName()
     {
@@ -87,8 +101,8 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
         }
 
         $sql = "CREATE TABLE IF NOT EXISTS $tableName (
-          user_id BIGINT(11) NOT NULL,
-          post_id BIGINT(11) NOT NULL,
+          follower_id BIGINT(11) NOT NULL,
+          following_id BIGINT(11) NOT NULL,
           created_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
           PRIMARY KEY (user_id, post_id)
 	    ) $charset_collate;";
@@ -98,5 +112,14 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
         dbDelta( $sql );
 
         add_option( $this->tableNoPrefix . '_db_version', $this->version );
+    }
+
+    public function findFollower($followerId, $followingId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE follower_id = %d AND following_id = %d", $followerId, $followingId);
+
+        return $wpdb->get_var($sql);
     }
 }
