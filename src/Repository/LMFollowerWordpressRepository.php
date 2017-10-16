@@ -60,7 +60,7 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT u.*
+        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM pld_lm_followers AS f 
               INNER JOIN pld_users as u
                 ON f.follower_id = u.ID AND f.following_id = %d;", $userId);
@@ -72,7 +72,7 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT u.*
+        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM pld_lm_followers AS f 
               INNER JOIN pld_users as u
                 ON f.following_id = u.ID AND f.follower_id = %d;", $userId);

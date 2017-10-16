@@ -93,21 +93,49 @@ class LMWPFollowerPublicManager
 
     public function getFollowers($request)
     {
-        return 'TO BE DONE';
+        $followingId = $request->get_param('following_id');
+
+        if(empty($followingId)) {
+            return array('status' => false);
+        }
+
+        $followers = $this->followerService->getFollowers($followingId);
+        return array('status' => true, 'data' => $followers);
     }
 
     public function getFollowings($request)
     {
-        return 'TO BE DONE';
+        $followerId = $request->get_param('follower_id');
+
+        if(empty($followerId)) {
+            return array('status' => false);
+        }
+
+        $followings = $this->followerService->getFollowings($followerId);
+        return array('status' => true, 'data' => $followings);
     }
 
     public function getFollowersCount($request)
     {
-        return 'TO BE DONE';
+        $followingId = $request->get_param('following_id');
+
+        if(empty($followingId)) {
+            return array('status' => false);
+        }
+
+        $followers = $this->followerService->getFollowersCount($followingId);
+        return array('status' => true, 'data' => $followers);
     }
 
     public function getFollowingsCount($request)
     {
-        return 'TO BE DONE';
+        $followerId = $request->get_param('follower_id');
+
+        if(empty($followerId)) {
+            return array('status' => false);
+        }
+
+        $followings = $this->followerService->getFollowingsCount($followerId);
+        return array('status' => true, 'data' => $followings);
     }
 }

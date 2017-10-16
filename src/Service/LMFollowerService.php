@@ -15,4 +15,6 @@ interface LMFollowerService
     public function removeFollower($followerId, $followingId);
     public function getFollowers($followingId);
     public function getFollowings($followerId);
+    public function getFollowersCount($followingId);
+    public function getFollowingsCount($followerId);
 }
