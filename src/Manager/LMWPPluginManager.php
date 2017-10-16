@@ -8,6 +8,7 @@ use LM\WPPostLikeRestApi\Repository\LMLikePostWordpressRepository;
 use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
 use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
 use LM\WPPostLikeRestApi\Service\LMSavedPostWordpressService;
+use LM\WPPostLikeRestApi\Service\LMWallWordpressService;
 
 /**
  * The Manager is the core plugin responsible for including and
@@ -120,13 +121,16 @@ class LMWPPluginManager {
         $likePostService = new LMLikePostWordpressService($likePostRepository);
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
         $followerService = new LMFollowerWordpressService($followerRepository);
+        $wallService = new LMWallWordpressService();
 
         $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);
         $savedPublic = new LMWPSavedPostPublicManager( $this->plugin_slug, $this->version, $savedPostService);
         $followerPublic = new LMWPFollowerPublicManager( $this->plugin_slug, $this->version, $followerService);
+        $wallPublic = new LMWPWallPublicManager( $this->plugin_slug, $this->version, $wallService);
         $this->loader->add_action('rest_api_init', $likePublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $savedPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $followerPublic, 'add_api_routes');
+        $this->loader->add_action('rest_api_init', $wallPublic, 'add_api_routes');
     }
 
     /**

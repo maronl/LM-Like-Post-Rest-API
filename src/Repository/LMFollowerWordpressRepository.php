@@ -85,7 +85,8 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
                 ON f.following_id = u.ID AND f.follower_id = %d
             LIMIT %d, %d;", $userId, $offset, $limit);
 
-        return $wpdb->get_results($sql);    }
+        return $wpdb->get_results($sql);
+    }
 
     public function getTableName()
     {
