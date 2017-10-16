@@ -56,26 +56,34 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         return $wpdb->delete($this->table, $data, $format);
     }
 
-    public function findFollowers($userId)
+    public function findFollowers($userId, $page = 1, $item_per_page = 20)
     {
         global $wpdb;
+
+        $offset = ($page - 1) * $item_per_page;
+        $limit = $item_per_page;
 
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM pld_lm_followers AS f 
               INNER JOIN pld_users as u
-                ON f.follower_id = u.ID AND f.following_id = %d;", $userId);
+                ON f.follower_id = u.ID AND f.following_id = %d
+            LIMIT %d, %d;", $userId, $offset, $limit);
 
         return $wpdb->get_results($sql);
     }
 
-    public function findFollowings($userId)
+    public function findFollowings($userId, $page = 1, $item_per_page = 20)
     {
         global $wpdb;
+
+        $offset = ($page - 1) * $item_per_page;
+        $limit = $item_per_page;
 
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM pld_lm_followers AS f 
               INNER JOIN pld_users as u
-                ON f.following_id = u.ID AND f.follower_id = %d;", $userId);
+                ON f.following_id = u.ID AND f.follower_id = %d
+            LIMIT %d, %d;", $userId, $offset, $limit);
 
         return $wpdb->get_results($sql);    }
 

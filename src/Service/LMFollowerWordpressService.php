@@ -81,13 +81,13 @@ class LMFollowerWordpressService implements LMFollowerService
         return $count;
     }
     
-    public function getFollowers($followingId)
+    public function getFollowers($followingId, $page, $item_per_page)
     {
-        return $this->repository->findFollowers($followingId);
+        return $this->repository->findFollowers($followingId, $page, $item_per_page);
     }
 
-    public function getFollowings($followerId)
+    public function getFollowings($followerId, $page, $item_per_page)
     {
-        return $this->repository->findFollowings($followerId);
+        return $this->repository->findFollowings($followerId, $page, $item_per_page);
     }
 }

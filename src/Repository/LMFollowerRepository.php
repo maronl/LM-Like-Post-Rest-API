@@ -13,8 +13,8 @@ interface LMFollowerRepository
 {
     public function saveFollower($followerId, $followingId);
     public function deleteFollower($followerId, $followingId);
-    public function findFollowers($userId);
-    public function findFollowings($userId);
+    public function findFollowers($userId, $page, $item_per_page);
+    public function findFollowings($userId, $page, $item_per_page);
     public function findFollower($followerId, $followingId);
     public function getTableName();
     public function createDBStructure();
