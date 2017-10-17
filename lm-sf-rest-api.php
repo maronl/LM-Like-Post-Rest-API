@@ -52,7 +52,7 @@ run_LMWPPluginManager();
 
 
 /**
- * NOW JUST CODE TO TEST REST API CUSTOMIZATION
+ * NOW JUST CODE TO TEST REST API CUSTOMIZATION --- TODO remove this code. we are using now new endpoint /wall
  */
 function register_like_counter_rest_api() {
     register_rest_field( 'post',
