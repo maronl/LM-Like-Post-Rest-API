@@ -9,8 +9,25 @@
 namespace LM\WPPostLikeRestApi\Service;
 
 
+use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
+
 class LMWallWordpressService implements LMWallService
 {
+
+    /**
+     * @var LMFollowerService
+     */
+    private $followerService;
+    /**
+     * @var LMHeaderAuthorization
+     */
+    private $headerAuthorization;
+
+    function __construct(LMFollowerService $followerService, LMHeaderAuthorization $headerAuthorization)
+    {
+        $this->followerService = $followerService;
+        $this->headerAuthorization = $headerAuthorization;
+    }
 
     public function getWall(Array $params)
     {
@@ -24,6 +41,8 @@ class LMWallWordpressService implements LMWallService
 
         if(array_key_exists('item_per_page', $params)) {
             $paramsQuery['posts_per_page'] = $params['item_per_page'];
+        } else {
+            $paramsQuery['posts_per_page'] = 20;
         }
 
         if(array_key_exists('page', $params)) {
@@ -32,10 +51,14 @@ class LMWallWordpressService implements LMWallService
 
         if(array_key_exists('categories', $params)) {
             $paramsQuery['cat'] = $params['categories'];
+        } else {
+            $paramsQuery['author'] = $this->getDefaultCategoriesPerUser();
         }
 
         if(array_key_exists('authors', $params)) {
             $paramsQuery['author'] = $params['authors'];
+        } else {
+            $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
         }
 
         return $paramsQuery;
@@ -120,5 +143,26 @@ class LMWallWordpressService implements LMWallService
         return $saved_counter;
     }
 
+    private function getDefaultCategoriesPerUser()
+    {
+        // todo mettere come parametro configurabile
+        return array(2);
+    }
+
+    private function getDefaultAuthorsPerUser()
+    {
+        // return redazione todo mettere come paramentro configurabile
+        $authors = array(1);
+
+
+        $userAuthorized = $this->headerAuthorization->getUser();
+
+        if ($userAuthorized) {
+            $followings = $this->followerService->getFollowingsIds($userAuthorized);
+            $authors = array_merge($authors, $followings);
+        }
+
+        return $authors;
+    }
 
 }

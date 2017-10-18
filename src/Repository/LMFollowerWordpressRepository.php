@@ -88,6 +88,31 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         return $wpdb->get_results($sql);
     }
 
+    public function findFollowingsIds($userId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT f.following_id
+            FROM pld_lm_followers AS f 
+            WHERE f.follower_id = %d;", $userId);
+
+        $res = $wpdb->get_results($sql, ARRAY_N);
+        $resClean = [];
+        foreach ($res as $singleRes) {
+            $resClean[] = $singleRes[0];
+        }
+        return $resClean;
+    }
+
+    public function findFollower($followerId, $followingId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE follower_id = %d AND following_id = %d", $followerId, $followingId);
+
+        return $wpdb->get_var($sql);
+    }
+
     public function getTableName()
     {
         return $this->table;
@@ -123,12 +148,4 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         add_option( $this->tableNoPrefix . '_db_version', $this->version );
     }
 
-    public function findFollower($followerId, $followingId)
-    {
-        global $wpdb;
-
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE follower_id = %d AND following_id = %d", $followerId, $followingId);
-
-        return $wpdb->get_var($sql);
-    }
 }

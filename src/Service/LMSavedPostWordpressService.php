@@ -9,7 +9,7 @@
 namespace LM\WPPostLikeRestApi\Service;
 
 
-use LM\WPPostLikeRestApi\Manager\LMWPPostChaceCounter;
+use LM\WPPostLikeRestApi\Utility\LMWPPostChaceCounter;
 use LM\WPPostLikeRestApi\Repository\LMLikePostRepository;
 
 class LMSavedPostWordpressService implements LMLikePostService

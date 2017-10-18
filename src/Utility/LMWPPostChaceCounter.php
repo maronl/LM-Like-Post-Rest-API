@@ -6,7 +6,7 @@
  * Time: 12:14
  */
 
-namespace LM\WPPostLikeRestApi\Manager;
+namespace LM\WPPostLikeRestApi\Utility;
 
 
 trait LMWPPostChaceCounter

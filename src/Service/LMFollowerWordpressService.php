@@ -9,7 +9,7 @@
 namespace LM\WPPostLikeRestApi\Service;
 
 
-use LM\WPPostLikeRestApi\Manager\LMWPFollowerChaceCounter;
+use LM\WPPostLikeRestApi\Utility\LMWPFollowerChaceCounter;
 use LM\WPPostLikeRestApi\Repository\LMFollowerRepository;
 
 class LMFollowerWordpressService implements LMFollowerService
@@ -100,4 +100,8 @@ class LMFollowerWordpressService implements LMFollowerService
         return $this->repository->findFollowings($followerId, $page, $item_per_page);
     }
 
+    public function getFollowingsIds($followerId)
+    {
+        return $this->repository->findFollowingsIds($followerId);
+    }
 }
