@@ -41,6 +41,11 @@ class LMWPLikePostPublicManager
             'methods' => 'POST',
             'callback' => array($this, 'removeLike'),
         ));
+
+        register_rest_route($this->namespace, 'like/toggle', [
+            'methods' => 'POST',
+            'callback' => array($this, 'toggleLike'),
+        ]);
     }
 
 
@@ -69,5 +74,28 @@ class LMWPLikePostPublicManager
         $status = $this->likePostService->removeLike($userId, $postId);
         return array('status' => $status);
     }
+
+    public function toggleLike($request)
+    {
+        $userId = $request->get_param('user_id');
+        $postId = $request->get_param('post_id');
+
+        if(empty($userId) || empty($postId)) {
+            return array('status' => false);
+        }
+
+        $dataLike = 0;
+        if($this->likePostService->checkUserPostLike($userId, $postId)) {
+            $this->removeLike($request);
+        } else {
+            $this->addLike($request);
+            $dataLike = 1;
+        }
+
+        $res = array('status' => true, 'data' => $dataLike);
+
+        return $res;
+    }
+
 
 }

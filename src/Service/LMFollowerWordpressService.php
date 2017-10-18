@@ -59,6 +59,15 @@ class LMFollowerWordpressService implements LMFollowerService
         return false;
     }
 
+    public function checkUserFollower($followerId, $followingId)
+    {
+        if($this->repository->findFollower($followerId, $followingId)) {
+            return true;
+        }
+        return false;
+    }
+
+
     public function getFollowersCount($followingId)
     {
         $count = get_user_meta($followingId, $this->cacheFollowerCounter, true);
@@ -90,4 +99,5 @@ class LMFollowerWordpressService implements LMFollowerService
     {
         return $this->repository->findFollowings($followerId, $page, $item_per_page);
     }
+
 }

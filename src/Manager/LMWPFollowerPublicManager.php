@@ -43,6 +43,11 @@ class LMWPFollowerPublicManager
             'callback' => array($this, 'removeFollower'),
         ));
 
+        register_rest_route($this->namespace, 'follower/toggle', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'toggleFollower'),
+        ));
+
         register_rest_route($this->namespace, 'followers', array(
             'methods' => 'GET',
             'callback' => array($this, 'getFollowers'),
@@ -89,6 +94,28 @@ class LMWPFollowerPublicManager
 
         $status = $this->followerService->removeFollower($followerId, $followingId);
         return array('status' => $status);
+    }
+
+    public function toggleFollower($request)
+    {
+        $followerId = $request->get_param('follower_id');
+        $followingId = $request->get_param('following_id');
+
+        if(empty($followerId) || empty($followingId)) {
+            return array('status' => false);
+        }
+
+        $dataFollower = 0;
+        if($this->followerService->checkUserFollower($followerId, $followingId)) {
+            $this->removeFollower($request);
+        } else {
+            $this->addFollower($request);
+            $dataFollower = 1;
+        }
+
+        $res = array('status' => true, 'data' => $dataFollower);
+
+        return $res;
     }
 
     public function getFollowers($request)

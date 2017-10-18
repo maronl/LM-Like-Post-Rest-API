@@ -42,6 +42,11 @@ class LMWPSavedPostPublicManager
             'methods' => 'POST',
             'callback' => array($this, 'removeSaved'),
         ));
+
+        register_rest_route($this->namespace, 'saved/toggle', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'toggleSaved'),
+        ));
     }
 
     public function addSaved($request)
@@ -68,6 +73,28 @@ class LMWPSavedPostPublicManager
 
         $status = $this->savedPostService->removeLike($userId, $postId);
         return array('status' => $status);
+    }
+
+    public function toggleSaved($request)
+    {
+        $userId = $request->get_param('user_id');
+        $postId = $request->get_param('post_id');
+
+        if(empty($userId) || empty($postId)) {
+            return array('status' => false);
+        }
+
+        $dataLike = 0;
+        if($this->savedPostService->checkUserPostLike($userId, $postId)) {
+            $this->removeSaved($request);
+        } else {
+            $this->addSaved($request);
+            $dataLike = 1;
+        }
+
+        $res = array('status' => true, 'data' => $dataLike);
+
+        return $res;
     }
 
 }
