@@ -35,15 +35,22 @@ Endpoint | HTTP Verb
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/like/remove](#like-remove)* | POST
 
+*[/wp-json/lm-sf-rest-api/v1.0.0/like/toggle](#like-toggle)* | POST
 
-*[/wp-json/lm-sf-rest-api/v1.0.0/saved/add](#save-add)* | POST
 
-*[/wp-json/lm-sf-rest-api/v1.0.0/saved/remove](#save-remove)* | POST
+*[/wp-json/lm-sf-rest-api/v1.0.0/saved/add](#saved-add)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/saved/remove](#saved-remove)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/saved/toggle](#saved-toggle)* | POST
 
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/follower/add](#follower-add)* | POST
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/follower/remove](#follower-remove)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/follower/toggle](#follower-toggle)* | POST
+
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/followers](#followers)* | GET
 
@@ -61,6 +68,8 @@ Endpoint | HTTP Verb
 
 ## <a name="like-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/add
 Add user like to a specific post
+
+METHOD: POST
 
 Parameters mandatory are:
 - user_id
@@ -81,6 +90,8 @@ JSON Response:
 ## <a name="like-remove"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/remove
 Remove user like to a specific post
 
+METHOD: POST
+
 Parameters mandatory are:
 - user_id
 - post_id
@@ -100,6 +111,9 @@ JSON Response:
 
 ## <a name="like-toggle"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/toggle
 Toggle like preferece to a specific post
+
+METHOD: POST
+
 Parameters mandatory are:
 - user_id
 - post_id
@@ -122,6 +136,8 @@ JSON Response:
 ## <a name="saved-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/add
 Save post as favourite for an user
 
+METHOD: POST
+
 Parameters mandatory are:
 - user_id
 - post_id
@@ -143,6 +159,8 @@ JSON Response:
 ## <a name="saved-remove"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/remove
 Remove post as favourite for an user
 
+METHOD: POST
+
 Parameters mandatory are:
 - user_id
 - post_id
@@ -163,6 +181,8 @@ JSON Response:
 
 ## <a name="saved-toggle"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/toggle
 Toogle favourite preference for a post
+
+METHOD: POST
 
 Parameters mandatory are:
 - user_id
@@ -187,6 +207,8 @@ JSON Response:
 ## <a name="follower-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/follower/add
 Add an user A as follower of user B
 
+METHOD: POST
+
 Parameters mandatory are:
 - follower_id
 - following_id
@@ -207,6 +229,8 @@ JSON Response:
 
 ## <a name="follower-remove"></a> /wp-json/lm-sf-rest-api/v1.0.0/follower/remove
 Remove an user A as follower of user B
+
+METHOD: POST
 
 Parameters mandatory are:
 - follower_id
@@ -250,6 +274,8 @@ JSON Response:
 
 ## <a name="followers"></a> /wp-json/lm-sf-rest-api/v1.0.0/followers
 Return list of users following a specific user
+
+METHOD: GET
 
 Parameters mandatory are:
 - following_id
@@ -295,6 +321,8 @@ JSON Response
 ## <a name="followings"></a> /wp-json/lm-sf-rest-api/v1.0.0/followings
 Return list of users followed by specific user
 
+METHOD: GET
+
 Parameters mandatory are:
 - follower_id
 
@@ -337,13 +365,36 @@ JSON Response
 ```
 
 ## <a name="followers-count"></a> /wp-json/lm-sf-rest-api/v1.0.0/followers/count
+Return the number of user follwing an user
+
+METHOD: GET
+
 Parameters mandatory are:
 - following_id
 
+JSON Response
+```
+{
+  "status": true,
+  "data": "1"
+}
+```
+
 ## <a name="followings-count"></a> /wp-json/lm-sf-rest-api/v1.0.0/followings/count
+Return the number of user followed by an user
+
+METHOD: GET
+
 Parameters mandatory are:
 - follower_id
 
+JSON Response
+```
+{
+  "status": true,
+  "data": "1"
+}
+```
 
 ## <a name="wall"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall
 Return details for a single post with all the comments linked to the post
@@ -536,7 +587,6 @@ Return details for a single post with all the comments linked to the post
 METHOD: GET
 
 There are no parameters associated to this endpoint
-
 
 JSON Response
 ```
