@@ -12,4 +12,5 @@ namespace LM\WPPostLikeRestApi\Service;
 interface LMWallService
 {
     public function getWall(Array $params);
+    public function getPost($postId);
 }

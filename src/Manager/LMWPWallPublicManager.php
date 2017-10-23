@@ -36,6 +36,11 @@ class LMWPWallPublicManager
             'callback' => array($this, 'getWall'),
         ]);
 
+        register_rest_route($this->namespace, 'wall/(?P<id>\d+)', [
+            'methods' => 'GET',
+            'callback' => array($this, 'getPost'),
+        ]);
+
     }
 
     public function getWall($request)
@@ -60,5 +65,11 @@ class LMWPWallPublicManager
 
         $posts = $this->wallService->getWall($params);
         return array('status' => true, 'data' => $posts);
+    }
+
+    public function getPost($request)
+    {
+        $postId = $request->get_param('id');
+        return array('status' => true, 'data' => $this->wallService->getPost($postId));
     }
 }

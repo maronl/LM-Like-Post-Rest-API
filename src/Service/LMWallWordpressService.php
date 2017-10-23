@@ -44,6 +44,10 @@ class LMWallWordpressService implements LMWallService
         return $this->completePostsInformation(get_posts($paramsQuery));
     }
 
+    public function getPost($postId) {
+        return $this->retrievePostInformation(get_post($postId), 1);
+    }
+
     private function setWallQueryParameters(Array $params)
     {
         $paramsQuery = array();
@@ -88,7 +92,7 @@ class LMWallWordpressService implements LMWallService
         return $res;
     }
 
-    private function retrievePostInformation(\WP_Post $post)
+    private function retrievePostInformation(\WP_Post $post, $latestComments = 3)
     {
         global $wpdb;
 
@@ -98,8 +102,10 @@ class LMWallWordpressService implements LMWallService
 
         $post->author = $this->retrieveAuthorInformation($post, $wpdb);
 
-        $post->latest_comment = get_comments(array('post_id' => $post->ID, 'number' => 2, 'orderby' => 'comment_date', 'order' => 'DESC'));
+        $post->latest_comment = get_comments(array('post_id' => $post->ID, 'number' => $latestComments, 'orderby' => 'comment_date', 'order' => 'DESC'));
 
+        // li ricerco per date DESC ... così da prendere gli ultimi
+        // ma poi li visualizzo in data ASC quelli trovati. per questo faccio il reverse
         $post->latest_comment = array_reverse($post->latest_comment );
 
         $post->categories = get_the_terms($post->ID, 'category');
