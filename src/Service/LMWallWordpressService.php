@@ -45,7 +45,7 @@ class LMWallWordpressService implements LMWallService
     }
 
     public function getPost($postId) {
-        return $this->retrievePostInformation(get_post($postId), 1);
+        return $this->retrievePostInformation(get_post($postId), null);
     }
 
     private function setWallQueryParameters(Array $params)
