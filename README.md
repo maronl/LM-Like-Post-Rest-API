@@ -31,7 +31,7 @@ New endpoints are added to this namespace.
 Endpoint | HTTP Verb
 --- | ---
 
-*/wp-json/lm-sf-rest-api/v1.0.0/like/add* | POST
+*[/wp-json/lm-sf-rest-api/v1.0.0/like/add](#wall-post)* | POST
 
 */wp-json/lm-sf-rest-api/v1.0.0/like/remove* | POST
 
@@ -56,6 +56,7 @@ Endpoint | HTTP Verb
 
 */wp-json/lm-sf-rest-api/v1.0.0/wall* | GET
 
+*/wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}* | GET
 
 
 ##/wp-json/lm-sf-rest-api/v1.0.0/like/add
@@ -77,7 +78,7 @@ JSON Response:
 }
 ```
 
-##/wp-json/lm-sf-rest-api/v1.0.0/like/remove
+## /wp-json/lm-sf-rest-api/v1.0.0/like/remove
 Remove user like to a specific post
 
 Parameters mandatory are:
@@ -97,7 +98,7 @@ JSON Response:
 }
 ```
 
-##/wp-json/lm-sf-rest-api/v1.0.0/like/toggle
+## /wp-json/lm-sf-rest-api/v1.0.0/like/toggle
 Toggle like preferece to a specific post
 Parameters mandatory are:
 - user_id
@@ -118,7 +119,7 @@ JSON Response:
 }
 ```
 
-##/wp-json/lm-sf-rest-api/v1.0.0/saved/add
+## /wp-json/lm-sf-rest-api/v1.0.0/saved/add
 Save post as favourite for an user
 
 Parameters mandatory are:
@@ -139,7 +140,7 @@ JSON Response:
 ```
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/saved/remove
+## /wp-json/lm-sf-rest-api/v1.0.0/saved/remove
 Remove post as favourite for an user
 
 Parameters mandatory are:
@@ -160,7 +161,7 @@ JSON Response:
 ```
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/saved/toggle
+## /wp-json/lm-sf-rest-api/v1.0.0/saved/toggle
 Toogle favourite preference for a post
 
 Parameters mandatory are:
@@ -183,7 +184,7 @@ JSON Response:
 ```
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/follower/add
+## /wp-json/lm-sf-rest-api/v1.0.0/follower/add
 Add an user A as follower of user B
 
 Parameters mandatory are:
@@ -204,7 +205,7 @@ JSON Response:
 ```
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/follower/remove
+## /wp-json/lm-sf-rest-api/v1.0.0/follower/remove
 Remove an user A as follower of user B
 
 Parameters mandatory are:
@@ -224,7 +225,7 @@ JSON Response:
 }
 ```
 
-##/wp-json/lm-sf-rest-api/v1.0.0/follower/toggle
+## /wp-json/lm-sf-rest-api/v1.0.0/follower/toggle
 Toggle following preference for user A as follower of user B
 
 Parameters mandatory are:
@@ -247,7 +248,7 @@ JSON Response:
 ```
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/followers
+## /wp-json/lm-sf-rest-api/v1.0.0/followers
 Return list of users following a specific user
 
 Parameters mandatory are:
@@ -291,7 +292,7 @@ JSON Response
 }
 ```
 
-##/wp-json/lm-sf-rest-api/v1.0.0/followings
+## /wp-json/lm-sf-rest-api/v1.0.0/followings
 Return list of users followed by specific user
 
 Parameters mandatory are:
@@ -335,18 +336,285 @@ JSON Response
 }
 ```
 
-##/wp-json/lm-sf-rest-api/v1.0.0/followers/count
+## /wp-json/lm-sf-rest-api/v1.0.0/followers/count
 Parameters mandatory are:
 - following_id
 
-##/wp-json/lm-sf-rest-api/v1.0.0/followings/count
+## /wp-json/lm-sf-rest-api/v1.0.0/followings/count
 Parameters mandatory are:
 - follower_id
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/wall
+## /wp-json/lm-sf-rest-api/v1.0.0/wall
+Return details for a single post with all the comments linked to the post
+
+METHOD: GET
+
 Parameters NOT mandatory are:
 - item_per_page
 - page
 - categories
 - authors
+
+JSON Response
+```
+{
+  "status": true,
+  "data": [
+    {
+      "ID": 12,
+      "post_author": "1",
+      "post_date": "2017-10-16 17:25:41",
+      "post_date_gmt": "2017-10-16 15:25:41",
+      "post_content": "questo \u00e8 un post per un game!!",
+      "post_title": "prova gioco",
+      "post_excerpt": "",
+      "post_status": "publish",
+      "comment_status": "open",
+      "ping_status": "open",
+      "post_password": "",
+      "post_name": "prova-gioco",
+      "to_ping": "",
+      "pinged": "",
+      "post_modified": "2017-10-16 17:25:41",
+      "post_modified_gmt": "2017-10-16 15:25:41",
+      "post_content_filtered": "",
+      "post_parent": 0,
+      "guid": "http:\/\/playdoc.luc\/?p=12",
+      "menu_order": 0,
+      "post_type": "post",
+      "post_mime_type": "",
+      "comment_count": "0",
+      "filter": "raw",
+      "post_content_rendered": "<p>questo \u00e8 un post per un game!!<\/p>\n",
+      "post_excerpt_rendered": "",
+      "author": {
+        "ID": "1",
+        "user_login": "playdoc-admin",
+        "display_name": "playdoc-admin",
+        "user_email": "lcmaroni77@gmail.com",
+        "user_registered": "2017-10-05 07:10:31",
+        "user_status": "0"
+      },
+      "latest_comment": [],
+      "categories": [
+        {
+          "term_id": 3,
+          "name": "Game",
+          "slug": "game",
+          "term_group": 0,
+          "term_taxonomy_id": 3,
+          "taxonomy": "category",
+          "description": "",
+          "parent": 0,
+          "count": 1,
+          "filter": "raw"
+        }
+      ],
+      "lm_like_counter": 0,
+      "lm_saved_counter": 0,
+      "featured_image": false,
+      "liked": false,
+      "saved": false
+    },
+    {
+      "ID": 1,
+      "post_author": "1",
+      "post_date": "2017-10-05 09:10:31",
+      "post_date_gmt": "2017-10-05 07:10:31",
+      "post_content": "Benvenuto in WordPress. Questo \u00e8 il tuo primo articolo. Modificalo o eliminalo, e inizia a creare il tuo blog!",
+      "post_title": "Ciao mondo!",
+      "post_excerpt": "",
+      "post_status": "publish",
+      "comment_status": "open",
+      "ping_status": "open",
+      "post_password": "",
+      "post_name": "ciao-mondo",
+      "to_ping": "",
+      "pinged": "",
+      "post_modified": "2017-10-12 09:20:00",
+      "post_modified_gmt": "2017-10-12 07:20:00",
+      "post_content_filtered": "",
+      "post_parent": 0,
+      "guid": "http:\/\/playdoc.luc\/?p=1",
+      "menu_order": 0,
+      "post_type": "post",
+      "post_mime_type": "",
+      "comment_count": "6",
+      "filter": "raw",
+      "post_content_rendered": "<p>Benvenuto in WordPress. Questo \u00e8 il tuo primo articolo. Modificalo o eliminalo, e inizia a creare il tuo blog!<\/p>\n",
+      "post_excerpt_rendered": "",
+      "author": {
+        "ID": "1",
+        "user_login": "playdoc-admin",
+        "display_name": "playdoc-admin",
+        "user_email": "lcmaroni77@gmail.com",
+        "user_registered": "2017-10-05 07:10:31",
+        "user_status": "0"
+      },
+      "latest_comment": [
+        {
+          "comment_ID": "4",
+          "comment_post_ID": "1",
+          "comment_author": "playdoc-admin",
+          "comment_author_email": "lcmaroni77@gmail.com",
+          "comment_author_url": "",
+          "comment_author_IP": "127.0.0.1",
+          "comment_date": "2017-10-23 12:32:35",
+          "comment_date_gmt": "2017-10-23 10:32:35",
+          "comment_content": "quarto commento. riciao!",
+          "comment_karma": "0",
+          "comment_approved": "1",
+          "comment_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/61.0.3163.100 Safari\/537.36",
+          "comment_type": "",
+          "comment_parent": "0",
+          "user_id": "1"
+        },
+        {
+          "comment_ID": "5",
+          "comment_post_ID": "1",
+          "comment_author": "playdoc-admin",
+          "comment_author_email": "lcmaroni77@gmail.com",
+          "comment_author_url": "",
+          "comment_author_IP": "127.0.0.1",
+          "comment_date": "2017-10-23 12:32:44",
+          "comment_date_gmt": "2017-10-23 10:32:44",
+          "comment_content": "quinto ... quanti commenti!",
+          "comment_karma": "0",
+          "comment_approved": "1",
+          "comment_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/61.0.3163.100 Safari\/537.36",
+          "comment_type": "",
+          "comment_parent": "0",
+          "user_id": "1"
+        },
+        {
+          "comment_ID": "6",
+          "comment_post_ID": "1",
+          "comment_author": "playdoc-admin",
+          "comment_author_email": "lcmaroni77@gmail.com",
+          "comment_author_url": "",
+          "comment_author_IP": "127.0.0.1",
+          "comment_date": "2017-10-23 12:32:54",
+          "comment_date_gmt": "2017-10-23 10:32:54",
+          "comment_content": "e ora il sesto! ciao %&\/()=P\u00e7L;:; Luca",
+          "comment_karma": "0",
+          "comment_approved": "1",
+          "comment_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/61.0.3163.100 Safari\/537.36",
+          "comment_type": "",
+          "comment_parent": "0",
+          "user_id": "1"
+        }
+      ],
+      "categories": [
+        {
+          "term_id": 2,
+          "name": "Bacheca",
+          "slug": "bacheca",
+          "term_group": 0,
+          "term_taxonomy_id": 2,
+          "taxonomy": "category",
+          "description": "",
+          "parent": 0,
+          "count": 2,
+          "filter": "raw"
+        }
+      ],
+      "lm_like_counter": 0,
+      "lm_saved_counter": "1",
+      "featured_image": "http:\/\/playdoc.luc\/wp\/..\/cn\/uploads\/2017\/10\/girasole-r100.jpg",
+      "liked": false,
+      "saved": true
+    }
+  ]
+}
+```
+
+
+## <a name="wall-post"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}
+Return details for a single post with all the comments linked to the post
+
+METHOD: GET
+
+There are no parameters associated to this endpoint
+
+
+JSON Response
+```
+{
+  "status": true,
+  "data": {
+    "ID": 1,
+    "post_author": "1",
+    "post_date": "2017-10-05 09:10:31",
+    "post_date_gmt": "2017-10-05 07:10:31",
+    "post_content": "Benvenuto in WordPress. Questo \u00e8 il tuo primo articolo. Modificalo o eliminalo, e inizia a creare il tuo blog!",
+    "post_title": "Ciao mondo!",
+    "post_excerpt": "",
+    "post_status": "publish",
+    "comment_status": "open",
+    "ping_status": "open",
+    "post_password": "",
+    "post_name": "ciao-mondo",
+    "to_ping": "",
+    "pinged": "",
+    "post_modified": "2017-10-12 09:20:00",
+    "post_modified_gmt": "2017-10-12 07:20:00",
+    "post_content_filtered": "",
+    "post_parent": 0,
+    "guid": "http:\/\/playdoc.luc\/?p=1",
+    "menu_order": 0,
+    "post_type": "post",
+    "post_mime_type": "",
+    "comment_count": "1",
+    "filter": "raw",
+    "post_content_rendered": "<p>Benvenuto in WordPress. Questo \u00e8 il tuo primo articolo. Modificalo o eliminalo, e inizia a creare il tuo blog!<\/p>\n",
+    "post_excerpt_rendered": "",
+    "author": {
+      "ID": "1",
+      "user_login": "playdoc-admin",
+      "display_name": "playdoc-admin",
+      "user_email": "lcmaroni77@gmail.com",
+      "user_registered": "2017-10-05 07:10:31",
+      "user_status": "0"
+    },
+    "latest_comment": [
+      {
+        "comment_ID": "6",
+        "comment_post_ID": "1",
+        "comment_author": "playdoc-admin",
+        "comment_author_email": "lcmaroni77@gmail.com",
+        "comment_author_url": "",
+        "comment_author_IP": "127.0.0.1",
+        "comment_date": "2017-10-23 12:32:54",
+        "comment_date_gmt": "2017-10-23 10:32:54",
+        "comment_content": "e ora il sesto! ciao %&\/()=P\u00e7L;:; Luca",
+        "comment_karma": "0",
+        "comment_approved": "1",
+        "comment_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/61.0.3163.100 Safari\/537.36",
+        "comment_type": "",
+        "comment_parent": "0",
+        "user_id": "1"
+      }
+    ],
+    "categories": [
+      {
+        "term_id": 2,
+        "name": "Bacheca",
+        "slug": "bacheca",
+        "term_group": 0,
+        "term_taxonomy_id": 2,
+        "taxonomy": "category",
+        "description": "",
+        "parent": 0,
+        "count": 2,
+        "filter": "raw"
+      }
+    ],
+    "lm_like_counter": 0,
+    "lm_saved_counter": "1",
+    "featured_image": "http:\/\/playdoc.luc\/wp\/..\/cn\/uploads\/2017\/10\/girasole-r100.jpg",
+    "liked": false,
+    "saved": true
+  }
+}
+```
