@@ -31,35 +31,35 @@ New endpoints are added to this namespace.
 Endpoint | HTTP Verb
 --- | ---
 
-*[/wp-json/lm-sf-rest-api/v1.0.0/like/add](#wall-post)* | POST
+*[/wp-json/lm-sf-rest-api/v1.0.0/like/add](#like-add)* | POST
 
-*/wp-json/lm-sf-rest-api/v1.0.0/like/remove* | POST
-
-
-*/wp-json/lm-sf-rest-api/v1.0.0/saved/add* | POST
-
-*/wp-json/lm-sf-rest-api/v1.0.0/saved/remove* | POST
+*[/wp-json/lm-sf-rest-api/v1.0.0/like/remove](#like-remove)* | POST
 
 
-*/wp-json/lm-sf-rest-api/v1.0.0/follower/add* | POST
+*[/wp-json/lm-sf-rest-api/v1.0.0/saved/add](#save-add)* | POST
 
-*/wp-json/lm-sf-rest-api/v1.0.0/follower/remove* | POST
-
-*/wp-json/lm-sf-rest-api/v1.0.0/followers* | GET
-
-*/wp-json/lm-sf-rest-api/v1.0.0/followings* | GET
-
-*/wp-json/lm-sf-rest-api/v1.0.0/followers/count* | GET
-
-*/wp-json/lm-sf-rest-api/v1.0.0/followings/count* | GET
+*[/wp-json/lm-sf-rest-api/v1.0.0/saved/remove](#save-remove)* | POST
 
 
-*/wp-json/lm-sf-rest-api/v1.0.0/wall* | GET
+*[/wp-json/lm-sf-rest-api/v1.0.0/follower/add](#follower-add)* | POST
 
-*/wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}* | GET
+*[/wp-json/lm-sf-rest-api/v1.0.0/follower/remove](#follower-remove)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/followers](#followers)* | GET
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/followings](#followings)* | GET
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/followers/count](#followers-count)* | GET
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/followings/count](#followings-count)* | GET
 
 
-##/wp-json/lm-sf-rest-api/v1.0.0/like/add
+*[/wp-json/lm-sf-rest-api/v1.0.0/wall](#wall)* | GET
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}](#wall-post)* | GET
+
+
+## <a name="like-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/add
 Add user like to a specific post
 
 Parameters mandatory are:
@@ -78,7 +78,7 @@ JSON Response:
 }
 ```
 
-## /wp-json/lm-sf-rest-api/v1.0.0/like/remove
+## <a name="like-remove"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/remove
 Remove user like to a specific post
 
 Parameters mandatory are:
@@ -98,7 +98,7 @@ JSON Response:
 }
 ```
 
-## /wp-json/lm-sf-rest-api/v1.0.0/like/toggle
+## <a name="like-toggle"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/toggle
 Toggle like preferece to a specific post
 Parameters mandatory are:
 - user_id
@@ -119,7 +119,7 @@ JSON Response:
 }
 ```
 
-## /wp-json/lm-sf-rest-api/v1.0.0/saved/add
+## <a name="saved-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/add
 Save post as favourite for an user
 
 Parameters mandatory are:
@@ -140,7 +140,7 @@ JSON Response:
 ```
 
 
-## /wp-json/lm-sf-rest-api/v1.0.0/saved/remove
+## <a name="saved-remove"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/remove
 Remove post as favourite for an user
 
 Parameters mandatory are:
@@ -161,7 +161,7 @@ JSON Response:
 ```
 
 
-## /wp-json/lm-sf-rest-api/v1.0.0/saved/toggle
+## <a name="saved-toggle"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/toggle
 Toogle favourite preference for a post
 
 Parameters mandatory are:
@@ -184,7 +184,7 @@ JSON Response:
 ```
 
 
-## /wp-json/lm-sf-rest-api/v1.0.0/follower/add
+## <a name="follower-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/follower/add
 Add an user A as follower of user B
 
 Parameters mandatory are:
@@ -205,7 +205,7 @@ JSON Response:
 ```
 
 
-## /wp-json/lm-sf-rest-api/v1.0.0/follower/remove
+## <a name="follower-remove"></a> /wp-json/lm-sf-rest-api/v1.0.0/follower/remove
 Remove an user A as follower of user B
 
 Parameters mandatory are:
@@ -225,7 +225,7 @@ JSON Response:
 }
 ```
 
-## /wp-json/lm-sf-rest-api/v1.0.0/follower/toggle
+## <a name="follower-toggle"></a> /wp-json/lm-sf-rest-api/v1.0.0/follower/toggle
 Toggle following preference for user A as follower of user B
 
 Parameters mandatory are:
@@ -248,7 +248,7 @@ JSON Response:
 ```
 
 
-## /wp-json/lm-sf-rest-api/v1.0.0/followers
+## <a name="followers"></a> /wp-json/lm-sf-rest-api/v1.0.0/followers
 Return list of users following a specific user
 
 Parameters mandatory are:
@@ -292,7 +292,7 @@ JSON Response
 }
 ```
 
-## /wp-json/lm-sf-rest-api/v1.0.0/followings
+## <a name="followings"></a> /wp-json/lm-sf-rest-api/v1.0.0/followings
 Return list of users followed by specific user
 
 Parameters mandatory are:
@@ -336,16 +336,16 @@ JSON Response
 }
 ```
 
-## /wp-json/lm-sf-rest-api/v1.0.0/followers/count
+## <a name="followers-count"></a> /wp-json/lm-sf-rest-api/v1.0.0/followers/count
 Parameters mandatory are:
 - following_id
 
-## /wp-json/lm-sf-rest-api/v1.0.0/followings/count
+## <a name="followings-count"></a> /wp-json/lm-sf-rest-api/v1.0.0/followings/count
 Parameters mandatory are:
 - follower_id
 
 
-## /wp-json/lm-sf-rest-api/v1.0.0/wall
+## <a name="wall"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall
 Return details for a single post with all the comments linked to the post
 
 METHOD: GET
