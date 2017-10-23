@@ -13,20 +13,29 @@ use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
 
 class LMWallWordpressService implements LMWallService
 {
-
-    /**
-     * @var LMFollowerService
-     */
-    private $followerService;
     /**
      * @var LMHeaderAuthorization
      */
     private $headerAuthorization;
+    /**
+     * @var LMLikePostService
+     */
+    private $likePostService;
+    /**
+     * @var LMLikePostService
+     */
+    private $savedPostService;
+    /**
+     * @var LMFollowerService
+     */
+    private $followerService;
 
-    function __construct(LMFollowerService $followerService, LMHeaderAuthorization $headerAuthorization)
+    function __construct(LMHeaderAuthorization $headerAuthorization, LMFollowerService $followerService, LMLikePostService $likePostService, LMLikePostService $savedPostService)
     {
-        $this->followerService = $followerService;
         $this->headerAuthorization = $headerAuthorization;
+        $this->likePostService = $likePostService;
+        $this->savedPostService = $savedPostService;
+        $this->followerService = $followerService;
     }
 
     public function getWall(Array $params)
@@ -100,6 +109,10 @@ class LMWallWordpressService implements LMWallService
         $post->lm_saved_counter = $this->retrieveSavedCounter($post);
 
         $post->featured_image = get_the_post_thumbnail_url($post->ID);
+
+        $post->liked = $this->likePostService->checkUserPostLike(get_current_user_id(), $post->ID);
+
+        $post->saved = $this->savedPostService->checkUserPostLike(get_current_user_id(), $post->ID);
 
         return $post;
     }

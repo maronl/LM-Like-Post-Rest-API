@@ -122,7 +122,7 @@ class LMWPPluginManager {
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
         $followerService = new LMFollowerWordpressService($followerRepository);
         $headerAuhtorization = new LMWPJWTFirebaseHeaderAuthorization($this->options['jwt-secret']);
-        $wallService = new LMWallWordpressService($followerService, $headerAuhtorization);
+        $wallService = new LMWallWordpressService($headerAuhtorization, $followerService, $likePostService, $savedPostService);
 
         $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);
         $savedPublic = new LMWPSavedPostPublicManager( $this->plugin_slug, $this->version, $savedPostService);
