@@ -120,6 +120,13 @@ class LMWallWordpressService implements LMWallService
 
         $post->saved = $this->savedPostService->checkUserPostLike(get_current_user_id(), $post->ID);
 
+        if ($post->post_parent !== 0) {
+            $postParent = get_post($post->post_parent);
+            $post->parentDetails = $postParent;
+            $post->parentDetails->post_content_rendered = apply_filters('the_content', $postParent->post_content);
+            $post->parentDetails->featured_image = get_the_post_thumbnail_url($postParent->ID);
+        }
+
         return $post;
     }
 
