@@ -12,4 +12,5 @@ namespace LM\WPPostLikeRestApi\Service;
 interface LMProfileService
 {
     public function getLoggedUserProfile();
+    public function getUserProfile($userId);
 }

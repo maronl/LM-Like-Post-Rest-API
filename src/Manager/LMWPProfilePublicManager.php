@@ -39,7 +39,7 @@ class LMWPProfilePublicManager
 
         register_rest_route($this->namespace, 'profile/(?P<id>\d+)', [
             'methods' => 'GET',
-            'callback' => array($this, 'getLoggedUserProfile'),
+            'callback' => array($this, 'getUserProfile'),
         ]);
     }
 
@@ -48,5 +48,20 @@ class LMWPProfilePublicManager
         $profile = $this->profileService->getLoggedUserProfile();
         return array('status' => true, 'data' => $profile);
     }
+
+    public function getUserProfile($request)
+    {
+        $postId = $request->get_param('id');
+
+        if(empty($postId) || !is_numeric($postId)) {
+            return array('status' => false);
+        }
+
+        $profile = $this->profileService->getUserProfile($postId);
+
+        return array('status' => true, 'data' => $profile);
+    }
+
+
 
 }
