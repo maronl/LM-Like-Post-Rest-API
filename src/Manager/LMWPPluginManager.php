@@ -10,6 +10,7 @@ use LM\WPPostLikeRestApi\Repository\LMSharingWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
 use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
+use LM\WPPostLikeRestApi\Service\LMProfileWordpressService;
 use LM\WPPostLikeRestApi\Service\LMSavedPostWordpressService;
 use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
 use LM\WPPostLikeRestApi\Service\LMWallWordpressService;
@@ -134,20 +135,25 @@ class LMWPPluginManager {
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
         $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
         $wallPostRepository = new LMWallPostWordpressRepository(new LMWallPostInsertRequest());
+
         $likePostService = new LMLikePostWordpressService($likePostRepository);
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
         $followerService = new LMFollowerWordpressService($followerRepository);
         $headerAuhtorization = new LMWPJWTFirebaseHeaderAuthorization($this->options['jwt-secret']);
         $wallService = new LMWallWordpressService($headerAuhtorization, $wallPostRepository, $followerService, $likePostService, $savedPostService);
+        $profileService = new LMProfileWordpressService($headerAuhtorization, $followerService, $likePostService, $savedPostService);
 
         $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);
         $savedPublic = new LMWPSavedPostPublicManager( $this->plugin_slug, $this->version, $savedPostService);
         $followerPublic = new LMWPFollowerPublicManager( $this->plugin_slug, $this->version, $followerService);
         $wallPublic = new LMWPWallPublicManager( $this->plugin_slug, $this->version, $wallService);
+        $profilePublic = new LMWPProfilePublicManager( $this->plugin_slug, $this->version, $profileService);
+
         $this->loader->add_action('rest_api_init', $likePublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $savedPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $followerPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $wallPublic, 'add_api_routes');
+        $this->loader->add_action('rest_api_init', $profilePublic, 'add_api_routes');
 
         $this->loader->add_action('wp_insert_post', $wallPublic, 'incrementCountSharedPost', 10, 3);
 //        $this->loader->add_action('register_post_type_args', $wallPublic, 'wp1482371_custom_post_type_args', 20, 2);
