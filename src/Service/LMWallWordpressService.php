@@ -9,10 +9,15 @@
 namespace LM\WPPostLikeRestApi\Service;
 
 
+use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
+use LM\WPPostLikeRestApi\Utility\LMWPPostWallDetails;
 
 class LMWallWordpressService implements LMWallService
 {
+
+    use LMWPPostWallDetails;
+
     /**
      * @var LMHeaderAuthorization
      */
@@ -29,13 +34,18 @@ class LMWallWordpressService implements LMWallService
      * @var LMFollowerService
      */
     private $followerService;
+    /**
+     * @var LMWallPostWordpressRepository
+     */
+    private $wallPostWordpressRepository;
 
-    function __construct(LMHeaderAuthorization $headerAuthorization, LMFollowerService $followerService, LMLikePostService $likePostService, LMLikePostService $savedPostService)
+    function __construct(LMHeaderAuthorization $headerAuthorization, LMWallPostWordpressRepository $wallPostWordpressRepository, LMFollowerService $followerService, LMLikePostService $likePostService, LMLikePostService $savedPostService)
     {
         $this->headerAuthorization = $headerAuthorization;
         $this->likePostService = $likePostService;
         $this->savedPostService = $savedPostService;
         $this->followerService = $followerService;
+        $this->wallPostWordpressRepository = $wallPostWordpressRepository;
     }
 
     public function getWall(Array $params)
@@ -45,12 +55,19 @@ class LMWallWordpressService implements LMWallService
     }
 
     public function getPost($postId) {
-        return $this->retrievePostInformation(get_post($postId), null);
+        return $this->retrievePostInformation(get_post($postId), null, $this->likePostService, $this->savedPostService);
+    }
+
+    public function createPost($request)
+    {
+        return $this->wallPostWordpressRepository->createPost($request);
     }
 
     private function setWallQueryParameters(Array $params)
     {
         $paramsQuery = array();
+
+        $paramsQuery['post_type'] = 'lm_wall';
 
         if(array_key_exists('item_per_page', $params)) {
             $paramsQuery['posts_per_page'] = $params['item_per_page'];
@@ -64,8 +81,6 @@ class LMWallWordpressService implements LMWallService
 
         if(array_key_exists('categories', $params)) {
             $paramsQuery['cat'] = $params['categories'];
-        } else {
-            $paramsQuery['author'] = $this->getDefaultCategoriesPerUser();
         }
 
         if(array_key_exists('authors', $params)) {
@@ -86,93 +101,10 @@ class LMWallWordpressService implements LMWallService
         $res = array();
 
         foreach ($posts as $post) {
-            $res[] = $this->retrievePostInformation($post);
+            $res[] = $this->retrievePostInformation($post, 3, $this->likePostService, $this->savedPostService);
         }
 
         return $res;
-    }
-
-    private function retrievePostInformation(\WP_Post $post, $latestComments = 3)
-    {
-        global $wpdb;
-
-        $post->post_content_rendered = apply_filters('the_content', $post->post_content);
-
-        $post->post_excerpt_rendered = apply_filters('the_excerpt', $post->post_excerpt);
-
-        $post->author = $this->retrieveAuthorInformation($post, $wpdb);
-
-        $post->latest_comment = get_comments(array('post_id' => $post->ID, 'number' => $latestComments, 'orderby' => 'comment_date', 'order' => 'DESC'));
-
-        // li ricerco per date DESC ... così da prendere gli ultimi
-        // ma poi li visualizzo in data ASC quelli trovati. per questo faccio il reverse
-        $post->latest_comment = array_reverse($post->latest_comment );
-
-        $post->categories = get_the_terms($post->ID, 'category');
-
-        $post->lm_like_counter = $this->retrieveLikeCounter($post);
-
-        $post->lm_saved_counter = $this->retrieveSavedCounter($post);
-
-        $post->featured_image = get_the_post_thumbnail_url($post->ID);
-
-        $post->liked = $this->likePostService->checkUserPostLike(get_current_user_id(), $post->ID);
-
-        $post->saved = $this->savedPostService->checkUserPostLike(get_current_user_id(), $post->ID);
-
-        if ($post->post_parent !== 0) {
-            $postParent = get_post($post->post_parent);
-            $post->parentDetails = $postParent;
-            $post->parentDetails->post_content_rendered = apply_filters('the_content', $postParent->post_content);
-            $post->parentDetails->featured_image = get_the_post_thumbnail_url($postParent->ID);
-        }
-
-        return $post;
-    }
-
-    /**
-     * @param \WP_Post $post
-     * @param $wpdb
-     */
-    private function retrieveAuthorInformation(\WP_Post $post, $wpdb)
-    {
-        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
-            FROM pld_users as u
-            WHERE u.ID = %d;", $post->post_author);
-
-        return $wpdb->get_row($sql);
-    }
-
-    /**
-     * @param \WP_Post $post
-     * @return int
-     */
-    private function retrieveLikeCounter(\WP_Post $post)
-    {
-        $like_counter = get_post_meta($post->ID, 'lm-like-counter', true);
-        if (empty($like_counter)) {
-            $like_counter = 0;
-        }
-        return $like_counter;
-    }
-
-    /**
-     * @param \WP_Post $post
-     * @return int
-     */
-    private function retrieveSavedCounter(\WP_Post $post)
-    {
-        $saved_counter = get_post_meta($post->ID, 'lm-saved-counter', true);
-        if (empty($saved_counter)) {
-            $saved_counter = 0;
-        }
-        return $saved_counter;
-    }
-
-    private function getDefaultCategoriesPerUser()
-    {
-        // todo mettere come parametro configurabile
-        return array(2);
     }
 
     private function getDefaultAuthorsPerUser()
@@ -182,6 +114,8 @@ class LMWallWordpressService implements LMWallService
 
 
         $userAuthorized = $this->headerAuthorization->getUser();
+
+        $authors = array_merge($authors, array($userAuthorized));
 
         if ($userAuthorized) {
             $followings = $this->followerService->getFollowingsIds($userAuthorized);

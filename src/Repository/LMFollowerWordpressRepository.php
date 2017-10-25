@@ -97,10 +97,12 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
             WHERE f.follower_id = %d;", $userId);
 
         $res = $wpdb->get_results($sql, ARRAY_N);
+
         $resClean = [];
         foreach ($res as $singleRes) {
             $resClean[] = $singleRes[0];
         }
+
         return $resClean;
     }
 
@@ -138,7 +140,7 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
           follower_id BIGINT(11) NOT NULL,
           following_id BIGINT(11) NOT NULL,
           created_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-          PRIMARY KEY (user_id, post_id)
+          PRIMARY KEY (follower_id, following_id)
 	    ) $charset_collate;";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

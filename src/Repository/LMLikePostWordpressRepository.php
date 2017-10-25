@@ -12,9 +12,7 @@ namespace LM\WPPostLikeRestApi\Repository;
 class LMLikePostWordpressRepository implements LMLikePostRepository
 {
     private $table;
-    /**
-     * @var
-     */
+
     private $version;
 
     private $tableNoPrefix;

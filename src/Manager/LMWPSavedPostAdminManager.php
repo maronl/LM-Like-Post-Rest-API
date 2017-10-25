@@ -28,7 +28,7 @@ class LMWPSavedPostAdminManager
 
     function columnHeader($defaults)
     {
-        $defaults['lm-sf-saved'] = '<span class="dashicons dashicons-heart" title="User saving this post"><span class="screen-reader-text">Saved</span></span>';
+        $defaults['lm-sf-saved'] = '<span class="dashicons dashicons-star-filled" title="User saving this post"><span class="screen-reader-text">Saved</span></span>';
         return $defaults;
     }
 

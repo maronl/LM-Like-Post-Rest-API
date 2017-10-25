@@ -10,29 +10,30 @@ namespace LM\WPPostLikeRestApi\Manager;
 
 
 use LM\WPPostLikeRestApi\Service\LMLikePostService;
+use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
 
-class LMWPLikePostAdminManager
+class LMWPSharingAdminManager
 {
     /**
      * @var LMLikePostService
      */
-    private $savedPostService;
+    private $sharingService;
     private $version;
 
-    function __construct(LMLikePostService $savedPostService, $version)
+    function __construct(LMSharingWordpressService $sharingService, $version)
     {
-        $this->savedPostService = $savedPostService;
+        $this->sharingService = $sharingService;
         $this->version = $version;
     }
 
     function columnHeader($defaults) {
-        $defaults['lm-sf-like'] = '<span class="dashicons dashicons-heart" title="User like this post"><span class="screen-reader-text">Like</span></span>';
+        $defaults['lm-sf-sharing'] = '<span class="dashicons dashicons-share" title="Number of sharing posts"><span class="screen-reader-text">Sharing</span></span>';
         return $defaults;
     }
 
     function columnContent($column_name, $post_ID) {
-        if ($column_name == 'lm-sf-like') {
-            echo $this->savedPostService->getPostLikeCount($post_ID);
+        if ($column_name == 'lm-sf-sharing') {
+            echo $this->sharingService->getSharingCount($post_ID);
         }
     }
 

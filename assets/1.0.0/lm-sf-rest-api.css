@@ -9,3 +9,9 @@ th.column-lm-sf-like {
     padding: 0;
     text-align: left;
 }
+
+th.column-lm-sf-sharing {
+    width: 3em;
+    padding: 0;
+    text-align: left;
+}

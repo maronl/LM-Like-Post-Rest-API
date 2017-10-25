@@ -36,11 +36,15 @@ class LMWPWallPublicManager
             'callback' => array($this, 'getWall'),
         ]);
 
+        register_rest_route($this->namespace, 'wall', [
+            'methods' => 'POST',
+            'callback' => array($this, 'createPost'),
+        ]);
+
         register_rest_route($this->namespace, 'wall/(?P<id>\d+)', [
             'methods' => 'GET',
             'callback' => array($this, 'getPost'),
         ]);
-
     }
 
     public function getWall($request)
@@ -72,4 +76,30 @@ class LMWPWallPublicManager
         $postId = $request->get_param('id');
         return array('status' => true, 'data' => $this->wallService->getPost($postId));
     }
+
+    public function createPost($request)
+    {
+        $postId = $this->wallService->createPost($request);
+        if(is_wp_error($postId)) {
+            return array('status' => false, 'data' => $postId->errors);
+        }
+        if(is_array($postId)) {
+            return array('status' => false, 'data' => $postId);
+        }
+        return array('status' => true, 'data' => $this->wallService->getPost($postId));
+    }
+
+    public function incrementCountSharedPost( $post_id, $post, $update ) {
+
+        global $wpdb;
+
+        if($post->post_parent === 0) {
+            return;
+        }
+
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM " . $wpdb->prefix . "posts WHERE post_parent = %d AND post_status = 'publish'", $post->post_parent);
+        $count = $wpdb->get_var($sql);
+        return update_post_meta($post_id, 'lm-shared-post-counter', $count);
+    }
+
 }

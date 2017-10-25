@@ -3,12 +3,17 @@
 namespace LM\WPPostLikeRestApi\Manager;
 
 
+use LM\WPPostLikeRestApi\Model\LMWallPostModel;
 use LM\WPPostLikeRestApi\Repository\LMFollowerWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMLikePostWordpressRepository;
+use LM\WPPostLikeRestApi\Repository\LMSharingWordpressRepository;
+use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
 use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
 use LM\WPPostLikeRestApi\Service\LMSavedPostWordpressService;
+use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
 use LM\WPPostLikeRestApi\Service\LMWallWordpressService;
+use LMWallPostInsertRequest;
 
 /**
  * The Manager is the core plugin responsible for including and
@@ -97,15 +102,25 @@ class LMWPPluginManager {
     private function define_admin_hooks() {
         $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
+        $sharingPostRepository = new LMSharingWordpressRepository('lm_post_shared', $this->version);
         $likePostService = new LMLikePostWordpressService($likePostRepository);
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
+        $sharingPostService = new LMSharingWordpressService($sharingPostRepository);
         $likeAdmin = new LMWPLikePostAdminManager($likePostService, $this->version);
         $savedAdmin = new LMWPSavedPostAdminManager($savedPostService, $this->version);
+        $sharingAdmin = new LMWPSharingAdminManager($sharingPostService, $this->version);
         $this->loader->add_filter('manage_posts_columns', $likeAdmin, 'columnHeader');
         $this->loader->add_filter('manage_posts_columns', $savedAdmin, 'columnHeader');
+        $this->loader->add_filter('manage_posts_columns', $sharingAdmin, 'columnHeader');
         $this->loader->add_action('manage_posts_custom_column', $likeAdmin, 'columnContent', 10, 2);
         $this->loader->add_action('manage_posts_custom_column', $savedAdmin, 'columnContent', 10, 2);
+        $this->loader->add_action('manage_posts_custom_column', $sharingAdmin, 'columnContent', 10, 2);
         $this->loader->add_action('admin_enqueue_scripts', $savedAdmin, 'customCssFile');
+
+        $wallPostModel = new LMWallPostModel();
+        $this->loader->add_action('init', $wallPostModel, 'defineCustomPostWall', 0);
+        $this->loader->add_action('init', $wallPostModel, 'defineCustomPostWallTaxonomy', 0);
+
     }
 
     /**
@@ -118,11 +133,12 @@ class LMWPPluginManager {
         $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
         $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
+        $wallPostRepository = new LMWallPostWordpressRepository(new LMWallPostInsertRequest());
         $likePostService = new LMLikePostWordpressService($likePostRepository);
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
         $followerService = new LMFollowerWordpressService($followerRepository);
         $headerAuhtorization = new LMWPJWTFirebaseHeaderAuthorization($this->options['jwt-secret']);
-        $wallService = new LMWallWordpressService($headerAuhtorization, $followerService, $likePostService, $savedPostService);
+        $wallService = new LMWallWordpressService($headerAuhtorization, $wallPostRepository, $followerService, $likePostService, $savedPostService);
 
         $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);
         $savedPublic = new LMWPSavedPostPublicManager( $this->plugin_slug, $this->version, $savedPostService);
@@ -132,6 +148,10 @@ class LMWPPluginManager {
         $this->loader->add_action('rest_api_init', $savedPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $followerPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $wallPublic, 'add_api_routes');
+
+        $this->loader->add_action('wp_insert_post', $wallPublic, 'incrementCountSharedPost', 10, 3);
+//        $this->loader->add_action('register_post_type_args', $wallPublic, 'wp1482371_custom_post_type_args', 20, 2);
+
     }
 
     /**
@@ -143,10 +163,14 @@ class LMWPPluginManager {
         $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
         $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
+        $sharingRepository = new LMSharingWordpressRepository('lm_post_shared', $this->version);
+        $wallPostModel = new LMWallPostModel();
 
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $likePostRepository, 'createDBStructure' ) );
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $savedPostRepository, 'createDBStructure' ) );
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $followerRepository, 'createDBStructure' ) );
+        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $sharingRepository, 'createDBStructure' ) );
+        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $wallPostModel, 'setCustomPostWallCapabilities' ) );
     }
 
     /**
