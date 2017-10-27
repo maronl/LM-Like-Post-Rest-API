@@ -43,6 +43,7 @@ class LMProfileWordpressService implements LMProfileService
         $res['user_email'] = $user->user_email;
         $res['display_name'] = $user->display_name;
         $res['user_picture'] = 'http://0.gravatar.com/avatar/c06f9a7686481ac171d46f2ed0835ca6?s=154&d=mm&r=g';
+        $res['user_cover'] = 'https://playdoc.axenso.com/cn/themes/playdoc-wp-theme/assets/img/user-cover-default.png';
         $res['user_registered'] = $user->user_registered;
         $res['profession'] = 'TO BE DONE';
         $res['location'] = 'TO BE DONE';
@@ -62,6 +63,7 @@ class LMProfileWordpressService implements LMProfileService
         $res['user_email'] = $user->user_email;
         $res['display_name'] = $user->display_name;
         $res['user_picture'] = 'http://0.gravatar.com/avatar/c06f9a7686481ac171d46f2ed0835ca6?s=154&d=mm&r=g';
+        $res['user_cover'] = 'https://playdoc.axenso.com/cn/themes/playdoc-wp-theme/assets/img/user-cover-default.png';
         $res['user_registered'] = $user->user_registered;
         $res['profession'] = 'TO BE DONE';
         $res['location'] = 'TO BE DONE';
