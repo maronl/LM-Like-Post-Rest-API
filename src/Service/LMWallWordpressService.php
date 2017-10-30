@@ -12,6 +12,7 @@ namespace LM\WPPostLikeRestApi\Service;
 use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
 use LM\WPPostLikeRestApi\Utility\LMWPPostWallDetails;
+use LMWallPostInsertRequest;
 
 class LMWallWordpressService implements LMWallService
 {
@@ -38,14 +39,32 @@ class LMWallWordpressService implements LMWallService
      * @var LMWallPostWordpressRepository
      */
     private $wallPostWordpressRepository;
+    /**
+     * @var LMWallPostInsertRequest
+     */
+    private $insertRequest;
+    /**
+     * @var LMSharingService
+     */
+    private $sharingService;
 
-    function __construct(LMHeaderAuthorization $headerAuthorization, LMWallPostWordpressRepository $wallPostWordpressRepository, LMFollowerService $followerService, LMLikePostService $likePostService, LMLikePostService $savedPostService)
+    function __construct(
+        LMHeaderAuthorization $headerAuthorization, 
+        LMWallPostWordpressRepository $wallPostWordpressRepository, 
+        LMFollowerService $followerService, 
+        LMLikePostService $likePostService, 
+        LMLikePostService $savedPostService,
+        LMWallPostInsertRequest $insertRequest,
+        LMSharingService $sharingService
+    )
     {
         $this->headerAuthorization = $headerAuthorization;
         $this->likePostService = $likePostService;
         $this->savedPostService = $savedPostService;
         $this->followerService = $followerService;
         $this->wallPostWordpressRepository = $wallPostWordpressRepository;
+        $this->insertRequest = $insertRequest;
+        $this->sharingService = $sharingService;
     }
 
     public function getWall(Array $params)
@@ -55,12 +74,22 @@ class LMWallWordpressService implements LMWallService
     }
 
     public function getPost($postId) {
-        return $this->retrievePostInformation(get_post($postId), null, $this->likePostService, $this->savedPostService);
+        return $this->retrievePostInformation(get_post($postId), null, $this->likePostService, $this->savedPostService, $this->sharingService);
     }
 
     public function createPost($request)
     {
-        return $this->wallPostWordpressRepository->createPost($request);
+        $postId = $this->wallPostWordpressRepository->createPost($request);
+
+        if(is_wp_error($postId)) {
+            return $postId;
+        }
+
+        $this->setNewPostFormat($request, $postId);
+        
+        $this->setNewPostSharingPost($request, $postId);
+
+        return $postId;
     }
 
     private function setWallQueryParameters(Array $params)
@@ -101,7 +130,7 @@ class LMWallWordpressService implements LMWallService
         $res = array();
 
         foreach ($posts as $post) {
-            $res[] = $this->retrievePostInformation($post, 3, $this->likePostService, $this->savedPostService);
+            $res[] = $this->retrievePostInformation($post, 3, $this->likePostService, $this->savedPostService, $this->sharingService);
         }
 
         return $res;
@@ -123,6 +152,33 @@ class LMWallWordpressService implements LMWallService
         }
 
         return $authors;
+    }
+
+    /**
+     * @param $request
+     * @param $postId
+     * @return bool
+     */
+    private function setNewPostFormat($request, $postId)
+    {
+        $dataRequest = $this->insertRequest->getDataFromRequest($request);
+
+        if (array_key_exists('format', $dataRequest)) {
+            set_post_format($postId, $dataRequest['format']);
+        }
+
+        return true;
+    }
+
+    private function setNewPostSharingPost($request, $postId)
+    {
+        $dataRequest = $this->insertRequest->getDataFromRequest($request);
+
+        if (array_key_exists('shared_post', $dataRequest)) {
+            $this->sharingService->saveSharing($dataRequest['shared_post'], $postId);
+        }
+
+        return true;
     }
 
 }

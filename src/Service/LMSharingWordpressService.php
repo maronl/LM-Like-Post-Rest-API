@@ -20,8 +20,24 @@ class LMSharingWordpressService implements LMSharingService
         $this->repository = $repository;
     }
 
-    public function getSharingCount($sharedId)
+    public function findSharedPost($sharingId)
     {
-        return $this->repository->findShared($sharedId);
+        $shared = $this->repository->findSharedId($sharingId);
+        return (!empty($shared)) ? $shared : 0;
+    }
+
+    public function getSharedCount($sharedId)
+    {
+        return $this->repository->findSharingsCount($sharedId);
+    }
+
+    public function saveSharing($sharedId, $sharingId)
+    {
+        return $this->repository->saveSharing($sharedId, $sharingId);
+    }
+
+    public function deleteSharing($sharedId, $sharingId)
+    {
+        return $this->repository->deleteSharing($sharedId, $sharingId);
     }
 }

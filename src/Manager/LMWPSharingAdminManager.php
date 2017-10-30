@@ -33,7 +33,7 @@ class LMWPSharingAdminManager
 
     function columnContent($column_name, $post_ID) {
         if ($column_name == 'lm-sf-sharing') {
-            echo $this->sharingService->getSharingCount($post_ID);
+            echo $this->sharingService->getSharedCount($post_ID);
         }
     }
 

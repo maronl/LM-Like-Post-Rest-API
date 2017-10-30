@@ -11,12 +11,13 @@ namespace LM\WPPostLikeRestApi\Repository;
 
 interface LMSharingRepository
 {
-    public function saveSharing($followerId, $followingId);
-    public function deleteSharing($followerId, $followingId);
-    public function findSharings($userId);
-    public function findSharingsIds($userId);
-    public function findShared($userId);
-    public function findSharedIds($userId);
+    public function saveSharing($sharedId, $sharingId);
+    public function deleteSharing($sharedId, $sharingId);
+    public function findSharedId($sharingId);
+    public function findSharingsCount($sharedId);
+    public function findSharingsIds($sharedId);
+    public function findSharedsCount($sharingId);
+    public function findSharedsIds($sharingId);
     public function getTableName();
     public function createDBStructure();
 }

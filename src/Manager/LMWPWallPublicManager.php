@@ -80,12 +80,15 @@ class LMWPWallPublicManager
     public function createPost($request)
     {
         $postId = $this->wallService->createPost($request);
+
         if(is_wp_error($postId)) {
             return array('status' => false, 'data' => $postId->errors);
         }
+
         if(is_array($postId)) {
             return array('status' => false, 'data' => $postId);
         }
+
         return array('status' => true, 'data' => $this->wallService->getPost($postId));
     }
 

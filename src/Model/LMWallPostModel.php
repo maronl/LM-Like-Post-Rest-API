@@ -44,7 +44,9 @@ class LMWallPostModel
         $capabilities = array(
             'edit_post'             => 'edit_lm_wall',
             'read_post'             => 'read_lm_wall',
-            'delete_posts'           => 'delete_lm_walls',
+            'delete_posts'          => 'delete_lm_walls',
+            'delete_post'          => 'delete_lm_wall',
+            'delete_published_posts'=> 'delete_published_lm_walls',
             'edit_posts'            => 'edit_lm_walls',
             'edit_others_posts'     => 'edit_others_lm_walls',
             'publish_posts'         => 'publish_lm_wall',
@@ -116,6 +118,8 @@ class LMWallPostModel
         $role->add_cap( 'edit_lm_wall' );
         $role->add_cap( 'read_lm_wall' );
         $role->add_cap( 'delete_lm_walls' );
+        $role->add_cap( 'delete_lm_wall' );
+        $role->add_cap( 'delete_published_lm_walls' );
         $role->add_cap( 'edit_lm_walls' );
         $role->add_cap( 'edit_others_lm_walls' );
         $role->add_cap( 'publish_lm_wall' );
@@ -126,6 +130,8 @@ class LMWallPostModel
         $role->add_cap( 'edit_lm_wall' );
         $role->add_cap( 'read_lm_wall' );
         $role->add_cap( 'delete_lm_walls' );
+        $role->add_cap( 'delete_lm_wall' );
+        $role->add_cap( 'delete_published_lm_walls' );
         $role->add_cap( 'edit_lm_walls' );
         $role->add_cap( 'edit_others_lm_walls' );
         $role->add_cap( 'publish_lm_wall' );

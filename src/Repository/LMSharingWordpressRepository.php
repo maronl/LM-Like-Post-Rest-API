@@ -81,7 +81,7 @@ class LMSharingWordpressRepository implements LMSharingRepository
      * @param int $item_per_page
      * @return mixed
      */
-    public function findSharings($sharedId)
+    public function findSharingsCount($sharedId)
     {
         global $wpdb;
 
@@ -116,7 +116,7 @@ class LMSharingWordpressRepository implements LMSharingRepository
         return array_column($wpdb->get_results($sql), 0);
     }
 
-    public function findShared($sharingId)
+    public function findSharedsCount($sharingId)
     {
         global $wpdb;
 
@@ -141,7 +141,7 @@ class LMSharingWordpressRepository implements LMSharingRepository
         return $this->retrievePostInformation($posts, null, $this->likePostService, $this->savedPostService);
     }*/
 
-    public function findSharedIds($sharingId)
+    public function findSharedsIds($sharingId)
     {
         global $wpdb;
 
@@ -184,4 +184,14 @@ class LMSharingWordpressRepository implements LMSharingRepository
         dbDelta( $sql );
 
         add_option( $this->tableNoPrefix . '_db_version', $this->version );    }
+
+    public function findSharedId($sharingId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT shared_post_id FROM $this->table WHERE sharing_post_id = %d", $sharingId);
+
+        return $wpdb->get_var($sql);
+    }
+
 }

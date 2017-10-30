@@ -134,13 +134,15 @@ class LMWPPluginManager {
         $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
         $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
         $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
+        $sharingRepository = new LMSharingWordpressRepository('lm_post_shared', $this->version);
         $wallPostRepository = new LMWallPostWordpressRepository(new LMWallPostInsertRequest());
 
         $likePostService = new LMLikePostWordpressService($likePostRepository);
         $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
         $followerService = new LMFollowerWordpressService($followerRepository);
+        $sharingService = new LMSharingWordpressService($sharingRepository);
         $headerAuhtorization = new LMWPJWTFirebaseHeaderAuthorization($this->options['jwt-secret']);
-        $wallService = new LMWallWordpressService($headerAuhtorization, $wallPostRepository, $followerService, $likePostService, $savedPostService);
+        $wallService = new LMWallWordpressService($headerAuhtorization, $wallPostRepository, $followerService, $likePostService, $savedPostService, new LMWallPostInsertRequest(), $sharingService);
         $profileService = new LMProfileWordpressService($headerAuhtorization, $followerService, $likePostService, $savedPostService);
 
         $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);

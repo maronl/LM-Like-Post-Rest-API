@@ -11,7 +11,7 @@ namespace LM\WPPostLikeRestApi\Utility;
 trait LMWPPostWallDetails
 {
 
-    private function retrievePostInformation(\WP_Post $post, $latestComments = 3, $likePostService, $savedPostService)
+    private function retrievePostInformation(\WP_Post $post, $latestComments = 3, $likePostService, $savedPostService, $sharingPostService)
     {
         global $wpdb;
 
@@ -35,20 +35,21 @@ trait LMWPPostWallDetails
 
         $post->lm_saved_counter = $this->retrieveSavedCounter($post);
 
+        $post->lm_shared_counter = $sharingPostService->getSharedCount($post->ID);
+
         $post->featured_image = get_the_post_thumbnail_url($post->ID);
 
         $post->liked = $likePostService->checkUserPostLike(get_current_user_id(), $post->ID);
 
         $post->saved = $savedPostService->checkUserPostLike(get_current_user_id(), $post->ID);
 
-        // non usiamo il post parent di wordpress ... no buono per nostri scopi!
-        $post->post_parent = get_post_meta('lm-shared-post') ? : 0;
+        $post->shared_post = $sharingPostService->findSharedPost($post->ID);
 
-        if ($post->post_parent !== 0) {
-            $postParent = get_post($post->post_parent);
-            $post->parentDetails = $postParent;
-            $post->parentDetails->post_content_rendered = apply_filters('the_content', $postParent->post_content);
-            $post->parentDetails->featured_image = get_the_post_thumbnail_url($postParent->ID);
+        if ($post->shared_post !== 0) {
+            $postShared = get_post($post->shared_post);
+            $post->sharedPostDetails = $postShared;
+            $post->sharedPostDetails->post_content_rendered = apply_filters('the_content', $postShared->post_content);
+            $post->sharedPostDetails->featured_image = get_the_post_thumbnail_url($postShared->ID);
         }
 
         return $post;

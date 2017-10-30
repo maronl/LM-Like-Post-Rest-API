@@ -56,8 +56,9 @@ class LMWallPostInsertRequest
         $categories = $request->get_param('categories');
         $format = $request->get_param('format');
         $file = $request->get_file_params('following_id');
+        $shared_post = $request->get_param('shared_post');
 
-        return compact('title', 'content', 'author', 'status', 'categories', 'format', 'file');
+        return compact('title', 'content', 'author', 'status', 'categories', 'format', 'file', 'shared_post');
     }
 
     private function validateTitle($title)
@@ -101,10 +102,6 @@ class LMWallPostInsertRequest
     {
         if(empty($categories)) {
             $this->errors[] = array('categories' => 'Non è possibile creare un nuovo post senza indicare la categoria del post');
-        }
-
-        if(!is_numeric($categories) && !is_array($categories)) {
-            $this->errors[] = array('author' => 'Il campo categories non è valorizzato correttamente. indicare id della categoria oppure un array di categorie (e.g categories=2 o categories=2,3)');
         }
     }
 

@@ -31,6 +31,23 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
             return $validate;
         }
 
+        // creo post
+        $newPost = $this->createNewPostData($request);
+        $postId = wp_insert_post($newPost);
+
+        if(is_wp_error($postId)) {
+            return $postId;
+        }
+
+        return $postId;
+    }
+
+    /**
+     * @param $request
+     * @return array
+     */
+    private function createNewPostData($request)
+    {
         $dataRequest = $this->insertRequest->getDataFromRequest($request);
 
         $newPost = array();
@@ -41,31 +58,21 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
         $newPost['post_type'] = 'lm_wall';
         $newPost['comment_status'] = 'open';
 
-        if(array_key_exists('title', $dataRequest) && !empty($dataRequest['title'])) {
+        if (array_key_exists('title', $dataRequest) && !empty($dataRequest['title'])) {
             $newPost['post_title'] = $dataRequest['title'];
-        }else{
-            $newPost['post_title'] = 'UID: '. $dataRequest['author'] .' - POSTID: ' . wp_generate_uuid4();
+        } else {
+            $newPost['post_title'] = 'UID: ' . $dataRequest['author'] . ' - POSTID: ' . wp_generate_uuid4();
         }
 
-        if(array_key_exists('status', $dataRequest)) {
+        if (array_key_exists('status', $dataRequest)) {
             $newPost['post_status'] = $dataRequest['status'];
         }
 
         $newPost['post_content'] = $dataRequest['content'];
         $newPost['post_author'] = $dataRequest['author'];
-        $newPost['post_category'] = explode(',', $dataRequest['categories']);
+        $newPost['tax_input'] = array( 'lm_wall_category' => explode(',', $dataRequest['categories']));
 
-        // creo post
-        $postId = wp_insert_post($newPost);
-
-        if(is_wp_error($postId)) {
-            return $postId;
-        }
-
-        if(array_key_exists('format', $dataRequest)) {
-            set_post_format($postId, $dataRequest['format'] );
-        }
-
-        return $postId;
+        return $newPost;
     }
+
 }
