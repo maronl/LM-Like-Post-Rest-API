@@ -63,6 +63,8 @@ Endpoint | HTTP Verb
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/wall](#wall)* | GET
 
+*[/wp-json/lm-sf-rest-api/v1.0.0/wall](#wall)* | POST
+
 *[/wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}](#wall-post)* | GET
 
 
@@ -579,6 +581,23 @@ JSON Response
   ]
 }
 ```
+
+## <a name="wall"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall
+Create a new post
+
+METHOD: POST
+
+Parameters mandatory are:
+- content: {contenuto del commento}
+- author: {user id}
+- status: publish
+- categories: Bacheca (la categoria viene indicata con una stringa)
+- format: standard (standard/image/video/link)
+
+Parameters NOT mandatory are:
+- shared_post: {post id} (id del post che stiamo condividendo)
+
+JSON Response: se il post viene creato correttamente il json contiene le informazioni del post appena creato.
 
 
 ## <a name="wall-post"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}
