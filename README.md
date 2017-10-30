@@ -63,7 +63,7 @@ Endpoint | HTTP Verb
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/wall](#wall)* | GET
 
-*[/wp-json/lm-sf-rest-api/v1.0.0/wall](#wall)* | POST
+*[/wp-json/lm-sf-rest-api/v1.0.0/wall](#wall-post-create)* | POST
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}](#wall-post)* | GET
 
@@ -582,7 +582,7 @@ JSON Response
 }
 ```
 
-## <a name="wall"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall
+## <a name="wall-post-create"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall
 Create a new post
 
 METHOD: POST
