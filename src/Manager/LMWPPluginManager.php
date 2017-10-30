@@ -110,12 +110,12 @@ class LMWPPluginManager {
         $likeAdmin = new LMWPLikePostAdminManager($likePostService, $this->version);
         $savedAdmin = new LMWPSavedPostAdminManager($savedPostService, $this->version);
         $sharingAdmin = new LMWPSharingAdminManager($sharingPostService, $this->version);
-        $this->loader->add_filter('manage_posts_columns', $likeAdmin, 'columnHeader');
-        $this->loader->add_filter('manage_posts_columns', $savedAdmin, 'columnHeader');
-        $this->loader->add_filter('manage_posts_columns', $sharingAdmin, 'columnHeader');
-        $this->loader->add_action('manage_posts_custom_column', $likeAdmin, 'columnContent', 10, 2);
-        $this->loader->add_action('manage_posts_custom_column', $savedAdmin, 'columnContent', 10, 2);
-        $this->loader->add_action('manage_posts_custom_column', $sharingAdmin, 'columnContent', 10, 2);
+        $this->loader->add_filter('manage_lm_wall_posts_columns', $likeAdmin, 'columnHeader');
+        $this->loader->add_filter('manage_lm_wall_posts_columns', $savedAdmin, 'columnHeader');
+        $this->loader->add_filter('manage_lm_wall_posts_columns', $sharingAdmin, 'columnHeader');
+        $this->loader->add_action('manage_lm_wall_posts_custom_column', $likeAdmin, 'columnContent', 10, 2);
+        $this->loader->add_action('manage_lm_wall_posts_custom_column', $savedAdmin, 'columnContent', 10, 2);
+        $this->loader->add_action('manage_lm_wall_posts_custom_column', $sharingAdmin, 'columnContent', 10, 2);
         $this->loader->add_action('admin_enqueue_scripts', $savedAdmin, 'customCssFile');
 
         $wallPostModel = new LMWallPostModel();
