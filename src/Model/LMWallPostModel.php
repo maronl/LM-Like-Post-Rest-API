@@ -70,7 +70,8 @@ class LMWallPostModel
             'exclude_from_search'   => false,
             'publicly_queryable'    => true,
             'capabilities'          => $capabilities,
-            'rewrite'            => array( 'slug' => 'blog' )
+            'rewrite'               => array( 'slug' => 'blog' ),
+            'show_in_rest'          => true
         );
 
         register_post_type( 'lm_wall', $args );
@@ -130,7 +131,7 @@ class LMWallPostModel
         $role->add_cap( 'edit_lm_wall' );
         $role->add_cap( 'read_lm_wall' );
         $role->add_cap( 'delete_lm_walls' );
-        $role->add_cap( 'delete_lm_wall' );
+        $role->add_cap( 'delete_lm_wall ' );
         $role->add_cap( 'delete_published_lm_walls' );
         $role->add_cap( 'edit_lm_walls' );
         $role->add_cap( 'edit_others_lm_walls' );
