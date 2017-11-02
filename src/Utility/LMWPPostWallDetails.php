@@ -66,8 +66,14 @@ trait LMWPPostWallDetails
             FROM pld_users as u
             WHERE u.ID = %d;", $post->post_author);
 
-        return $wpdb->get_row($sql);
+        $userInfo = $wpdb->get_row($sql);
+        if(!empty($userInfo)) {
+            $userInfo->user_picture = 'http://0.gravatar.com/avatar/c06f9a7686481ac171d46f2ed0835ca6?s=154&d=mm&r=g';
+        }
+
+        return $userInfo;
     }
+
 
     /**
      * @param \WP_Post $post
