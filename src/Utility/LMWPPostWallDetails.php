@@ -31,6 +31,8 @@ trait LMWPPostWallDetails
 
         $post->categories = get_the_terms($post->ID, 'category');
 
+        $post->wall_categories = get_the_terms($post->ID, 'lm_wall_category');
+
         $post->lm_like_counter = $this->retrieveLikeCounter($post);
 
         $post->lm_saved_counter = $this->retrieveSavedCounter($post);

@@ -450,7 +450,8 @@ JSON Response
         "user_status": "0"
       },
       "latest_comment": [],
-      "categories": [
+      "categories": [],
+      "wall_categories": [
         {
           "term_id": 3,
           "name": "Game",
@@ -558,7 +559,8 @@ JSON Response
           "user_id": "1"
         }
       ],
-      "categories": [
+      "categories": [],
+      "wall_categories": [
         {
           "term_id": 2,
           "name": "Bacheca",
@@ -665,7 +667,8 @@ JSON Response
         "user_id": "1"
       }
     ],
-    "categories": [
+    "categories": [],
+    "wall_categories": [
       {
         "term_id": 2,
         "name": "Bacheca",
@@ -678,7 +681,7 @@ JSON Response
         "count": 2,
         "filter": "raw"
       }
-    ],
+    ],    
     "lm_like_counter": 0,
     "lm_saved_counter": "1",
     "featured_image": "http:\/\/playdoc.luc\/wp\/..\/cn\/uploads\/2017\/10\/girasole-r100.jpg",
