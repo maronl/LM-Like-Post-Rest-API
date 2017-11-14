@@ -68,6 +68,11 @@ class LMWPWallPublicManager
         }
 
         $posts = $this->wallService->getWall($params);
+
+        if(has_filter('lm-sf-rest-api-get-wall')) {
+            $posts = apply_filters( 'lm-sf-rest-api-get-wall', $posts);
+        }
+
         return array('status' => true, 'data' => $posts);
     }
 
