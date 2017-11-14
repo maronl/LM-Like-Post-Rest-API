@@ -11,6 +11,14 @@ namespace LM\WPPostLikeRestApi\Utility;
 trait LMWPPostWallDetails
 {
 
+    /**
+     * @param \WP_Post $post
+     * @param int $latestComments
+     * @param $likePostService
+     * @param $savedPostService
+     * @param $sharingPostService
+     * @return \WP_Post
+     */
     private function retrievePostInformation(\WP_Post $post, $latestComments = 3, $likePostService, $savedPostService, $sharingPostService)
     {
         global $wpdb;
@@ -21,9 +29,9 @@ trait LMWPPostWallDetails
 
         $post->post_format = get_post_format() ? : 'standard';
 
-        $post->author = $this->retrieveAuthorInformation($post, $wpdb);
+        $post->author = $this->retrieveAuthorPostInformation($post, $wpdb);
 
-        $post->latest_comment = get_comments(array('post_id' => $post->ID, 'number' => $latestComments, 'orderby' => 'comment_date', 'order' => 'DESC'));
+        $post = $this->retrieveLatestComments($post, $latestComments);
 
         // li ricerco per date DESC ... così da prendere gli ultimi
         // ma poi li visualizzo in data ASC quelli trovati. per questo faccio il reverse
@@ -62,11 +70,31 @@ trait LMWPPostWallDetails
      * @param $wpdb
      * @return mixed
      */
-    private function retrieveAuthorInformation(\WP_Post $post, $wpdb)
+    private function retrieveAuthorPostInformation(\WP_Post $post, $wpdb)
+    {
+        return $this->retrieveAuthorInformation($post->post_author, $wpdb);
+    }
+
+    /**
+     * @param \WP_Comment $comment
+     * @param $wpdb
+     * @return mixed
+     */
+    private function retrieveAuthorCommentInformation(\WP_Comment $comment, $wpdb)
+    {
+        return $this->retrieveAuthorInformation($comment->user_id, $wpdb);
+    }
+
+    /**
+     * @param $authorId
+     * @param $wpdb
+     * @return mixed
+     */
+    private function retrieveAuthorInformation($authorId, $wpdb)
     {
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM pld_users as u
-            WHERE u.ID = %d;", $post->post_author);
+            WHERE u.ID = %d;", $authorId);
 
         $userInfo = $wpdb->get_row($sql);
         if(!empty($userInfo)) {
@@ -101,6 +129,30 @@ trait LMWPPostWallDetails
             $saved_counter = 0;
         }
         return $saved_counter;
+    }
+
+    /**
+     * @param \WP_Post $post
+     * @param $latestComments
+     * @return \WP_Post
+     */
+    private function retrieveLatestComments(\WP_Post $post, $latestComments)
+    {
+        global $wpdb;
+
+        $post->latest_comment = get_comments(array(
+            'post_id' => $post->ID,
+            'number' => $latestComments,
+            'orderby' => 'comment_date',
+            'order' => 'DESC'
+        ));
+
+        foreach ($post->latest_comment as $comment) {
+            $comment->author = $this->retrieveAuthorCommentInformation($comment, $wpdb);
+        }
+
+        return $post;
+
     }
 
 }
