@@ -62,6 +62,10 @@ trait LMWPPostWallDetails
             $post->sharedPostDetails->featured_image = get_the_post_thumbnail_url($postShared->ID);
         }
 
+        if( has_filter('lm-sf-rest-api-wall-details')) {
+            $post = apply_filters( 'lm-sf-rest-api-wall-details', $post);
+        }
+
         return $post;
     }
 
