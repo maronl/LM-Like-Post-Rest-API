@@ -1,5 +1,7 @@
 <?php
 
+namespace LM\WPPostLikeRestApi\Request;
+
 /**
  * Created by PhpStorm.
  * User: maronl

@@ -10,9 +10,9 @@ namespace LM\WPPostLikeRestApi\Service;
 
 
 use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
+use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
 use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
 use LM\WPPostLikeRestApi\Utility\LMWPPostWallDetails;
-use LMWallPostInsertRequest;
 
 class LMWallWordpressService implements LMWallService
 {

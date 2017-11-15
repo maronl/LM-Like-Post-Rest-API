@@ -9,7 +9,7 @@
 namespace LM\WPPostLikeRestApi\Repository;
 
 
-use LMWallPostInsertRequest;
+use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
 
 class LMWallPostWordpressRepository implements LMWallPostRepository
 {

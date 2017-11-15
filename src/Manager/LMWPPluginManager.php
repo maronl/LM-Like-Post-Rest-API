@@ -2,20 +2,6 @@
 
 namespace LM\WPPostLikeRestApi\Manager;
 
-
-use LM\WPPostLikeRestApi\Model\LMWallPostModel;
-use LM\WPPostLikeRestApi\Repository\LMFollowerWordpressRepository;
-use LM\WPPostLikeRestApi\Repository\LMLikePostWordpressRepository;
-use LM\WPPostLikeRestApi\Repository\LMSharingWordpressRepository;
-use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
-use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
-use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
-use LM\WPPostLikeRestApi\Service\LMProfileWordpressService;
-use LM\WPPostLikeRestApi\Service\LMSavedPostWordpressService;
-use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
-use LM\WPPostLikeRestApi\Service\LMWallWordpressService;
-use LMWallPostInsertRequest;
-
 /**
  * The Manager is the core plugin responsible for including and
  * instantiating all of the code that composes the plugin.
@@ -101,15 +87,12 @@ class LMWPPluginManager {
      * @access private
      */
     private function define_admin_hooks() {
-        $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
-        $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
-        $sharingPostRepository = new LMSharingWordpressRepository('lm_post_shared', $this->version);
-        $likePostService = new LMLikePostWordpressService($likePostRepository);
-        $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
-        $sharingPostService = new LMSharingWordpressService($sharingPostRepository);
-        $likeAdmin = new LMWPLikePostAdminManager($likePostService, $this->version);
-        $savedAdmin = new LMWPSavedPostAdminManager($savedPostService, $this->version);
-        $sharingAdmin = new LMWPSharingAdminManager($sharingPostService, $this->version);
+        global $containerLmSfRestAPI;
+
+        $likeAdmin = $containerLmSfRestAPI->get('LMWPLikePostAdminManager');
+        $savedAdmin = $containerLmSfRestAPI->get('LMWPSavedPostAdminManager');
+        $sharingAdmin = $containerLmSfRestAPI->get('LMWPSharingAdminManager');
+
         $this->loader->add_filter('manage_lm_wall_posts_columns', $likeAdmin, 'columnHeader');
         $this->loader->add_filter('manage_lm_wall_posts_columns', $savedAdmin, 'columnHeader');
         $this->loader->add_filter('manage_lm_wall_posts_columns', $sharingAdmin, 'columnHeader');
@@ -118,7 +101,7 @@ class LMWPPluginManager {
         $this->loader->add_action('manage_lm_wall_posts_custom_column', $sharingAdmin, 'columnContent', 10, 2);
         $this->loader->add_action('admin_enqueue_scripts', $savedAdmin, 'customCssFile');
 
-        $wallPostModel = new LMWallPostModel();
+        $wallPostModel = $containerLmSfRestAPI->get('LMWallPostModel');
         $this->loader->add_action('init', $wallPostModel, 'defineCustomPostWall', 0);
         $this->loader->add_action('init', $wallPostModel, 'defineCustomPostWallTaxonomy', 0);
 
@@ -131,25 +114,13 @@ class LMWPPluginManager {
      * @access private
      */
     private function define_public_hooks() {
-        $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
-        $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
-        $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
-        $sharingRepository = new LMSharingWordpressRepository('lm_post_shared', $this->version);
-        $wallPostRepository = new LMWallPostWordpressRepository(new LMWallPostInsertRequest());
+        global $containerLmSfRestAPI;
 
-        $likePostService = new LMLikePostWordpressService($likePostRepository);
-        $savedPostService = new LMSavedPostWordpressService($savedPostRepository);
-        $followerService = new LMFollowerWordpressService($followerRepository);
-        $sharingService = new LMSharingWordpressService($sharingRepository);
-        $headerAuhtorization = new LMWPJWTFirebaseHeaderAuthorization($this->options['jwt-secret']);
-        $wallService = new LMWallWordpressService($headerAuhtorization, $wallPostRepository, $followerService, $likePostService, $savedPostService, new LMWallPostInsertRequest(), $sharingService);
-        $profileService = new LMProfileWordpressService($headerAuhtorization, $followerService, $likePostService, $savedPostService);
-
-        $likePublic = new LMWPLikePostPublicManager( $this->plugin_slug, $this->version, $likePostService);
-        $savedPublic = new LMWPSavedPostPublicManager( $this->plugin_slug, $this->version, $savedPostService);
-        $followerPublic = new LMWPFollowerPublicManager( $this->plugin_slug, $this->version, $followerService);
-        $wallPublic = new LMWPWallPublicManager( $this->plugin_slug, $this->version, $wallService);
-        $profilePublic = new LMWPProfilePublicManager( $this->plugin_slug, $this->version, $profileService);
+        $likePublic = $containerLmSfRestAPI->get('LMWPLikePostPublicManager');
+        $savedPublic = $containerLmSfRestAPI->get('LMWPSavedPostPublicManager');
+        $followerPublic = $containerLmSfRestAPI->get('LMWPFollowerPublicManager');
+        $wallPublic = $containerLmSfRestAPI->get('LMWPWallPublicManager');
+        $profilePublic = $containerLmSfRestAPI->get('LMWPProfilePublicManager');
 
         $this->loader->add_action('rest_api_init', $likePublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $savedPublic, 'add_api_routes');
@@ -158,8 +129,6 @@ class LMWPPluginManager {
         $this->loader->add_action('rest_api_init', $profilePublic, 'add_api_routes');
 
         $this->loader->add_action('wp_insert_post', $wallPublic, 'incrementCountSharedPost', 10, 3);
-//        $this->loader->add_action('register_post_type_args', $wallPublic, 'wp1482371_custom_post_type_args', 20, 2);
-
     }
 
     /**
@@ -168,11 +137,13 @@ class LMWPPluginManager {
      * @access private
      */
     private function define_register_activation_hook() {
-        $likePostRepository = new LMLikePostWordpressRepository('lm_post_like', $this->version);
-        $savedPostRepository = new LMLikePostWordpressRepository('lm_post_saved', $this->version);
-        $followerRepository = new LMFollowerWordpressRepository('lm_followers', $this->version);
-        $sharingRepository = new LMSharingWordpressRepository('lm_post_shared', $this->version);
-        $wallPostModel = new LMWallPostModel();
+        global $containerLmSfRestAPI;
+
+        $likePostRepository = $containerLmSfRestAPI->get('LMLikePostWordpressRepository');
+        $savedPostRepository = $containerLmSfRestAPI->get('LMSavedPostWordpressRepository');
+        $followerRepository = $containerLmSfRestAPI->get('LMFollowerWordpressRepository');
+        $sharingRepository = $containerLmSfRestAPI->get('LMSharingWordpressRepository');
+        $wallPostModel = $containerLmSfRestAPI->get('LMWallPostModel');
 
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $likePostRepository, 'createDBStructure' ) );
         register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $savedPostRepository, 'createDBStructure' ) );

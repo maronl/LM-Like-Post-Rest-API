@@ -26,10 +26,14 @@ if (!defined('WPINC')) {
     die;
 }
 
-/**
- * Include the core class responsible for loading all necessary components of the plugin.
- */
-require_once plugin_dir_path(__FILE__) . 'src/autoloader.php';
+if(!class_exists('\DI\ContainerBuilder')) {
+    echo "Please install PHP-DI library before. You can enable AXE DIContainer plugin for that!";
+    die();
+}
+
+include_once 'lm-sf-rest-api-bootstrap.php';
+
+include_once 'lm-sf-rest-api-service-registration.php';
 
 /**
  * Instantiates the LM Social Function Rest API Manager class and then
