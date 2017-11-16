@@ -30,14 +30,14 @@ class LMWPJWTFirebaseHeaderAuthorization implements LMHeaderAuthorization
         /*
          * Looking for the HTTP_AUTHORIZATION header
          */
-        $auth = isset($_SERVER['HTTP_AUTHORIZATION']) ?  $_SERVER['HTTP_AUTHORIZATION'] : false;
+        $auth = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : false;
 
 
         /* Double check for different auth header string (server dependent) */
         if (!$auth) {
-            $auth = isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ?  $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : false;
+            $auth = isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : false;
         }
-        
+
         if (!$auth) {
             return false;
         }
@@ -58,13 +58,13 @@ class LMWPJWTFirebaseHeaderAuthorization implements LMHeaderAuthorization
     public function getUser()
     {
         $token = $this->getToken();
-        
+
         if ($token === false) {
             return false;
         }
-        
+
         $token = JWT::decode($token, $this->secret, array('HS256'));
-        
+
         if ($token->iss != get_bloginfo('url')) {
             return false;
         }
@@ -72,7 +72,7 @@ class LMWPJWTFirebaseHeaderAuthorization implements LMHeaderAuthorization
         if (!isset($token->data->user->id)) {
             return false;
         }
-        
+
         return $token->data->user->id;
     }
 }

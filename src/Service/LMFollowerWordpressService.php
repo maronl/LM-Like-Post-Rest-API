@@ -38,12 +38,13 @@ class LMFollowerWordpressService implements LMFollowerService
     public function addFollower($followerId, $followingId)
     {
 
-        if($this->repository->findFollower($followerId, $followingId)) {
+        if ($this->repository->findFollower($followerId, $followingId)) {
             return true;
         }
 
-        if($this->repository->saveFollower($followerId, $followingId)) {
-            $this->incrementFollowerCounters($followerId, $followingId, $this->cacheFollowerCounter, $this->cacheFollowingCounter);
+        if ($this->repository->saveFollower($followerId, $followingId)) {
+            $this->incrementFollowerCounters($followerId, $followingId, $this->cacheFollowerCounter,
+                $this->cacheFollowingCounter);
             return true;
         }
 
@@ -52,8 +53,9 @@ class LMFollowerWordpressService implements LMFollowerService
 
     public function removeFollower($followerId, $followingId)
     {
-        if($this->repository->deleteFollower($followerId, $followingId)) {
-            $this->decrementFollowerCounters($followerId, $followingId, $this->cacheFollowerCounter, $this->cacheFollowingCounter);
+        if ($this->repository->deleteFollower($followerId, $followingId)) {
+            $this->decrementFollowerCounters($followerId, $followingId, $this->cacheFollowerCounter,
+                $this->cacheFollowingCounter);
             return true;
         }
         return false;
@@ -61,7 +63,7 @@ class LMFollowerWordpressService implements LMFollowerService
 
     public function checkUserFollower($followerId, $followingId)
     {
-        if($this->repository->findFollower($followerId, $followingId)) {
+        if ($this->repository->findFollower($followerId, $followingId)) {
             return true;
         }
         return false;
@@ -72,7 +74,7 @@ class LMFollowerWordpressService implements LMFollowerService
     {
         $count = get_user_meta($followingId, $this->cacheFollowerCounter, true);
 
-        if(!is_numeric($count)) {
+        if (!is_numeric($count)) {
             return 0;
         }
 
@@ -83,13 +85,13 @@ class LMFollowerWordpressService implements LMFollowerService
     {
         $count = get_user_meta($followerId, $this->cacheFollowingCounter, true);
 
-        if(!is_numeric($count)) {
+        if (!is_numeric($count)) {
             return 0;
         }
 
         return $count;
     }
-    
+
     public function getFollowers($followingId, $page, $item_per_page)
     {
         return $this->repository->findFollowers($followingId, $page, $item_per_page);

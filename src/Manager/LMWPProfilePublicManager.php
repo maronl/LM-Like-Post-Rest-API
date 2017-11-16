@@ -19,7 +19,7 @@ class LMWPProfilePublicManager
      */
     private $profileService;
 
-    public function __construct($plugin_slug, $version,  LMProfileService $profileService)
+    public function __construct($plugin_slug, $version, LMProfileService $profileService)
     {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
@@ -53,7 +53,7 @@ class LMWPProfilePublicManager
     {
         $postId = $request->get_param('id');
 
-        if(empty($postId) || !is_numeric($postId)) {
+        if (empty($postId) || !is_numeric($postId)) {
             return array('status' => false);
         }
 
@@ -61,7 +61,6 @@ class LMWPProfilePublicManager
 
         return array('status' => true, 'data' => $profile);
     }
-
 
 
 }

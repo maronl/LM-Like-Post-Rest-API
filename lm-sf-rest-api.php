@@ -26,7 +26,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-if(!class_exists('\DI\ContainerBuilder')) {
+if (!class_exists('\DI\ContainerBuilder')) {
     echo "Please install PHP-DI library before. You can enable AXE DIContainer plugin for that!";
     die();
 }

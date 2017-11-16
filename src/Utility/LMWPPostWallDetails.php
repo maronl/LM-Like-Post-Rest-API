@@ -19,15 +19,20 @@ trait LMWPPostWallDetails
      * @param $sharingPostService
      * @return \WP_Post
      */
-    private function retrievePostInformation(\WP_Post $post, $latestComments = 3, $likePostService, $savedPostService, $sharingPostService)
-    {
+    private function retrievePostInformation(
+        \WP_Post $post,
+        $latestComments = 3,
+        $likePostService,
+        $savedPostService,
+        $sharingPostService
+    ) {
         global $wpdb;
 
         $post->post_content_rendered = apply_filters('the_content', $post->post_content);
 
         $post->post_excerpt_rendered = apply_filters('the_excerpt', $post->post_excerpt);
 
-        $post->post_format = get_post_format() ? : 'standard';
+        $post->post_format = get_post_format() ?: 'standard';
 
         $post->author = $this->retrieveAuthorPostInformation($post, $wpdb);
 
@@ -35,7 +40,7 @@ trait LMWPPostWallDetails
 
         // li ricerco per date DESC ... così da prendere gli ultimi
         // ma poi li visualizzo in data ASC quelli trovati. per questo faccio il reverse
-        $post->latest_comment = array_reverse($post->latest_comment );
+        $post->latest_comment = array_reverse($post->latest_comment);
 
         $post->categories = get_the_terms($post->ID, 'category');
 
@@ -62,8 +67,8 @@ trait LMWPPostWallDetails
             $post->sharedPostDetails->featured_image = get_the_post_thumbnail_url($postShared->ID);
         }
 
-        if( has_filter('lm-sf-rest-api-wall-details')) {
-            $post = apply_filters( 'lm-sf-rest-api-wall-details', $post);
+        if (has_filter('lm-sf-rest-api-wall-details')) {
+            $post = apply_filters('lm-sf-rest-api-wall-details', $post);
         }
 
         return $post;
@@ -101,7 +106,7 @@ trait LMWPPostWallDetails
             WHERE u.ID = %d;", $authorId);
 
         $userInfo = $wpdb->get_row($sql);
-        if(!empty($userInfo)) {
+        if (!empty($userInfo)) {
             $userInfo->user_picture = 'http://0.gravatar.com/avatar/c06f9a7686481ac171d46f2ed0835ca6?s=154&d=mm&r=g';
         }
 

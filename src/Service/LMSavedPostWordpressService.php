@@ -34,11 +34,11 @@ class LMSavedPostWordpressService implements LMLikePostService
 
     public function addLike($userId, $postId)
     {
-        if($this->repository->findLike($userId, $postId)) {
+        if ($this->repository->findLike($userId, $postId)) {
             return true;
         }
 
-        if($this->repository->saveLike($userId, $postId)) {
+        if ($this->repository->saveLike($userId, $postId)) {
             $this->incrementPostLikeCounter($postId, $this->cacheCounter);
             return true;
         }
@@ -48,7 +48,7 @@ class LMSavedPostWordpressService implements LMLikePostService
 
     public function removeLike($userId, $postId)
     {
-        if($this->repository->deleteLike($userId, $postId)) {
+        if ($this->repository->deleteLike($userId, $postId)) {
             $this->decrementPostLikeCounter($postId, $this->cacheCounter);
             return true;
         }
@@ -59,7 +59,7 @@ class LMSavedPostWordpressService implements LMLikePostService
     {
         $count = get_post_meta($postId, $this->cacheCounter, true);
 
-        if(!is_numeric($count)) {
+        if (!is_numeric($count)) {
             return 0;
         }
 
@@ -68,7 +68,7 @@ class LMSavedPostWordpressService implements LMLikePostService
 
     public function checkUserPostLike($userId, $postId)
     {
-        if($this->repository->findLike($userId, $postId)) {
+        if ($this->repository->findLike($userId, $postId)) {
             return true;
         }
         return false;

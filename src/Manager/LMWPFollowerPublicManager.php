@@ -15,12 +15,12 @@ class LMWPFollowerPublicManager
 {
 
     /**
-    /**
+     * /**
      * @var LMFollowerService
      */
     private $followerService;
 
-    public function __construct($plugin_slug, $version,  LMFollowerService $followerService)
+    public function __construct($plugin_slug, $version, LMFollowerService $followerService)
     {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
@@ -75,7 +75,7 @@ class LMWPFollowerPublicManager
         $followerId = $request->get_param('follower_id');
         $followingId = $request->get_param('following_id');
 
-        if(empty($followerId) || empty($followingId)) {
+        if (empty($followerId) || empty($followingId)) {
             return array('status' => false);
         }
 
@@ -88,7 +88,7 @@ class LMWPFollowerPublicManager
         $followerId = $request->get_param('follower_id');
         $followingId = $request->get_param('following_id');
 
-        if(empty($followerId) || empty($followingId)) {
+        if (empty($followerId) || empty($followingId)) {
             return array('status' => false);
         }
 
@@ -101,12 +101,12 @@ class LMWPFollowerPublicManager
         $followerId = $request->get_param('follower_id');
         $followingId = $request->get_param('following_id');
 
-        if(empty($followerId) || empty($followingId)) {
+        if (empty($followerId) || empty($followingId)) {
             return array('status' => false);
         }
 
         $dataFollower = 0;
-        if($this->followerService->checkUserFollower($followerId, $followingId)) {
+        if ($this->followerService->checkUserFollower($followerId, $followingId)) {
             $this->removeFollower($request);
         } else {
             $this->addFollower($request);
@@ -121,52 +121,64 @@ class LMWPFollowerPublicManager
     public function getFollowers($request)
     {
         $followingId = $request->get_param('following_id');
-        $page  = $request->get_param('page');
-        $item_per_page  = $request->get_param('item_per_page');
+        $page = $request->get_param('page');
+        $item_per_page = $request->get_param('item_per_page');
 
-        if(empty($page)) {
-            $page  = 1;
+        if (empty($page)) {
+            $page = 1;
         }
 
-        if(empty($item_per_page)) {
-            $item_per_page  = 20;
+        if (empty($item_per_page)) {
+            $item_per_page = 20;
         }
 
-        if(empty($followingId)) {
+        if (empty($followingId)) {
             return array('status' => false);
         }
 
         $followers = $this->followerService->getFollowers($followingId, $page, $item_per_page);
 
-        return array('status' => true, 'data' => $followers, 'total' => $this->followerService->getFollowersCount($followingId), 'page' => $page, 'item_per_page' => $item_per_page);
+        return array(
+            'status' => true,
+            'data' => $followers,
+            'total' => $this->followerService->getFollowersCount($followingId),
+            'page' => $page,
+            'item_per_page' => $item_per_page
+        );
     }
 
     public function getFollowings($request)
     {
         $followerId = $request->get_param('follower_id');
-        $page  = $request->get_param('page');
-        $item_per_page  = $request->get_param('item_per_page');
+        $page = $request->get_param('page');
+        $item_per_page = $request->get_param('item_per_page');
 
-        if(empty($page)) {
-            $page  = 1;
+        if (empty($page)) {
+            $page = 1;
         }
 
-        if(empty($item_per_page)) {
-            $item_per_page  = 20;
+        if (empty($item_per_page)) {
+            $item_per_page = 20;
         }
-        if(empty($followerId)) {
+        if (empty($followerId)) {
             return array('status' => false);
         }
 
         $followings = $this->followerService->getFollowings($followerId, $page, $item_per_page);
-        return array('status' => true, 'data' => $followings, 'total' => $this->followerService->getFollowingsCount($followerId), 'page' => $page, 'item_per_page' => $item_per_page);
+        return array(
+            'status' => true,
+            'data' => $followings,
+            'total' => $this->followerService->getFollowingsCount($followerId),
+            'page' => $page,
+            'item_per_page' => $item_per_page
+        );
     }
 
     public function getFollowersCount($request)
     {
         $followingId = $request->get_param('following_id');
 
-        if(empty($followingId)) {
+        if (empty($followingId)) {
             return array('status' => false);
         }
 
@@ -178,7 +190,7 @@ class LMWPFollowerPublicManager
     {
         $followerId = $request->get_param('follower_id');
 
-        if(empty($followerId)) {
+        if (empty($followerId)) {
             return array('status' => false);
         }
 

@@ -54,7 +54,7 @@ class LMWPLikePostPublicManager
         $userId = $request->get_param('user_id');
         $postId = $request->get_param('post_id');
 
-        if(empty($userId) || empty($postId)) {
+        if (empty($userId) || empty($postId)) {
             return array('status' => false);
         }
 
@@ -67,7 +67,7 @@ class LMWPLikePostPublicManager
         $userId = $request->get_param('user_id');
         $postId = $request->get_param('post_id');
 
-        if(empty($userId) || empty($postId)) {
+        if (empty($userId) || empty($postId)) {
             return array('status' => false);
         }
 
@@ -80,12 +80,12 @@ class LMWPLikePostPublicManager
         $userId = $request->get_param('user_id');
         $postId = $request->get_param('post_id');
 
-        if(empty($userId) || empty($postId)) {
+        if (empty($userId) || empty($postId)) {
             return array('status' => false);
         }
 
         $dataLike = 0;
-        if($this->likePostService->checkUserPostLike($userId, $postId)) {
+        if ($this->likePostService->checkUserPostLike($userId, $postId)) {
             $this->removeLike($request);
         } else {
             $this->addLike($request);

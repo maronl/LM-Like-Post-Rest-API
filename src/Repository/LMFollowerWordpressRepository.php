@@ -64,15 +64,15 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         $limit = $item_per_page;
 
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
-            FROM ".$wpdb->prefix."lm_followers AS f 
-              INNER JOIN ".$wpdb->prefix."users as u
+            FROM " . $wpdb->prefix . "lm_followers AS f 
+              INNER JOIN " . $wpdb->prefix . "users as u
                 ON f.follower_id = u.ID AND f.following_id = %d
             LIMIT %d, %d;", $userId, $offset, $limit);
 
         $followers = $wpdb->get_results($sql);
 
-        if(has_filter('lm-sf-rest-api-get-followers')) {
-            $followers = apply_filters( 'lm-sf-rest-api-get-followers', $followers);
+        if (has_filter('lm-sf-rest-api-get-followers')) {
+            $followers = apply_filters('lm-sf-rest-api-get-followers', $followers);
         }
 
         return $followers;
@@ -86,15 +86,15 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         $limit = $item_per_page;
 
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
-            FROM ".$wpdb->prefix."lm_followers AS f 
-              INNER JOIN ".$wpdb->prefix."users as u
+            FROM " . $wpdb->prefix . "lm_followers AS f 
+              INNER JOIN " . $wpdb->prefix . "users as u
                 ON f.following_id = u.ID AND f.follower_id = %d
             LIMIT %d, %d;", $userId, $offset, $limit);
 
         $followings = $wpdb->get_results($sql);
 
-        if(has_filter('lm-sf-rest-api-get-followings')) {
-            $followings = apply_filters( 'lm-sf-rest-api-get-followings', $followings);
+        if (has_filter('lm-sf-rest-api-get-followings')) {
+            $followings = apply_filters('lm-sf-rest-api-get-followings', $followings);
         }
 
         return $followings;
@@ -105,7 +105,7 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         global $wpdb;
 
         $sql = $wpdb->prepare("SELECT f.following_id
-            FROM ".$wpdb->prefix."lm_followers AS f 
+            FROM " . $wpdb->prefix . "lm_followers AS f 
             WHERE f.follower_id = %d;", $userId);
 
         $res = $wpdb->get_results($sql, ARRAY_N);
@@ -122,7 +122,8 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE follower_id = %d AND following_id = %d", $followerId, $followingId);
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE follower_id = %d AND following_id = %d",
+            $followerId, $followingId);
 
         return $wpdb->get_var($sql);
     }
@@ -140,11 +141,11 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
 
         $charset_collate = '';
 
-        if ( ! empty( $wpdb->charset ) ) {
+        if (!empty($wpdb->charset)) {
             $charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
         }
 
-        if ( ! empty( $wpdb->collate ) ) {
+        if (!empty($wpdb->collate)) {
             $charset_collate .= " COLLATE {$wpdb->collate}";
         }
 
@@ -155,11 +156,11 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
           PRIMARY KEY (follower_id, following_id)
 	    ) $charset_collate;";
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-        dbDelta( $sql );
+        dbDelta($sql);
 
-        add_option( $this->tableNoPrefix . '_db_version', $this->version );
+        add_option($this->tableNoPrefix . '_db_version', $this->version);
     }
 
 }

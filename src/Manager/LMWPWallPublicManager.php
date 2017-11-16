@@ -18,7 +18,7 @@ class LMWPWallPublicManager
      */
     private $wallService;
 
-    public function __construct($plugin_slug, $version,  LMWallService $wallService)
+    public function __construct($plugin_slug, $version, LMWallService $wallService)
     {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
@@ -51,26 +51,26 @@ class LMWPWallPublicManager
     {
         $params = array();
         $item_per_page = $request->get_param('item_per_page');
-        if(!empty($item_per_page)) {
+        if (!empty($item_per_page)) {
             $params['item_per_page'] = $item_per_page;
         }
         $page = $request->get_param('page');
-        if(!empty($page)) {
+        if (!empty($page)) {
             $params['page'] = $page;
         }
         $categories = $request->get_param('categories');
-        if(!empty($categories)) {
+        if (!empty($categories)) {
             $params['categories'] = $categories;
         }
         $authors = $request->get_param('authors');
-        if(!empty($authors)) {
+        if (!empty($authors)) {
             $params['authors'] = $authors;
         }
 
         $posts = $this->wallService->getWall($params);
 
-        if(has_filter('lm-sf-rest-api-get-wall')) {
-            $posts = apply_filters( 'lm-sf-rest-api-get-wall', $posts);
+        if (has_filter('lm-sf-rest-api-get-wall')) {
+            $posts = apply_filters('lm-sf-rest-api-get-wall', $posts);
         }
 
         return array('status' => true, 'data' => $posts);
@@ -86,26 +86,28 @@ class LMWPWallPublicManager
     {
         $postId = $this->wallService->createPost($request);
 
-        if(is_wp_error($postId)) {
+        if (is_wp_error($postId)) {
             return array('status' => false, 'data' => $postId->errors);
         }
 
-        if(is_array($postId)) {
+        if (is_array($postId)) {
             return array('status' => false, 'data' => $postId);
         }
 
         return array('status' => true, 'data' => $this->wallService->getPost($postId));
     }
 
-    public function incrementCountSharedPost( $post_id, $post, $update ) {
+    public function incrementCountSharedPost($post_id, $post, $update)
+    {
 
         global $wpdb;
 
-        if($post->post_parent === 0) {
+        if ($post->post_parent === 0) {
             return;
         }
 
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM " . $wpdb->prefix . "posts WHERE post_parent = %d AND post_status = 'publish'", $post->post_parent);
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM " . $wpdb->prefix . "posts WHERE post_parent = %d AND post_status = 'publish'",
+            $post->post_parent);
         $count = $wpdb->get_var($sql);
         return update_post_meta($post_id, 'lm-shared-post-counter', $count);
     }

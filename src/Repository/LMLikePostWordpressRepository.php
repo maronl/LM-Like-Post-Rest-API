@@ -58,7 +58,8 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE post_id = %d AND user_id = %d", $postId, $userId);
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE post_id = %d AND user_id = %d", $postId,
+            $userId);
 
         return $wpdb->get_var($sql);
     }
@@ -76,11 +77,11 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
 
         $charset_collate = '';
 
-        if ( ! empty( $wpdb->charset ) ) {
+        if (!empty($wpdb->charset)) {
             $charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
         }
 
-        if ( ! empty( $wpdb->collate ) ) {
+        if (!empty($wpdb->collate)) {
             $charset_collate .= " COLLATE {$wpdb->collate}";
         }
 
@@ -91,10 +92,10 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
           PRIMARY KEY (user_id, post_id)
 	    ) $charset_collate;";
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-        dbDelta( $sql );
+        dbDelta($sql);
 
-        add_option( $this->tableNoPrefix . '_db_version', $this->version );
+        add_option($this->tableNoPrefix . '_db_version', $this->version);
     }
 }

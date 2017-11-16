@@ -111,7 +111,8 @@ class LMSharingWordpressRepository implements LMSharingRepository
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT sharing_post_id FROM $this->table WHERE shared_post_id = %d ORDER BY created_at DESC", $sharedId);
+        $sql = $wpdb->prepare("SELECT sharing_post_id FROM $this->table WHERE shared_post_id = %d ORDER BY created_at DESC",
+            $sharedId);
 
         return array_column($wpdb->get_results($sql), 0);
     }
@@ -145,7 +146,8 @@ class LMSharingWordpressRepository implements LMSharingRepository
     {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT shared_post_id FROM $this->table WHERE sharing_post_id = %d ORDER BY created_at DESC", $sharingId);
+        $sql = $wpdb->prepare("SELECT shared_post_id FROM $this->table WHERE sharing_post_id = %d ORDER BY created_at DESC",
+            $sharingId);
 
         return array_column($wpdb->get_results($sql), 0);
     }
@@ -164,11 +166,11 @@ class LMSharingWordpressRepository implements LMSharingRepository
 
         $charset_collate = '';
 
-        if ( ! empty( $wpdb->charset ) ) {
+        if (!empty($wpdb->charset)) {
             $charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
         }
 
-        if ( ! empty( $wpdb->collate ) ) {
+        if (!empty($wpdb->collate)) {
             $charset_collate .= " COLLATE {$wpdb->collate}";
         }
 
@@ -179,11 +181,12 @@ class LMSharingWordpressRepository implements LMSharingRepository
           PRIMARY KEY (shared_post_id, sharing_post_id)
 	    ) $charset_collate;";
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-        dbDelta( $sql );
+        dbDelta($sql);
 
-        add_option( $this->tableNoPrefix . '_db_version', $this->version );    }
+        add_option($this->tableNoPrefix . '_db_version', $this->version);
+    }
 
     public function findSharedId($sharingId)
     {

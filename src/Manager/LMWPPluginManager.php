@@ -6,7 +6,7 @@ namespace LM\WPPostLikeRestApi\Manager;
  * The Manager is the core plugin responsible for including and
  * instantiating all of the code that composes the plugin.
  *
- * The Manager includes an instance to the Loader which is 
+ * The Manager includes an instance to the Loader which is
  * responsible for coordinating the hooks that exist within the plugin.
  *
  * It also maintains a reference to the plugin slug which can be used in
@@ -16,7 +16,8 @@ namespace LM\WPPostLikeRestApi\Manager;
  *
  * @since 1.0.0
  */
-class LMWPPluginManager {
+class LMWPPluginManager
+{
 
     /**
      * A reference to the loader class that coordinates the hooks and callbacks
@@ -67,7 +68,8 @@ class LMWPPluginManager {
      * @param $pluginVersion
      * @param $pluginOptions
      */
-    public function __construct(LMWPPluginLoader $loader, $pluginSlug, $pluginVersion, $pluginOptions) {
+    public function __construct(LMWPPluginLoader $loader, $pluginSlug, $pluginVersion, $pluginOptions)
+    {
 
         $this->plugin_slug = $pluginSlug;
         $this->version = $pluginVersion;
@@ -86,7 +88,8 @@ class LMWPPluginManager {
      *
      * @access private
      */
-    private function define_admin_hooks() {
+    private function define_admin_hooks()
+    {
         global $containerLmSfRestAPI;
 
         $likeAdmin = $containerLmSfRestAPI->get('LMWPLikePostAdminManager');
@@ -113,7 +116,8 @@ class LMWPPluginManager {
      *
      * @access private
      */
-    private function define_public_hooks() {
+    private function define_public_hooks()
+    {
         global $containerLmSfRestAPI;
 
         $likePublic = $containerLmSfRestAPI->get('LMWPLikePostPublicManager');
@@ -136,7 +140,8 @@ class LMWPPluginManager {
      *
      * @access private
      */
-    private function define_register_activation_hook() {
+    private function define_register_activation_hook()
+    {
         global $containerLmSfRestAPI;
 
         $likePostRepository = $containerLmSfRestAPI->get('LMLikePostWordpressRepository');
@@ -145,11 +150,16 @@ class LMWPPluginManager {
         $sharingRepository = $containerLmSfRestAPI->get('LMSharingWordpressRepository');
         $wallPostModel = $containerLmSfRestAPI->get('LMWallPostModel');
 
-        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $likePostRepository, 'createDBStructure' ) );
-        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $savedPostRepository, 'createDBStructure' ) );
-        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $followerRepository, 'createDBStructure' ) );
-        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $sharingRepository, 'createDBStructure' ) );
-        register_activation_hook( dirname( dirname( dirname( __FILE__ ) ) ) . '/lm-sf-rest-api.php' , array( $wallPostModel, 'setCustomPostWallCapabilities' ) );
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($likePostRepository, 'createDBStructure'));
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($savedPostRepository, 'createDBStructure'));
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($followerRepository, 'createDBStructure'));
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($sharingRepository, 'createDBStructure'));
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($wallPostModel, 'setCustomPostWallCapabilities'));
     }
 
     /**
@@ -159,7 +169,8 @@ class LMWPPluginManager {
      * register all of the hooks and callback functions used throughout the plugin
      * with WordPress.
      */
-    public function run() {
+    public function run()
+    {
         $this->loader->run();
     }
 
@@ -168,7 +179,8 @@ class LMWPPluginManager {
      *
      * @return string $this->version The current version of the plugin.
      */
-    public function get_version() {
+    public function get_version()
+    {
         return $this->version;
     }
 

@@ -26,12 +26,14 @@ class LMWPSharingAdminManager
         $this->version = $version;
     }
 
-    function columnHeader($defaults) {
+    function columnHeader($defaults)
+    {
         $defaults['lm-sf-sharing'] = '<span class="dashicons dashicons-share" title="Number of sharing posts"><span class="screen-reader-text">Sharing</span></span>';
         return $defaults;
     }
 
-    function columnContent($column_name, $post_ID) {
+    function columnContent($column_name, $post_ID)
+    {
         if ($column_name == 'lm-sf-sharing') {
             echo $this->sharingService->getSharedCount($post_ID);
         }
@@ -39,8 +41,9 @@ class LMWPSharingAdminManager
 
     function customCssFile()
     {
-        wp_register_style( 'lm-sf-rest-api-styles',  plugin_dir_url( dirname( dirname(__FILE__))) . 'assets/'.$this->version.'/lm-sf-rest-api.css' );
-        wp_enqueue_style( 'lm-sf-rest-api-styles' );
+        wp_register_style('lm-sf-rest-api-styles',
+            plugin_dir_url(dirname(dirname(__FILE__))) . 'assets/' . $this->version . '/lm-sf-rest-api.css');
+        wp_enqueue_style('lm-sf-rest-api-styles');
     }
 
 }

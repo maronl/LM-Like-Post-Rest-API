@@ -41,8 +41,9 @@ class LMWPSavedPostAdminManager
 
     function customCssFile()
     {
-        wp_register_style( 'lm-sf-rest-api-styles',  plugin_dir_url( dirname( dirname(__FILE__))) . 'assets/'.$this->version.'/lm-sf-rest-api.css' );
-        wp_enqueue_style( 'lm-sf-rest-api-styles' );
+        wp_register_style('lm-sf-rest-api-styles',
+            plugin_dir_url(dirname(dirname(__FILE__))) . 'assets/' . $this->version . '/lm-sf-rest-api.css');
+        wp_enqueue_style('lm-sf-rest-api-styles');
     }
 
 }

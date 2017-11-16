@@ -42,7 +42,7 @@ class LMWallPostInsertRequest
         $this->validateFormat($format);
         $this->validateFile($file);
 
-        if(empty($this->errors)) {
+        if (empty($this->errors)) {
             return true;
         }
 
@@ -71,54 +71,59 @@ class LMWallPostInsertRequest
 
     private function validateContent($content)
     {
-        if(empty($content)) {
+        if (empty($content)) {
             $this->errors[] = array('content' => 'il contenuto di un nuovo post non può essere vuoto');
         }
     }
 
     private function validateAuthor($author)
     {
-        if(empty($author)) {
+        if (empty($author)) {
             $this->errors[] = array('author' => 'Non è possibile creare un nuovo post senza indicare l\'autore del post');
         }
 
-        if(!is_numeric($author) || get_user_by('ID', $author) === false) {
+        if (!is_numeric($author) || get_user_by('ID', $author) === false) {
             $this->errors[] = array('author' => 'Il campo autore non è valorizzato correttamente. L\'autore indica non esiste');
         }
     }
 
     private function validateStatus($status)
     {
-        if(empty($status)) {
+        if (empty($status)) {
             return;
         }
 
         $validStatus = array('publish', 'pending');
 
-        if(!in_array($status, $validStatus)) {
-            $this->errors[] = array('status' => 'Il campo status può avere solo i seguenti valori: ' . implode(',', $validStatus));
+        if (!in_array($status, $validStatus)) {
+            $this->errors[] = array(
+                'status' => 'Il campo status può avere solo i seguenti valori: ' . implode(',', $validStatus)
+            );
         }
     }
 
     private function validateCategories($categories)
     {
-        if(empty($categories)) {
+        if (empty($categories)) {
             $this->errors[] = array('categories' => 'Non è possibile creare un nuovo post senza indicare la categoria del post');
         }
     }
 
     private function validateFormat($format)
     {
-        if(empty($format)) {
+        if (empty($format)) {
             return;
         }
 
         $validFormats = array('standard', 'image', 'link', 'video');
 
-        if(!in_array($format, $validFormats)) {
-            $this->errors[] = array('format' => 'Il campo format può avere solo i seguenti valori: ' . implode(',', $validFormats));
+        if (!in_array($format, $validFormats)) {
+            $this->errors[] = array(
+                'format' => 'Il campo format può avere solo i seguenti valori: ' . implode(',', $validFormats)
+            );
         }
     }
+
     private function validateFile($file)
     {
         // nessuna regola di validazione il file può essere anche nullo

@@ -12,7 +12,10 @@ namespace LM\WPPostLikeRestApi\Service;
 interface LMLikePostService
 {
     public function addLike($userId, $postId);
+
     public function removeLike($userId, $postId);
+
     public function getPostLikeCount($postId);
+
     public function checkUserPostLike($userId, $postId);
 }

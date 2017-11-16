@@ -12,5 +12,6 @@ namespace LM\WPPostLikeRestApi\Utility;
 interface LMHeaderAuthorization
 {
     public function getToken();
+
     public function getUser();
 }

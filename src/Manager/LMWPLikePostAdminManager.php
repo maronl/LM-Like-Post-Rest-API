@@ -25,12 +25,14 @@ class LMWPLikePostAdminManager
         $this->version = $version;
     }
 
-    function columnHeader($defaults) {
+    function columnHeader($defaults)
+    {
         $defaults['lm-sf-like'] = '<span class="dashicons dashicons-heart" title="User like this post"><span class="screen-reader-text">Like</span></span>';
         return $defaults;
     }
 
-    function columnContent($column_name, $post_ID) {
+    function columnContent($column_name, $post_ID)
+    {
         if ($column_name == 'lm-sf-like') {
             echo $this->savedPostService->getPostLikeCount($post_ID);
         }
@@ -38,8 +40,9 @@ class LMWPLikePostAdminManager
 
     function customCssFile()
     {
-        wp_register_style( 'lm-sf-rest-api-styles',  plugin_dir_url( dirname( dirname(__FILE__))) . 'assets/'.$this->version.'/lm-sf-rest-api.css' );
-        wp_enqueue_style( 'lm-sf-rest-api-styles' );
+        wp_register_style('lm-sf-rest-api-styles',
+            plugin_dir_url(dirname(dirname(__FILE__))) . 'assets/' . $this->version . '/lm-sf-rest-api.css');
+        wp_enqueue_style('lm-sf-rest-api-styles');
     }
 
 }

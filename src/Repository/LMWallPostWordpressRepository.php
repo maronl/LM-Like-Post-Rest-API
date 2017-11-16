@@ -27,7 +27,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
     {
         $validate = $this->insertRequest->validateRequest($request);
 
-        if($validate !== true) {
+        if ($validate !== true) {
             return $validate;
         }
 
@@ -35,7 +35,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
         $newPost = $this->createNewPostData($request);
         $postId = wp_insert_post($newPost);
 
-        if(is_wp_error($postId)) {
+        if (is_wp_error($postId)) {
             return $postId;
         }
 
@@ -70,7 +70,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
 
         $newPost['post_content'] = $dataRequest['content'];
         $newPost['post_author'] = $dataRequest['author'];
-        $newPost['tax_input'] = array( 'lm_wall_category' => explode(',', $dataRequest['categories']));
+        $newPost['tax_input'] = array('lm_wall_category' => explode(',', $dataRequest['categories']));
 
         return $newPost;
     }

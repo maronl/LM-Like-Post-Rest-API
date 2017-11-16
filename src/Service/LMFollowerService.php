@@ -12,11 +12,18 @@ namespace LM\WPPostLikeRestApi\Service;
 interface LMFollowerService
 {
     public function addFollower($followerId, $followingId);
+
     public function removeFollower($followerId, $followingId);
+
     public function checkUserFollower($followerId, $followingId);
+
     public function getFollowers($followingId, $page, $item_per_page);
+
     public function getFollowings($followerId, $page, $item_per_page);
+
     public function getFollowingsIds($followerId);
+
     public function getFollowersCount($followingId);
+
     public function getFollowingsCount($followerId);
 }
