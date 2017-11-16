@@ -74,7 +74,7 @@ class LMWallWordpressService implements LMWallService
     }
 
     public function getPost($postId) {
-        return $this->retrievePostInformation(get_post($postId), null, $this->likePostService, $this->savedPostService, $this->sharingService);
+        return $this->retrievePostInformation(get_post($postId), 3, $this->likePostService, $this->savedPostService, $this->sharingService);
     }
 
     public function createPost($request)
