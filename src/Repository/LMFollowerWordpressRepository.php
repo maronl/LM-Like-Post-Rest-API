@@ -64,12 +64,18 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         $limit = $item_per_page;
 
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
-            FROM pld_lm_followers AS f 
-              INNER JOIN pld_users as u
+            FROM ".$wpdb->prefix."lm_followers AS f 
+              INNER JOIN ".$wpdb->prefix."users as u
                 ON f.follower_id = u.ID AND f.following_id = %d
             LIMIT %d, %d;", $userId, $offset, $limit);
 
-        return $wpdb->get_results($sql);
+        $followers = $wpdb->get_results($sql);
+
+        if(has_filter('lm-sf-rest-api-get-followers')) {
+            $followers = apply_filters( 'lm-sf-rest-api-get-followers', $followers);
+        }
+
+        return $followers;
     }
 
     public function findFollowings($userId, $page = 1, $item_per_page = 20)
@@ -80,12 +86,18 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         $limit = $item_per_page;
 
         $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
-            FROM pld_lm_followers AS f 
-              INNER JOIN pld_users as u
+            FROM ".$wpdb->prefix."lm_followers AS f 
+              INNER JOIN ".$wpdb->prefix."users as u
                 ON f.following_id = u.ID AND f.follower_id = %d
             LIMIT %d, %d;", $userId, $offset, $limit);
 
-        return $wpdb->get_results($sql);
+        $followings = $wpdb->get_results($sql);
+
+        if(has_filter('lm-sf-rest-api-get-followings')) {
+            $followings = apply_filters( 'lm-sf-rest-api-get-followings', $followings);
+        }
+
+        return $followings;
     }
 
     public function findFollowingsIds($userId)
@@ -93,7 +105,7 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         global $wpdb;
 
         $sql = $wpdb->prepare("SELECT f.following_id
-            FROM pld_lm_followers AS f 
+            FROM ".$wpdb->prefix."lm_followers AS f 
             WHERE f.follower_id = %d;", $userId);
 
         $res = $wpdb->get_results($sql, ARRAY_N);
