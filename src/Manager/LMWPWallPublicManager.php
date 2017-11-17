@@ -50,6 +50,12 @@ class LMWPWallPublicManager
     public function getWall($request)
     {
         $params = array();
+
+        $search = $request->get_param('q');
+        if (!empty($search)) {
+            $params['q'] = $search;
+        }
+
         $item_per_page = $request->get_param('item_per_page');
         if (!empty($item_per_page)) {
             $params['item_per_page'] = $item_per_page;

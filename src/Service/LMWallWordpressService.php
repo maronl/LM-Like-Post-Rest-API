@@ -99,6 +99,10 @@ class LMWallWordpressService implements LMWallService
 
         $paramsQuery['post_type'] = 'lm_wall';
 
+        if (array_key_exists('q', $params)) {
+            $paramsQuery['s'] = $params['q'];
+        }
+
         if (array_key_exists('item_per_page', $params)) {
             $paramsQuery['posts_per_page'] = $params['item_per_page'];
         } else {
