@@ -24,8 +24,8 @@ use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
 use LM\WPPostLikeRestApi\Service\LMWallWordpressService;
 
 $builder = new \DI\ContainerBuilder();
-$builder->setDefinitionCache(new Doctrine\Common\Cache\ApcCache());
-$builder->writeProxiesToFile(true, 'tmp/proxies');
+//$builder->setDefinitionCache(new Doctrine\Common\Cache\ApcCache());
+//$builder->writeProxiesToFile(true, 'tmp/proxies');
 
 $builder->addDefinitions([
 
