@@ -107,7 +107,9 @@ trait LMWPPostWallDetails
 
         $userInfo = $wpdb->get_row($sql);
         if (!empty($userInfo)) {
-            $userInfo->user_picture = 'http://0.gravatar.com/avatar/c06f9a7686481ac171d46f2ed0835ca6?s=154&d=mm&r=g';
+            if (has_filter('lm-sf-rest-api-get-wall-author-info')) {
+                $userInfo = apply_filters('lm-sf-rest-api-get-wall-author-info', $userInfo);
+            }
         }
 
         return $userInfo;
