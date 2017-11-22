@@ -76,7 +76,7 @@ class LMWallWordpressService implements LMWallService
     public function getPost($postId)
     {
         return $this->retrievePostInformation(get_post($postId), 3, $this->likePostService, $this->savedPostService,
-            $this->sharingService);
+            $this->sharingService, $this->wallPostWordpressRepository->getLMWallPostsPictureRepository());
     }
 
     public function createPost($request)
@@ -194,7 +194,7 @@ class LMWallWordpressService implements LMWallService
     {
         $dataRequest = $this->insertRequest->getDataFromRequest($request);
 
-        if (array_key_exists('shared_post', $dataRequest)) {
+        if (array_key_exists('shared_post', $dataRequest) && !empty($dataRequest['shared_post'])) {
             $this->sharingService->saveSharing($dataRequest['shared_post'], $postId);
         }
 

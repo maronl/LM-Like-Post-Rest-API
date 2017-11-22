@@ -6,11 +6,10 @@
  * Time: 16:42
  */
 
-namespace LM\WPPostLikeRestApi\Manager;
+namespace LM\WPPostLikeRestApi\Utility;
 
 
 use \Firebase\JWT\JWT;
-use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
 
 class LMWPJWTFirebaseHeaderAuthorization implements LMHeaderAuthorization
 {

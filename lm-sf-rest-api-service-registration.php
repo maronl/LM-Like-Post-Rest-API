@@ -2,7 +2,7 @@
 
 use Interop\Container\ContainerInterface;
 use LM\WPPostLikeRestApi\Manager\LMWPFollowerPublicManager;
-use LM\WPPostLikeRestApi\Manager\LMWPJWTFirebaseHeaderAuthorization;
+use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostAdminManager;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPProfilePublicManager;
@@ -14,8 +14,10 @@ use LM\WPPostLikeRestApi\Model\LMWallPostModel;
 use LM\WPPostLikeRestApi\Repository\LMFollowerWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMLikePostWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMSharingWordpressRepository;
+use LM\WPPostLikeRestApi\Repository\LMWallPostsPictureWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
+use LM\WPPostLikeRestApi\Request\LMWallPostsPictureUpdateRequest;
 use LM\WPPostLikeRestApi\Request\LMWallPostUpdateRequest;
 use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
 use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
@@ -31,6 +33,8 @@ $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions([
 
     // parameters
+    'post-picture-folder' => 'secured-uploads/image',
+    'post-movie-folder' => 'secured-uploads/movie',
     'post-like-table' => 'lm_post_like',
     'post-saved-table' => 'lm_post_saved',
     'post-shared-table' => 'lm_post_shared',
@@ -45,6 +49,9 @@ $builder->addDefinitions([
     },
     'LMWallPostUpdateRequest' => function () {
         return new LMWallPostUpdateRequest();
+    },
+    'LMWallPostsPictureUpdateRequest' => function (ContainerInterface $c) {
+        return new LMWallPostsPictureUpdateRequest();
     },
 
     // model
@@ -65,11 +72,21 @@ $builder->addDefinitions([
     'LMFollowerWordpressRepository' => function (ContainerInterface $c) {
         return new LMFollowerWordpressRepository($c->get('follower-table'), $c->get('plugin-version'));
     },
+    'LMWallPostsPictureWordpressRepository' => function (ContainerInterface $c) {
+        $updateRequest = $c->get('LMWallPostsPictureUpdateRequest');
+
+        return new LMWallPostsPictureWordpressRepository($updateRequest, $c->get('post-picture-folder'));
+    },
+
     'LMWallPostWordpressRepository' => function (ContainerInterface $c) {
         $insertRequest = $c->get('LMWallPostInsertRequest');
         $updateRequest = $c->get('LMWallPostUpdateRequest');
-        return new LMWallPostWordpressRepository($insertRequest, $updateRequest);
+        $header = $c->get('LMWPJWTFirebaseHeaderAuthorization');
+        $pictureRepository = $c->get('LMWallPostsPictureWordpressRepository');
+
+        return new LMWallPostWordpressRepository($header, $insertRequest, $updateRequest, $pictureRepository);
     },
+
 
     // services
     'LMLikePostWordpressService' => function (ContainerInterface $c) {

@@ -24,7 +24,8 @@ trait LMWPPostWallDetails
         $latestComments = 3,
         $likePostService,
         $savedPostService,
-        $sharingPostService
+        $sharingPostService,
+        $pictureRepository
     ) {
         global $wpdb;
 
@@ -52,7 +53,7 @@ trait LMWPPostWallDetails
 
         $post->lm_shared_counter = $sharingPostService->getSharedCount($post->ID);
 
-        $post->featured_image = get_the_post_thumbnail_url($post->ID);
+        $post->featured_image = $this->getFeaturedMedia($post, $pictureRepository);
 
         $post->liked = $likePostService->checkUserPostLike(get_current_user_id(), $post->ID);
 
@@ -167,6 +168,23 @@ trait LMWPPostWallDetails
 
         return $post;
 
+    }
+
+    /**
+     * @param \WP_Post $post
+     */
+    private function getFeaturedMedia(\WP_Post $post, $pictureRepository)
+    {
+        $userId = $post->post_author;
+        $postId = $post->ID;
+        $pictureRepository->setPostId($postId);
+        $pictureRepository->setUserId($userId);
+        $featuredMedia = $pictureRepository->getPictureUrl();
+        if (!empty($featuredMedia)) {
+            return $featuredMedia;
+        }
+
+        return get_the_post_thumbnail_url($post->ID);
     }
 
 }

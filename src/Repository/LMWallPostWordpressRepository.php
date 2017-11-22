@@ -11,6 +11,7 @@ namespace LM\WPPostLikeRestApi\Repository;
 
 use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
 use LM\WPPostLikeRestApi\Request\LMWallPostUpdateRequest;
+use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 
 class LMWallPostWordpressRepository implements LMWallPostRepository
 {
@@ -22,11 +23,25 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
      * @var LMWallPostUpdateRequest
      */
     private $updateRequest;
+    /**
+     * @var LMWallPostsPictureWordpressRepository
+     */
+    private $pictureRepository;
+    /**
+     * @var LMWPJWTFirebaseHeaderAuthorization
+     */
+    private $headerAuthorization;
 
-    function __construct(LMWallPostInsertRequest $insertRequest, LMWallPostUpdateRequest $updateRequest)
-    {
+    function __construct(
+        LMWPJWTFirebaseHeaderAuthorization $headerAuthorization,
+        LMWallPostInsertRequest $insertRequest,
+        LMWallPostUpdateRequest $updateRequest,
+        LMWallPostsPictureWordpressRepository $pictureRepository
+    ) {
         $this->insertRequest = $insertRequest;
         $this->updateRequest = $updateRequest;
+        $this->pictureRepository = $pictureRepository;
+        $this->headerAuthorization = $headerAuthorization;
     }
 
     public function createPost($request)
@@ -45,6 +60,12 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
             return $postId;
         }
 
+        $userId = $this->headerAuthorization->getUser();
+        // salvo file allegato se è presente
+        $this->pictureRepository->setPostId($postId);
+        $this->pictureRepository->setUserId($userId);
+        $this->pictureRepository->updatePicture($request);
+
         return $postId;
     }
 
@@ -62,6 +83,12 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
         if ($postId === 0) {
             return array('msg' => 'Non è stato possibile aggioranre il contenuto del post');
         }
+
+        $userId = $this->headerAuthorization->getUser();
+        // salvo file allegato se è presente
+        $this->pictureRepository->setPostId($postId);
+        $this->pictureRepository->setUserId($userId);
+        $this->pictureRepository->updatePicture($request);
 
         return $postId;
     }
@@ -109,6 +136,11 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
         $updateData['post_content'] = $dataRequest['content'];
 
         return $updateData;
+    }
+
+    public function getLMWallPostsPictureRepository()
+    {
+        return $this->pictureRepository;
     }
 
 }
