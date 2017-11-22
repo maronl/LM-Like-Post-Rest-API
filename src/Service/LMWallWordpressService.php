@@ -56,7 +56,6 @@ class LMWallWordpressService implements LMWallService
         LMLikePostService $likePostService,
         LMLikePostService $savedPostService,
         LMWallPostInsertRequest $insertRequest,
-        LMWallPostUpdateRequest $insertRequest,
         LMSharingService $sharingService
     ) {
         $this->headerAuthorization = $headerAuthorization;
