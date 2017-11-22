@@ -62,9 +62,12 @@ trait LMWPPostWallDetails
 
         if ($post->shared_post !== 0) {
             $postShared = get_post($post->shared_post);
-            $post->sharedPostDetails = $postShared;
-            $post->sharedPostDetails->post_content_rendered = apply_filters('the_content', $postShared->post_content);
-            $post->sharedPostDetails->featured_image = get_the_post_thumbnail_url($postShared->ID);
+            if (!empty($postShared)) {
+                $post->sharedPostDetails = $postShared;
+                $post->sharedPostDetails->post_content_rendered = apply_filters('the_content',
+                    $postShared->post_content);
+                $post->sharedPostDetails->featured_image = get_the_post_thumbnail_url($postShared->ID);
+            }
         }
 
         if (has_filter('lm-sf-rest-api-wall-details')) {
