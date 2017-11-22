@@ -16,6 +16,7 @@ use LM\WPPostLikeRestApi\Repository\LMLikePostWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMSharingWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
+use LM\WPPostLikeRestApi\Request\LMWallPostUpdateRequest;
 use LM\WPPostLikeRestApi\Service\LMFollowerWordpressService;
 use LM\WPPostLikeRestApi\Service\LMLikePostWordpressService;
 use LM\WPPostLikeRestApi\Service\LMProfileWordpressService;
@@ -42,6 +43,9 @@ $builder->addDefinitions([
     'LMWallPostInsertRequest' => function () {
         return new LMWallPostInsertRequest();
     },
+    'LMWallPostUpdateRequest' => function () {
+        return new LMWallPostUpdateRequest();
+    },
 
     // model
     'LMWallPostModel' => function () {
@@ -63,7 +67,8 @@ $builder->addDefinitions([
     },
     'LMWallPostWordpressRepository' => function (ContainerInterface $c) {
         $insertRequest = $c->get('LMWallPostInsertRequest');
-        return new LMWallPostWordpressRepository($insertRequest);
+        $updateRequest = $c->get('LMWallPostUpdateRequest');
+        return new LMWallPostWordpressRepository($insertRequest, $updateRequest);
     },
 
     // services
@@ -91,8 +96,10 @@ $builder->addDefinitions([
         $savedPostService = $c->get('LMSavedPostWordpressService');
         $sharingService = $c->get('LMSharingWordpressService');
         $insertRequest = $c->get('LMWallPostInsertRequest');
+        $updateRequest = $c->get('LMWallPostUpdateRequest');
+
         return new LMWallWordpressService($header, $wallRepo, $followerService, $likePostService, $savedPostService,
-            $insertRequest, $sharingService);
+            $insertRequest, $updateRequest, $sharingService);
     },
     'LMProfileWordpressService' => function (ContainerInterface $c) {
         $header = $c->get('LMWPJWTFirebaseHeaderAuthorization');

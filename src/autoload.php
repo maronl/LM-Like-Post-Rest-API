@@ -10,6 +10,7 @@ require_once dirname(__FILE__) . '/Model/LMWallPostModel.php';
 require_once dirname(__FILE__) . '/Manager/LMWPPluginManager.php';
 
 require_once dirname(__FILE__) . '/Request/LMWallPostInsertRequest.php';
+require_once dirname(__FILE__) . '/Request/LMWallPostUpdateRequest.php';
 
 require_once dirname(__FILE__) . '/Repository/LMFollowerRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMFollowerWordpressRepository.php';

@@ -10,6 +10,7 @@ namespace LM\WPPostLikeRestApi\Repository;
 
 
 use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
+use LM\WPPostLikeRestApi\Request\LMWallPostUpdateRequest;
 
 class LMWallPostWordpressRepository implements LMWallPostRepository
 {
@@ -17,10 +18,15 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
      * @var LMWallPostInsertRequest
      */
     private $insertRequest;
+    /**
+     * @var LMWallPostUpdateRequest
+     */
+    private $updateRequest;
 
-    function __construct(LMWallPostInsertRequest $insertRequest)
+    function __construct(LMWallPostInsertRequest $insertRequest, LMWallPostUpdateRequest $updateRequest)
     {
         $this->insertRequest = $insertRequest;
+        $this->updateRequest = $updateRequest;
     }
 
     public function createPost($request)
@@ -37,6 +43,24 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
 
         if (is_wp_error($postId)) {
             return $postId;
+        }
+
+        return $postId;
+    }
+
+    public function updatePostContent($request)
+    {
+        $validate = $this->updateRequest->validateRequest($request);
+
+        if ($validate !== true) {
+            return $validate;
+        }
+        $updateData = $this->createUpdatePostData($request);
+
+        $postId = wp_update_post($updateData);
+
+        if ($postId === 0) {
+            return array('msg' => 'Non è stato possibile aggioranre il contenuto del post');
         }
 
         return $postId;
@@ -73,6 +97,18 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
         $newPost['tax_input'] = array('lm_wall_category' => explode(',', $dataRequest['categories']));
 
         return $newPost;
+    }
+
+    private function createUpdatePostData($request)
+    {
+        $dataRequest = $this->updateRequest->getDataFromRequest($request);
+
+        $updateData = array();
+
+        $updateData['ID'] = $dataRequest['post_id'];
+        $updateData['post_content'] = $dataRequest['content'];
+
+        return $updateData;
     }
 
 }

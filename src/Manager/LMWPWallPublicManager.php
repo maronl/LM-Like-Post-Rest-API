@@ -45,6 +45,11 @@ class LMWPWallPublicManager
             'methods' => 'GET',
             'callback' => array($this, 'getPost'),
         ]);
+
+        register_rest_route($this->namespace, 'wall/(?P<id>\d+)', [
+            'methods' => 'POST',
+            'callback' => array($this, 'updatePost'),
+        ]);
     }
 
     public function getWall($request)
@@ -91,6 +96,21 @@ class LMWPWallPublicManager
     public function createPost($request)
     {
         $postId = $this->wallService->createPost($request);
+
+        if (is_wp_error($postId)) {
+            return array('status' => false, 'data' => $postId->errors);
+        }
+
+        if (is_array($postId)) {
+            return array('status' => false, 'data' => $postId);
+        }
+
+        return array('status' => true, 'data' => $this->wallService->getPost($postId));
+    }
+
+    public function updatePost($request)
+    {
+        $postId = $this->wallService->updatePostContent($request);
 
         if (is_wp_error($postId)) {
             return array('status' => false, 'data' => $postId->errors);

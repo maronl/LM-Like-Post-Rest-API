@@ -11,6 +11,7 @@ namespace LM\WPPostLikeRestApi\Service;
 
 use LM\WPPostLikeRestApi\Repository\LMWallPostWordpressRepository;
 use LM\WPPostLikeRestApi\Request\LMWallPostInsertRequest;
+use LM\WPPostLikeRestApi\Request\LMWallPostUpdateRequest;
 use LM\WPPostLikeRestApi\Utility\LMHeaderAuthorization;
 use LM\WPPostLikeRestApi\Utility\LMWPPostWallDetails;
 
@@ -55,6 +56,7 @@ class LMWallWordpressService implements LMWallService
         LMLikePostService $likePostService,
         LMLikePostService $savedPostService,
         LMWallPostInsertRequest $insertRequest,
+        LMWallPostUpdateRequest $insertRequest,
         LMSharingService $sharingService
     ) {
         $this->headerAuthorization = $headerAuthorization;
@@ -82,13 +84,26 @@ class LMWallWordpressService implements LMWallService
     {
         $postId = $this->wallPostWordpressRepository->createPost($request);
 
-        if (is_wp_error($postId)) {
+        if (is_wp_error($postId) || is_array($postId)) {
             return $postId;
         }
 
         $this->setNewPostFormat($request, $postId);
 
         $this->setNewPostSharingPost($request, $postId);
+
+        return $postId;
+    }
+
+    public function updatePostContent($request)
+    {
+        $postId = $this->wallPostWordpressRepository->updatePostContent($request);
+
+        if (is_wp_error($postId) || is_array($postId)) {
+            return $postId;
+        }
+
+        $this->setNewPostFormat($request, $postId);
 
         return $postId;
     }
