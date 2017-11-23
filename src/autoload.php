@@ -12,6 +12,7 @@ require_once dirname(__FILE__) . '/Manager/LMWPPluginManager.php';
 require_once dirname(__FILE__) . '/Request/LMWallPostInsertRequest.php';
 require_once dirname(__FILE__) . '/Request/LMWallPostUpdateRequest.php';
 require_once dirname(__FILE__) . '/Request/LMWallPostsPictureUpdateRequest.php';
+require_once dirname(__FILE__) . '/Request/LMWallPostsMovieUpdateRequest.php';
 
 require_once dirname(__FILE__) . '/Repository/LMFollowerRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMFollowerWordpressRepository.php';
@@ -23,6 +24,7 @@ require_once dirname(__FILE__) . '/Repository/LMWallPostRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMWallPostWordpressRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMWallPostsPictureRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMWallPostsPictureWordpressRepository.php';
+require_once dirname(__FILE__) . '/Repository/LMWallPostsMovieWordpressRepository.php';
 
 require_once dirname(__FILE__) . '/Service/LMFollowerService.php';
 require_once dirname(__FILE__) . '/Service/LMFollowerWordpressService.php';

@@ -8,7 +8,7 @@ namespace LM\WPPostLikeRestApi\Request;
  * Date: 25/10/17
  * Time: 11:32
  */
-class LMWallPostsPictureUpdateRequest
+class LMWallPostsMovieUpdateRequest
 {
 
     private $errors;
@@ -22,11 +22,11 @@ class LMWallPostsPictureUpdateRequest
     {
         $files = $request->get_file_params();
 
-        if (!array_key_exists('picture', $files)) {
-            return $this->errors['picture'] = 'Nessun file caricato';
+        if (!array_key_exists('movie', $files)) {
+            return $this->errors['movie'] = 'Nessun file caricato';
         }
 
-        $file = $files['picture'];
+        $file = $files['movie'];
 
         $this->checkUploadErrors($file);
         if (!empty($this->errors)) {
@@ -60,27 +60,27 @@ class LMWallPostsPictureUpdateRequest
         );
 
         if ($file['error'] !== 0 && array_key_exists($file['error'], $phpFileUploadErrors)) {
-            $this->errors['picture'] = $phpFileUploadErrors[$file['error']];
+            $this->errors['movie'] = $phpFileUploadErrors[$file['error']];
         } elseif ($file['error'] !== 0) {
-            $this->errors['picture'] = 'Errore nel caricamento del file';
+            $this->errors['movie'] = 'Errore nel caricamento del file';
         }
     }
 
     private function checkFileType($file)
     {
-        $allowedMimeType = array('image/gif', 'image/jpg', 'image/jpeg', 'image/png');
+        $allowedMimeType = array('video/mp4');
         if (!in_array($file['type'], $allowedMimeType)) {
-            $this->errors['picture'] = 'Non sono ammessi file di tipo "' . $file['type'] . '". File validi sono: ' . implode(',',
+            $this->errors['movie'] = 'Non sono ammessi file di tipo "' . $file['type'] . '". File validi sono: ' . implode(',',
                     $allowedMimeType);
         }
     }
 
     private function checkFileSize($file)
     {
-        //maxSize = 15M
-        $max = 15 * 1024 * 1024;
+        //maxSize = 50Mb
+        $max = 50 * 1024 * 1024;
         if ($file['size'] > $max) {
-            $this->errors['picture'] = 'Il file caricato è troppo grande. il limite è di 15Mb';
+            $this->errors['movie'] = 'Il file caricato è troppo grande. il limite è di 50Mb';
         }
     }
 

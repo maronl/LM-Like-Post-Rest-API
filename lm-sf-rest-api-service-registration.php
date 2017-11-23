@@ -2,6 +2,8 @@
 
 use Interop\Container\ContainerInterface;
 use LM\WPPostLikeRestApi\Manager\LMWPFollowerPublicManager;
+use LM\WPPostLikeRestApi\Repository\LMWallPostsMovieWordpressRepository;
+use LM\WPPostLikeRestApi\Request\LMWallPostsMovieUpdateRequest;
 use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostAdminManager;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostPublicManager;
@@ -53,6 +55,9 @@ $builder->addDefinitions([
     'LMWallPostsPictureUpdateRequest' => function (ContainerInterface $c) {
         return new LMWallPostsPictureUpdateRequest();
     },
+    'LMWallPostsMovieUpdateRequest' => function (ContainerInterface $c) {
+        return new LMWallPostsMovieUpdateRequest();
+    },
 
     // model
     'LMWallPostModel' => function () {
@@ -77,14 +82,20 @@ $builder->addDefinitions([
 
         return new LMWallPostsPictureWordpressRepository($updateRequest, $c->get('post-picture-folder'));
     },
+    'LMWallPostsMovieWordpressRepository' => function (ContainerInterface $c) {
+        $updateRequest = $c->get('LMWallPostsMovieUpdateRequest');
+
+        return new LMWallPostsMovieWordpressRepository($updateRequest, $c->get('post-movie-folder'));
+    },
 
     'LMWallPostWordpressRepository' => function (ContainerInterface $c) {
         $insertRequest = $c->get('LMWallPostInsertRequest');
         $updateRequest = $c->get('LMWallPostUpdateRequest');
         $header = $c->get('LMWPJWTFirebaseHeaderAuthorization');
         $pictureRepository = $c->get('LMWallPostsPictureWordpressRepository');
+        $movieRepository = $c->get('LMWallPostsMovieWordpressRepository');
 
-        return new LMWallPostWordpressRepository($header, $insertRequest, $updateRequest, $pictureRepository);
+        return new LMWallPostWordpressRepository($header, $insertRequest, $updateRequest, $pictureRepository, $movieRepository);
     },
 
 

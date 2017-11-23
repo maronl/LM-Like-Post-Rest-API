@@ -25,7 +25,8 @@ trait LMWPPostWallDetails
         $likePostService,
         $savedPostService,
         $sharingPostService,
-        $pictureRepository
+        $pictureRepository,
+        $movieRepository
     ) {
         global $wpdb;
 
@@ -33,7 +34,7 @@ trait LMWPPostWallDetails
 
         $post->post_excerpt_rendered = apply_filters('the_excerpt', $post->post_excerpt);
 
-        $post->post_format = get_post_format() ?: 'standard';
+        $post->post_format = get_post_format($post->ID) ?: 'standard';
 
         $post->author = $this->retrieveAuthorPostInformation($post, $wpdb);
 
@@ -54,6 +55,10 @@ trait LMWPPostWallDetails
         $post->lm_shared_counter = $sharingPostService->getSharedCount($post->ID);
 
         $post->featured_image = $this->getFeaturedMedia($post, $pictureRepository);
+
+        if($post->post_format === 'video') {
+            $post->featured_video = $this->getFeaturedVideo($post, $movieRepository);
+        }
 
         $post->liked = $likePostService->checkUserPostLike(get_current_user_id(), $post->ID);
 
@@ -185,6 +190,24 @@ trait LMWPPostWallDetails
         }
 
         return get_the_post_thumbnail_url($post->ID);
+    }
+
+    /**
+     * @param \WP_Post $post
+     * @return bool
+     */
+    private function getFeaturedVideo(\WP_Post $post, $movieRepository)
+    {
+        $userId = $post->post_author;
+        $postId = $post->ID;
+        $movieRepository->setPostId($postId);
+        $movieRepository->setUserId($userId);
+        $featuredMedia = $movieRepository->getPictureUrl();
+        if (!empty($featuredMedia)) {
+            return $featuredMedia;
+        }
+
+        return false;
     }
 
 }

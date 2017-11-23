@@ -76,7 +76,8 @@ class LMWallWordpressService implements LMWallService
     public function getPost($postId)
     {
         return $this->retrievePostInformation(get_post($postId), 3, $this->likePostService, $this->savedPostService,
-            $this->sharingService, $this->wallPostWordpressRepository->getLMWallPostsPictureRepository());
+            $this->sharingService, $this->wallPostWordpressRepository->getLMWallPostsPictureRepository(),
+            $this->wallPostWordpressRepository->getLMWallPostsMovieRepository());
     }
 
     public function createPost($request)
@@ -150,7 +151,8 @@ class LMWallWordpressService implements LMWallService
 
         foreach ($posts as $post) {
             $res[] = $this->retrievePostInformation($post, 3, $this->likePostService, $this->savedPostService,
-                $this->sharingService,  $this->wallPostWordpressRepository->getLMWallPostsPictureRepository());
+                $this->sharingService, $this->wallPostWordpressRepository->getLMWallPostsPictureRepository(),
+                $this->wallPostWordpressRepository->getLMWallPostsMovieRepository());
         }
 
         return $res;

@@ -31,17 +31,23 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
      * @var LMWPJWTFirebaseHeaderAuthorization
      */
     private $headerAuthorization;
+    /**
+     * @var LMWallPostsMovieWordpressRepository
+     */
+    private $movieRepository;
 
     function __construct(
         LMWPJWTFirebaseHeaderAuthorization $headerAuthorization,
         LMWallPostInsertRequest $insertRequest,
         LMWallPostUpdateRequest $updateRequest,
-        LMWallPostsPictureWordpressRepository $pictureRepository
+        LMWallPostsPictureWordpressRepository $pictureRepository,
+        LMWallPostsMovieWordpressRepository $movieRepository
     ) {
         $this->insertRequest = $insertRequest;
         $this->updateRequest = $updateRequest;
         $this->pictureRepository = $pictureRepository;
         $this->headerAuthorization = $headerAuthorization;
+        $this->movieRepository = $movieRepository;
     }
 
     public function createPost($request)
@@ -60,12 +66,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
             return $postId;
         }
 
-        $userId = $this->headerAuthorization->getUser();
-        // salvo file allegato se è presente
-        // todo controllo se post format è image altrimenti salto
-        $this->pictureRepository->setPostId($postId);
-        $this->pictureRepository->setUserId($userId);
-        $this->pictureRepository->updatePicture($request);
+        $this->savePostMedia($postId, $request);
 
         return $postId;
     }
@@ -85,12 +86,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
             return array('msg' => 'Non è stato possibile aggioranre il contenuto del post');
         }
 
-        $userId = $this->headerAuthorization->getUser();
-        // salvo file allegato se è presente
-        // todo controllo se post format è image altrimenti salto
-        $this->pictureRepository->setPostId($postId);
-        $this->pictureRepository->setUserId($userId);
-        $this->pictureRepository->updatePicture($request);
+        $this->savePostMedia($postId, $request);
 
         return $postId;
     }
@@ -143,6 +139,31 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
     public function getLMWallPostsPictureRepository()
     {
         return $this->pictureRepository;
+    }
+
+    public function getLMWallPostsMovieRepository()
+    {
+        return $this->movieRepository;
+    }
+
+    private function savePostMedia($postId, $request)
+    {
+        $format = $request->get_param('format');
+
+        if ($format === 'image') {
+            $userId = $this->headerAuthorization->getUser();
+            $this->pictureRepository->setPostId($postId);
+            $this->pictureRepository->setUserId($userId);
+            $this->pictureRepository->updatePicture($request);
+        }
+
+        if ($format === 'video') {
+            $userId = $this->headerAuthorization->getUser();
+            $this->movieRepository->setPostId($postId);
+            $this->movieRepository->setUserId($userId);
+            $this->movieRepository->updatePicture($request);
+        }
+        return true;
     }
 
 }
