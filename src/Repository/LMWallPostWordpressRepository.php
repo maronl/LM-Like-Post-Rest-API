@@ -62,6 +62,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
 
         $userId = $this->headerAuthorization->getUser();
         // salvo file allegato se è presente
+        // todo controllo se post format è image altrimenti salto
         $this->pictureRepository->setPostId($postId);
         $this->pictureRepository->setUserId($userId);
         $this->pictureRepository->updatePicture($request);
@@ -86,6 +87,7 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
 
         $userId = $this->headerAuthorization->getUser();
         // salvo file allegato se è presente
+        // todo controllo se post format è image altrimenti salto
         $this->pictureRepository->setPostId($postId);
         $this->pictureRepository->setUserId($userId);
         $this->pictureRepository->updatePicture($request);

@@ -150,7 +150,7 @@ class LMWallWordpressService implements LMWallService
 
         foreach ($posts as $post) {
             $res[] = $this->retrievePostInformation($post, 3, $this->likePostService, $this->savedPostService,
-                $this->sharingService);
+                $this->sharingService,  $this->wallPostWordpressRepository->getLMWallPostsPictureRepository());
         }
 
         return $res;
