@@ -68,7 +68,7 @@ class LMWallPostsMovieUpdateRequest
 
     private function checkFileType($file)
     {
-        $allowedMimeType = array('video/mp4');
+        $allowedMimeType = array('video/mp4', 'video/quicktime');
         if (!in_array($file['type'], $allowedMimeType)) {
             $this->errors['movie'] = 'Non sono ammessi file di tipo "' . $file['type'] . '". File validi sono: ' . implode(',',
                     $allowedMimeType);

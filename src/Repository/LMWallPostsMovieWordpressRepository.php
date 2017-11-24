@@ -112,7 +112,7 @@ class LMWallPostsMovieWordpressRepository implements LMWallPostsPictureRepositor
         $f = fopen($dir . ".htaccess", "a+");
         fwrite($f, " Order deny,allow
 Deny from all
-<Files ~ \"^[0-9A-Za-z-_]+\.(jpg|png)$\">
+<Files ~ \"^[0-9A-Za-z-_]+\.(mp4|mov)$\">
 Allow from all
 </Files>");
         fclose($f);
