@@ -59,6 +59,9 @@ class LMWPLikePostPublicManager
         }
 
         $status = $this->likePostService->addLike($userId, $postId);
+
+        do_action('lm-sf-added-like', $userId, $postId);
+
         return array('status' => $status);
     }
 
@@ -72,6 +75,9 @@ class LMWPLikePostPublicManager
         }
 
         $status = $this->likePostService->removeLike($userId, $postId);
+
+        do_action('lm-sf-removed-like', $userId, $postId);
+
         return array('status' => $status);
     }
 

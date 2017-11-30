@@ -80,6 +80,9 @@ class LMWPFollowerPublicManager
         }
 
         $status = $this->followerService->addFollower($followerId, $followingId);
+
+        do_action('lm-sf-added-follower', $followerId, $followingId);
+
         return array('status' => $status);
     }
 
@@ -93,6 +96,9 @@ class LMWPFollowerPublicManager
         }
 
         $status = $this->followerService->removeFollower($followerId, $followingId);
+
+        do_action('lm-sf-removed-follower', $followerId, $followingId);
+
         return array('status' => $status);
     }
 

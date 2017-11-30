@@ -105,7 +105,11 @@ class LMWPWallPublicManager
             return array('status' => false, 'data' => $postId);
         }
 
-        return array('status' => true, 'data' => $this->wallService->getPost($postId));
+        $post = $this->wallService->getPost($postId);
+
+        do_action('lm-sf-created-post', $post);
+
+        return array('status' => true, 'data' => $post);
     }
 
     public function updatePost($request)
@@ -120,7 +124,11 @@ class LMWPWallPublicManager
             return array('status' => false, 'data' => $postId);
         }
 
-        return array('status' => true, 'data' => $this->wallService->getPost($postId));
+        $post = $this->wallService->getPost($postId);
+
+        do_action('lm-sf-updated-post', $post);
+
+        return array('status' => true, 'data' => $post);
     }
 
     public function incrementCountSharedPost($post_id, $post, $update)
