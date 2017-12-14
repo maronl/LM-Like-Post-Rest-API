@@ -90,7 +90,12 @@ class LMWPWallPublicManager
     public function getPost($request)
     {
         $postId = $request->get_param('id');
-        return array('status' => true, 'data' => $this->wallService->getPost($postId));
+        $post = $this->wallService->getPost($postId);
+        if($post === false){
+            return new \WP_REST_Response(array('msg' => 'post not found'), 404);
+
+        }
+        return new \WP_REST_Response(array('status' => true, 'data' => $this->wallService->getPost($postId)), 200);
     }
 
     public function createPost($request)
