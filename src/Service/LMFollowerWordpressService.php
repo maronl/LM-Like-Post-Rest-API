@@ -44,7 +44,7 @@ class LMFollowerWordpressService implements LMFollowerService
 
         if ($this->repository->saveFollower($followerId, $followingId)) {
             $this->incrementFollowerCounters($followerId, $followingId, $this->cacheFollowerCounter,
-                $this->cacheFollowingCounter);
+                $this->cacheFollowingCounter, $this->repository);
             return true;
         }
 
@@ -53,9 +53,9 @@ class LMFollowerWordpressService implements LMFollowerService
 
     public function removeFollower($followerId, $followingId)
     {
-        if ($this->repository->deleteFollower($followerId, $followingId)) {
+        if ($this->repository->deleteFollower($followerId, $followingId) !== false) {
             $this->decrementFollowerCounters($followerId, $followingId, $this->cacheFollowerCounter,
-                $this->cacheFollowingCounter);
+                $this->cacheFollowingCounter, $this->repository);
             return true;
         }
         return false;

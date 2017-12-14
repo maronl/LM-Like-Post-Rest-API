@@ -13,37 +13,22 @@ trait LMWPFollowerChaceCounter
 {
     // salvo un contatore anche come post meta da usare nel recuperare le liste di post
     // con l'informazione eventuale del numero di like associata
-    private function incrementFollowerCounters($followerId, $followingId, $keyFollower, $keyFollowing)
+    private function incrementFollowerCounters($followerId, $followingId, $keyFollower, $keyFollowing, $followerRepo)
     {
-        $count = (int) get_user_meta($followerId, $keyFollowing, true);
-        if (!is_numeric($count)) {
-            update_user_meta($followerId, $keyFollowing, 1);
-        }
-        update_user_meta($followerId, $keyFollowing, ($count + 1));
-
-        $count = (int) get_user_meta($followingId, $keyFollower, true);
-        if (!is_numeric($count)) {
-            update_user_meta($followingId, $keyFollower, 1);
-        }
-        update_user_meta($followingId, $keyFollower, ($count + 1));
+        $followings = $followerRepo->findFollowingsCount($followerId);
+        $followers = $followerRepo->findFollowersCount($followingId);
+        update_user_meta($followerId, $keyFollowing, $followings);
+        update_user_meta($followingId, $keyFollower, $followers);
 
         return true;
     }
 
-    private function decrementFollowerCounters($followerId, $followingId, $keyFollower, $keyFollowing)
+    private function decrementFollowerCounters($followerId, $followingId, $keyFollower, $keyFollowing, $followerRepo)
     {
-        $count = (int) get_user_meta($followerId, $keyFollowing, true);
-        if (!is_numeric($count) || $count <= 1) {
-            update_user_meta($followerId, $keyFollowing, 0);
-        }
-        update_user_meta($followerId, $keyFollowing, ($count - 1));
-
-        $count = (int) get_user_meta($followingId, $keyFollower, true);
-        if (!is_numeric($count) || $count <= 1) {
-            update_user_meta($followingId, $keyFollower, 0);
-        }
-
-        update_user_meta($followingId, $keyFollower, ($count - 1));
+        $followings = $followerRepo->findFollowingsCount($followerId);
+        $followers = $followerRepo->findFollowersCount($followingId);
+        update_user_meta($followerId, $keyFollowing, $followings);
+        update_user_meta($followingId, $keyFollower, $followers);
 
         return true;
     }

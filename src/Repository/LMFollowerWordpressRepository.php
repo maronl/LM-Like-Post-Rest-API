@@ -78,6 +78,19 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         return $followers;
     }
 
+    public function findFollowersCount($userId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT count(*)
+            FROM " . $wpdb->prefix . "lm_followers AS f 
+            WHERE f.following_id = %d;", $userId);
+
+        $followers = $wpdb->get_var($sql);
+
+        return $followers;
+    }
+
     public function findFollowings($userId, $page = 1, $item_per_page = 20)
     {
         global $wpdb;
@@ -99,6 +112,20 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
 
         return $followings;
     }
+
+    public function findFollowingsCount($userId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT count(*)
+            FROM " . $wpdb->prefix . "lm_followers AS f 
+            WHERE f.follower_id = %d;", $userId);
+
+        $followers = $wpdb->get_var($sql);
+
+        return $followers;
+    }
+
 
     public function findFollowingsIds($userId)
     {
