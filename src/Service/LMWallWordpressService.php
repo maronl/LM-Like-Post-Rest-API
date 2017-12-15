@@ -148,6 +148,10 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
         }
 
+        if (array_key_exists('date_query', $params)) {
+            $paramsQuery['date_query'] = $params['date_query'];
+        }
+
         return $paramsQuery;
     }
 

@@ -77,6 +77,17 @@ class LMWPWallPublicManager
         if (!empty($authors)) {
             $params['authors'] = $authors;
         }
+        $before = $request->get_param('before');
+        if (!empty($before)) {
+            // aggiungo un secondo così da poter conteggiare anche il post con la data indicata
+            $before = \DateTime::createFromFormat('Y-m-d H:i:s', $before);
+            $before->add(new \DateInterval('PT1S'));
+            $before = $before->format('Y-m-d H:i:s');
+            $params['date_query'] = array(
+                array('before' => $before)
+            );
+        }
+
 
         $posts = $this->wallService->getWall($params);
 
@@ -84,14 +95,14 @@ class LMWPWallPublicManager
             $posts = apply_filters('lm-sf-rest-api-get-wall', $posts);
         }
 
-        return array('status' => true, 'data' => $posts);
+        return new \WP_REST_Response(array('status' => true, 'data' => $posts), 200);
     }
 
     public function getPost($request)
     {
         $postId = $request->get_param('id');
         $post = $this->wallService->getPost($postId);
-        if($post === false){
+        if ($post === false) {
             return new \WP_REST_Response(array('msg' => 'post not found'), 404);
 
         }
