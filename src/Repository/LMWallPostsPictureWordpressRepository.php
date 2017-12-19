@@ -87,7 +87,15 @@ class LMWallPostsPictureWordpressRepository implements LMWallPostsPictureReposit
             return array('picture' => 'Non è stato possibile salvare l\'immagine caricata');
         }
 
-        $image->set_quality(95);
+        // extract crea le variabili $height e $width;
+        extract($image->get_size());
+
+        $resize_width = 1366;
+        if($height > $resize_width) {
+            $image->resize($resize_width, ($height * $resize_width) / $width, false);
+        }
+
+        $image->set_quality(30);
 
         $image->save($destination);
 
