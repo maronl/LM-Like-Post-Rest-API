@@ -91,7 +91,7 @@ class LMWallPostsPictureWordpressRepository implements LMWallPostsPictureReposit
         extract($image->get_size());
 
         $resize_width = 1366;
-        if($height > $resize_width) {
+        if($width > $resize_width) {
             $image->resize($resize_width, ($height * $resize_width) / $width, false);
         }
 
