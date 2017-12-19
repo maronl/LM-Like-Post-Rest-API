@@ -114,18 +114,18 @@ class LMWPWallPublicManager
         $postId = $this->wallService->createPost($request);
 
         if (is_wp_error($postId)) {
-            return array('status' => false, 'data' => $postId->errors);
+            return new \WP_REST_Response(array('status' => false, 'data' => $postId->errors), 422);
         }
 
         if (is_array($postId)) {
-            return array('status' => false, 'data' => $postId);
+            return new \WP_REST_Response(array('status' => false, 'data' => $postId), 422);
         }
 
         $post = $this->wallService->getPost($postId);
 
         do_action('lm-sf-created-post', $post);
 
-        return array('status' => true, 'data' => $post);
+        return new \WP_REST_Response(array('status' => true, 'data' => $post), 200);
     }
 
     public function updatePost($request)
@@ -133,18 +133,18 @@ class LMWPWallPublicManager
         $postId = $this->wallService->updatePostContent($request);
 
         if (is_wp_error($postId)) {
-            return array('status' => false, 'data' => $postId->errors);
+            return new \WP_REST_Response(array('status' => false, 'data' => $postId->errors), 422);
         }
 
         if (is_array($postId)) {
-            return array('status' => false, 'data' => $postId);
+            return new \WP_REST_Response(array('status' => false, 'data' => $postId), 422);
         }
 
         $post = $this->wallService->getPost($postId);
 
         do_action('lm-sf-updated-post', $post);
 
-        return array('status' => true, 'data' => $post);
+        return new \WP_REST_Response(array('status' => true, 'data' => $post), 200);
     }
 
     public function incrementCountSharedPost($post_id, $post, $update)
