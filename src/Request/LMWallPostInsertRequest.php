@@ -35,7 +35,7 @@ class LMWallPostInsertRequest
         $file = array_key_exists('file', $data) ? $data['file'] : null;
 
         $this->validateTitle($title);
-        $this->validateContent($content);
+        $this->validateContent($content, $format);
         $this->validateAuthor($author);
         $this->validateStatus($status);
         $this->validateCategories($categories);
@@ -69,9 +69,9 @@ class LMWallPostInsertRequest
         // il testo viene già ripulito con sanitize_text_field
     }
 
-    private function validateContent($content)
+    private function validateContent($content, $format)
     {
-        if (empty($content)) {
+        if (empty($content) && (!in_array($format, array('image', 'video')))) {
             $this->errors[] = array('content' => 'il contenuto di un nuovo post non può essere vuoto');
         }
     }
@@ -127,10 +127,10 @@ class LMWallPostInsertRequest
 
     private function validateFile($file, $format)
     {
-        if($format == 'image' && !array_key_exists('picture', $file)){
+        if ($format == 'image' && !array_key_exists('picture', $file)) {
             $this->errors[] = array('picture' => 'Nessun file caricato');
         }
-        if($format == 'video' && !array_key_exists('movie', $file)){
+        if ($format == 'video' && !array_key_exists('movie', $file)) {
             $this->errors[] = array('movie' => 'Nessun file caricato');
         }
     }

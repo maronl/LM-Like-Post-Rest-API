@@ -32,7 +32,7 @@ class LMWallPostUpdateRequest
         $file = array_key_exists('file', $data) ? $data['file'] : null;
 
         $this->validatePostId($postId);
-        $this->validateContent($content);
+        $this->validateContent($content, $format);
         $this->validateFormat($format);
         $this->validateFile($file);
 
@@ -61,10 +61,10 @@ class LMWallPostUpdateRequest
     }
 
 
-    private function validateContent($content)
+    private function validateContent($content, $format)
     {
-        if (empty($content)) {
-            $this->errors[] = array('content' => 'il contenuto di un post non può essere vuoto');
+        if (empty($content) && (!in_array($format, array('image', 'video')))) {
+            $this->errors[] = array('content' => 'il contenuto di un nuovo post non può essere vuoto');
         }
     }
 

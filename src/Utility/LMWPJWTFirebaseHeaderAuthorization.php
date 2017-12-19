@@ -62,7 +62,11 @@ class LMWPJWTFirebaseHeaderAuthorization implements LMHeaderAuthorization
             return false;
         }
 
-        $token = JWT::decode($token, $this->secret, array('HS256'));
+        try {
+            $token = JWT::decode($token, $this->secret, array('HS256'));
+        }catch(\Exception $e) {
+            return false;
+        }
 
         if ($token->iss != get_bloginfo('url')) {
             return false;
