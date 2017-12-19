@@ -23,7 +23,8 @@ class LMWallPostsPictureUpdateRequest
         $files = $request->get_file_params();
 
         if (!array_key_exists('picture', $files)) {
-            return $this->errors['picture'] = 'Nessun file caricato';
+            $this->errors['picture'] = 'Nessun file caricato';
+            return $this->errors;
         }
 
         $file = $files['picture'];

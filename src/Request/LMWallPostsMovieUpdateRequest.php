@@ -23,7 +23,8 @@ class LMWallPostsMovieUpdateRequest
         $files = $request->get_file_params();
 
         if (!array_key_exists('movie', $files)) {
-            return $this->errors['movie'] = 'Nessun file caricato';
+            $this->errors['movie'] = 'Nessun file caricato';
+            return $this->errors;
         }
 
         $file = $files['movie'];

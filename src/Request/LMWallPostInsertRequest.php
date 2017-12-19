@@ -40,7 +40,7 @@ class LMWallPostInsertRequest
         $this->validateStatus($status);
         $this->validateCategories($categories);
         $this->validateFormat($format);
-        $this->validateFile($file);
+        $this->validateFile($file, $format);
 
         if (empty($this->errors)) {
             return true;
@@ -122,11 +122,17 @@ class LMWallPostInsertRequest
                 'format' => 'Il campo format può avere solo i seguenti valori: ' . implode(',', $validFormats)
             );
         }
+
     }
 
-    private function validateFile($file)
+    private function validateFile($file, $format)
     {
-        // nessuna regola di validazione il file può essere anche nullo
+        if($format == 'image' && !array_key_exists('picture', $file)){
+            $this->errors[] = array('picture' => 'Nessun file caricato');
+        }
+        if($format == 'video' && !array_key_exists('movie', $file)){
+            $this->errors[] = array('movie' => 'Nessun file caricato');
+        }
     }
 
 }
