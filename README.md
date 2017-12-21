@@ -37,12 +37,16 @@ Endpoint | HTTP Verb
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/like/toggle](#like-toggle)* | POST
 
+*[/wp-json/lm-sf-rest-api/v1.0.0/posts/{post-id}/likes](#like-users)* | GET
+
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/saved/add](#saved-add)* | POST
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/saved/remove](#saved-remove)* | POST
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/saved/toggle](#saved-toggle)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/posts/{post-id}/saved](#saved-users)* | GET
 
 
 *[/wp-json/lm-sf-rest-api/v1.0.0/follower/add](#follower-add)* | POST
@@ -135,6 +139,42 @@ JSON Response:
 }
 ```
 
+## <a name="like-users"></a> /wp-json/lm-sf-rest-api/v1.0.0/posts/{post_id}/likes
+users list like a post
+
+METHOD: GET
+
+Parameters mandatory are:
+- post_id
+
+JSON Response:
+```
+{
+  "status": true,
+  "data": [
+    {
+      "ID": "1",
+      "user_login": "playdoc-admin",
+      "display_name": "playdoc-admin",
+      "user_email": "testtest@gmail.com",
+      "user_registered": "2017-10-05 07:10:31",
+      "user_status": "0",
+      "user_picture": "http:\/\/playdoc.dev\/cn\/uploads\/axe-accounts-profile\/1\/ab1fff92440ebe1791c03ad02af1119b.jpg"
+    },
+    {
+      "ID": "3",
+      "user_login": "playdoc-editor",
+      "display_name": "playdoc editor",
+      "user_email": "playdoc.editor@gmail.com",
+      "user_registered": "2017-10-16 15:26:18",
+      "user_status": "0",
+      "user_picture": "http:\/\/playdoc.dev\/cn\/uploads\/axe-accounts-profile\/34eaf2d938447267bcd801e89a167226.png"
+    }
+  ]
+}
+```
+
+
 ## <a name="saved-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/saved/add
 Save post as favourite for an user
 
@@ -202,6 +242,41 @@ JSON Response:
 ```
 {
  "status":false
+}
+```
+
+## <a name="saved-users"></a> /wp-json/lm-sf-rest-api/v1.0.0/posts/{post_id}/saved
+users list saved a post
+
+METHOD: GET
+
+Parameters mandatory are:
+- post_id
+
+JSON Response:
+```
+{
+  "status": true,
+  "data": [
+    {
+      "ID": "1",
+      "user_login": "playdoc-admin",
+      "display_name": "playdoc-admin",
+      "user_email": "testtest@gmail.com",
+      "user_registered": "2017-10-05 07:10:31",
+      "user_status": "0",
+      "user_picture": "http:\/\/playdoc.dev\/cn\/uploads\/axe-accounts-profile\/1\/ab1fff92440ebe1791c03ad02af1119b.jpg"
+    },
+    {
+      "ID": "3",
+      "user_login": "playdoc-editor",
+      "display_name": "playdoc editor",
+      "user_email": "playdoc.editor@gmail.com",
+      "user_registered": "2017-10-16 15:26:18",
+      "user_status": "0",
+      "user_picture": "http:\/\/playdoc.dev\/cn\/uploads\/axe-accounts-profile\/34eaf2d938447267bcd801e89a167226.png"
+    }
+  ]
 }
 ```
 

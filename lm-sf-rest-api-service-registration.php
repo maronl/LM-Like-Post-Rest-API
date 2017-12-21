@@ -105,7 +105,7 @@ $builder->addDefinitions([
         return new LMLikePostWordpressService($repo);
     },
     'LMSavedPostWordpressService' => function (ContainerInterface $c) {
-        $repo = $c->get('LMLikePostWordpressRepository');
+        $repo = $c->get('LMSavedPostWordpressRepository');
         return new LMSavedPostWordpressService($repo);
     },
     'LMSharingWordpressService' => function (ContainerInterface $c) {

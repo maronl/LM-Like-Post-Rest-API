@@ -76,7 +76,7 @@ class LMSavedPostWordpressService implements LMLikePostService
 
     public function getUsersLikePost($postId)
     {
-        return $this->getUsersLikePost($postId);
+        return $this->repository->findUserLikePost($postId);
     }
 
 
