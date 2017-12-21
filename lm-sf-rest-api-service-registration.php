@@ -165,9 +165,8 @@ $builder->addDefinitions([
     },
     'LMWPWallPublicManager' => function (ContainerInterface $c) {
         $service = $c->get('LMWallWordpressService');
-        $authorizationHeader = $c->get('LMWPJWTFirebaseHeaderAuthorization');
 
-        return new LMWPWallPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service, $authorizationHeader);
+        return new LMWPWallPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
     },
     'LMWPProfilePublicManager' => function (ContainerInterface $c) {
         $service = $c->get('LMProfileWordpressService');
