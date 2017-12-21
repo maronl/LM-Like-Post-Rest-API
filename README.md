@@ -474,7 +474,7 @@ JSON Response
 ```
 
 ## <a name="wall"></a> /wp-json/lm-sf-rest-api/v1.0.0/wall
-Return details for a single post with all the comments linked to the post
+Return posts published on wall
 
 METHOD: GET
 
@@ -483,6 +483,8 @@ Parameters NOT mandatory are:
 - page
 - categories
 - authors
+- before
+- q
 
 JSON Response
 ```
