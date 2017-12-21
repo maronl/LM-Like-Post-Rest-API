@@ -10,6 +10,7 @@ namespace LM\WPPostLikeRestApi\Manager;
 
 
 use LM\WPPostLikeRestApi\Service\LMWallService;
+use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 
 class LMWPWallPublicManager
 {
@@ -17,13 +18,22 @@ class LMWPWallPublicManager
      * @var LMWallService
      */
     private $wallService;
+    /**
+     * @var LMWPJWTFirebaseHeaderAuthorization
+     */
+    private $authorizationHeader;
 
-    public function __construct($plugin_slug, $version, LMWallService $wallService)
-    {
+    public function __construct(
+        $plugin_slug,
+        $version,
+        LMWallService $wallService,
+        LMWPJWTFirebaseHeaderAuthorization $authorizationHeader
+    ) {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
         $this->namespace = $this->plugin_slug . '/v' . $this->version;
         $this->wallService = $wallService;
+        $this->authorizationHeader = $authorizationHeader;
     }
 
     /**
@@ -88,6 +98,9 @@ class LMWPWallPublicManager
             );
         }
 
+        if (has_filter('lm-sf-rest-api-wall-query-params')) {
+            $params = apply_filters('lm-sf-rest-api-wall-query-params', $params, $this->authorizationHeader->getUser());
+        }
 
         $posts = $this->wallService->getWall($params);
 

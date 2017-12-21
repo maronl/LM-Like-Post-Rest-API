@@ -152,6 +152,10 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['date_query'] = $params['date_query'];
         }
 
+        if (array_key_exists('tax_query', $params)) {
+            $paramsQuery['tax_query'] = $params['tax_query'];
+        }
+
         return $paramsQuery;
     }
 
