@@ -17,6 +17,8 @@ interface LMLikePostRepository
 
     public function findLike($userId, $postId);
 
+    public function findUserLikePost($postId);
+
     public function getTableName();
 
     public function createDBStructure();

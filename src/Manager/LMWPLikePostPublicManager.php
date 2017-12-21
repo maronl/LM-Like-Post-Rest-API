@@ -46,6 +46,11 @@ class LMWPLikePostPublicManager
             'methods' => 'POST',
             'callback' => array($this, 'toggleLike'),
         ]);
+
+        register_rest_route($this->namespace, 'posts/(?P<id>\d+)/likes', [
+            'methods' => 'GET',
+            'callback' => array($this, 'listUserLikePost'),
+        ]);
     }
 
 
@@ -99,6 +104,17 @@ class LMWPLikePostPublicManager
         }
 
         $res = array('status' => true, 'data' => $dataLike);
+
+        return $res;
+    }
+
+    public function listUserLikePost($request)
+    {
+        $postId = $request->get_param('id');
+
+        $users = $this->likePostService->getUsersLikePost($postId);
+
+        $res = array('status' => true, 'data' => $users);
 
         return $res;
     }

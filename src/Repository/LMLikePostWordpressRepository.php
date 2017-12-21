@@ -64,6 +64,25 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
         return $wpdb->get_var($sql);
     }
 
+    public function findUserLikePost($postId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
+            FROM " . $this->table. " AS l 
+              INNER JOIN " . $wpdb->prefix . "users as u
+                ON l.user_id = u.ID AND l.post_id = %d;", $postId);
+
+        $users = $wpdb->get_results($sql);
+
+        if (has_filter('lm-sf-rest-api-get-user-like-post')) {
+            $users = apply_filters('lm-sf-rest-api-get-user-like-post', $users);
+        }
+
+        return $users;
+
+    }
+
     public function getTableName()
     {
         return $this->table;
