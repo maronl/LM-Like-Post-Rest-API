@@ -35,8 +35,8 @@ $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions([
 
     // parameters
-    'post-picture-folder' => 'secured-uploads/image',
-    'post-movie-folder' => 'secured-uploads/movie',
+    'post-picture-folder' => 'image',
+    'post-movie-folder' => 'movie',
     'post-like-table' => 'lm_post_like',
     'post-saved-table' => 'lm_post_saved',
     'post-shared-table' => 'lm_post_shared',

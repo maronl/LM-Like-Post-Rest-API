@@ -137,14 +137,23 @@ Allow from all
      */
     private function getUploadDir()
     {
-        $dir = trailingslashit(WP_CONTENT_DIR) . $this->uploadDir . '/' . $this->userId . '/' . $this->postId . '/';
+        if (!defined('LM_SF_REST_API_UPLOAD_FILES_PATH')) {
+            $dir = trailingslashit(WP_CONTENT_DIR) . 'secured-uploads/' . $this->uploadDir . '/' . $this->userId . '/' . $this->postId . '/';
+        }else{
+            $dir = trailingslashit(LM_SF_REST_API_UPLOAD_FILES_PATH) . $this->uploadDir . '/' . $this->userId . '/' . $this->postId . '/';
+
+        }
         return $dir;
     }
 
     private function getUploadURL()
     {
-        $dir = trailingslashit(WP_CONTENT_URL) . $this->uploadDir . '/' . $this->userId . '/' . $this->postId . '/';
-        return $dir;
+        if (!defined('LM_SF_REST_API_UPLOAD_FILES_URL')) {
+            $url = trailingslashit(WP_CONTENT_URL) . 'secured-uploads/' . $this->uploadDir . '/' . $this->userId . '/' . $this->postId . '/';
+        }else{
+            $url = trailingslashit(LM_SF_REST_API_UPLOAD_FILES_URL) . $this->uploadDir . '/' . $this->userId . '/' . $this->postId . '/';
+        }
+        return $url;
     }
 
     public function getPicturePath($filename = null)
