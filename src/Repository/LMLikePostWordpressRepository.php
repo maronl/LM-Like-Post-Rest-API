@@ -108,7 +108,8 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
           user_id BIGINT(11) NOT NULL,
           post_id BIGINT(11) NOT NULL,
           created_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-          PRIMARY KEY (user_id, post_id)
+          PRIMARY KEY (user_id, post_id),
+          KEY `".$this->tableNoPrefix."_created_at` (`created_at`)
 	    ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

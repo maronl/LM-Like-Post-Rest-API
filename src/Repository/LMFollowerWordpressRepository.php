@@ -202,7 +202,8 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
           follower_id BIGINT(11) NOT NULL,
           following_id BIGINT(11) NOT NULL,
           created_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-          PRIMARY KEY (follower_id, following_id)
+          PRIMARY KEY (follower_id, following_id),
+          KEY `".$this->tableNoPrefix."_created_at` (`created_at`)
 	    ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

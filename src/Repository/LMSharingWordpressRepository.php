@@ -178,7 +178,8 @@ class LMSharingWordpressRepository implements LMSharingRepository
           shared_post_id BIGINT(11) NOT NULL,
           sharing_post_id BIGINT(11) NOT NULL,
           created_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-          PRIMARY KEY (shared_post_id, sharing_post_id)
+          PRIMARY KEY (shared_post_id, sharing_post_id),
+          KEY `".$this->tableNoPrefix."_created_at` (`created_at`)
 	    ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
