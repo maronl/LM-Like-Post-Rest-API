@@ -17,9 +17,9 @@ interface LMFollowerService
 
     public function checkUserFollower($followerId, $followingId);
 
-    public function getFollowers($followingId, $page, $item_per_page);
+    public function getFollowers($followingId, $page, $item_per_page, $before);
 
-    public function getFollowings($followerId, $page, $item_per_page);
+    public function getFollowings($followerId, $page, $item_per_page, $before);
 
     public function getFollowingsIds($followerId);
 

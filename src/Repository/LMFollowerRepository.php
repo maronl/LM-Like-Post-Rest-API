@@ -15,9 +15,9 @@ interface LMFollowerRepository
 
     public function deleteFollower($followerId, $followingId);
 
-    public function findFollowers($userId, $page, $item_per_page);
+    public function findFollowers($userId, $page, $item_per_page, $before = null);
 
-    public function findFollowings($userId, $page, $item_per_page);
+    public function findFollowings($userId, $page, $item_per_page, $before = null);
 
     public function findFollowingsIds($userId);
 

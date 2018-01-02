@@ -56,18 +56,29 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         return $wpdb->delete($this->table, $data, $format);
     }
 
-    public function findFollowers($userId, $page = 1, $item_per_page = 20)
+    public function findFollowers($userId, $page = 1, $item_per_page = 20, $before = null)
     {
         global $wpdb;
 
         $offset = ($page - 1) * $item_per_page;
         $limit = $item_per_page;
 
-        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
+        $sql = "SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM " . $wpdb->prefix . "lm_followers AS f 
               INNER JOIN " . $wpdb->prefix . "users as u
-                ON f.follower_id = u.ID AND f.following_id = %d
-            LIMIT %d, %d;", $userId, $offset, $limit);
+                ON f.follower_id = u.ID AND f.following_id = %d ";
+
+        if (!is_null($before)) {
+            $sql .= " WHERE f.created_at < %s ";
+        }
+
+        $sql .= " LIMIT %d, %d;";
+
+        if (!is_null($before)) {
+            $sql = $wpdb->prepare($sql, $userId, $before, $offset, $limit);
+        } else {
+            $sql = $wpdb->prepare($sql, $userId, $offset, $limit);
+        }
 
         $followers = $wpdb->get_results($sql);
 
@@ -91,18 +102,29 @@ class LMFollowerWordpressRepository implements LMFollowerRepository
         return $followers;
     }
 
-    public function findFollowings($userId, $page = 1, $item_per_page = 20)
+    public function findFollowings($userId, $page = 1, $item_per_page = 20, $before = null)
     {
         global $wpdb;
 
         $offset = ($page - 1) * $item_per_page;
         $limit = $item_per_page;
 
-        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
+        $sql = "SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
             FROM " . $wpdb->prefix . "lm_followers AS f 
               INNER JOIN " . $wpdb->prefix . "users as u
-                ON f.following_id = u.ID AND f.follower_id = %d
-            LIMIT %d, %d;", $userId, $offset, $limit);
+                ON f.following_id = u.ID AND f.follower_id = %d ";
+
+        if (!is_null($before)) {
+            $sql .= " WHERE f.created_at < %s ";
+        }
+
+        $sql .= " LIMIT %d, %d;";
+
+        if (!is_null($before)) {
+            $sql = $wpdb->prepare($sql, $userId, $before, $offset, $limit);
+        } else {
+            $sql = $wpdb->prepare($sql, $userId, $offset, $limit);
+        }
 
         $followings = $wpdb->get_results($sql);
 

@@ -129,7 +129,13 @@ class LMWPFollowerPublicManager
         $followingId = $request->get_param('following_id');
         $page = $request->get_param('page');
         $item_per_page = $request->get_param('item_per_page');
-
+        $before = $request->get_param('before');
+        if (!empty($before)) {
+            // aggiungo un secondo così da poter conteggiare anche il post con la data indicata
+            $before = \DateTime::createFromFormat('Y-m-d H:i:s', $before);
+            $before->add(new \DateInterval('PT1S'));
+            $before = $before->format('Y-m-d H:i:s');
+        }
         if (empty($page)) {
             $page = 1;
         }
@@ -142,14 +148,15 @@ class LMWPFollowerPublicManager
             return array('status' => false);
         }
 
-        $followers = $this->followerService->getFollowers($followingId, $page, $item_per_page);
+        $followers = $this->followerService->getFollowers($followingId, $page, $item_per_page, $before);
 
         return array(
             'status' => true,
             'data' => $followers,
             'total' => $this->followerService->getFollowersCount($followingId),
             'page' => $page,
-            'item_per_page' => $item_per_page
+            'item_per_page' => $item_per_page,
+            'time_server' => date('Y-m-d H:i:s')
         );
     }
 
@@ -158,6 +165,13 @@ class LMWPFollowerPublicManager
         $followerId = $request->get_param('follower_id');
         $page = $request->get_param('page');
         $item_per_page = $request->get_param('item_per_page');
+        $before = $request->get_param('before');
+        if (!empty($before)) {
+            // aggiungo un secondo così da poter conteggiare anche il post con la data indicata
+            $before = \DateTime::createFromFormat('Y-m-d H:i:s', $before);
+            $before->add(new \DateInterval('PT1S'));
+            $before = $before->format('Y-m-d H:i:s');
+        }
 
         if (empty($page)) {
             $page = 1;
@@ -170,13 +184,15 @@ class LMWPFollowerPublicManager
             return array('status' => false);
         }
 
-        $followings = $this->followerService->getFollowings($followerId, $page, $item_per_page);
+        $followings = $this->followerService->getFollowings($followerId, $page, $item_per_page, $before);
+
         return array(
             'status' => true,
             'data' => $followings,
             'total' => $this->followerService->getFollowingsCount($followerId),
             'page' => $page,
-            'item_per_page' => $item_per_page
+            'item_per_page' => $item_per_page,
+            'time_server' => date('Y-m-d H:i:s')
         );
     }
 
