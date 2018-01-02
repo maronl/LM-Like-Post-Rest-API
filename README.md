@@ -358,8 +358,9 @@ Parameters mandatory are:
 - following_id
 
 Optional parameters
-- page (default = 20)
-- item_per_page (default = 1)
+- page (default = 1)
+- item_per_page (default = 20)
+- before (default = null, e.g. 2018-12-31 23:34:12)
 
 JSON Response
 ```
@@ -385,7 +386,8 @@ JSON Response
  ],
  "total":"2",
  "page":1,
- "item_per_page":20
+ "item_per_page":20,
+ "time_server":"2018-12-31 23:34:12" 
 }
 ```
 
@@ -404,8 +406,9 @@ Parameters mandatory are:
 - follower_id
 
 Optional parameters
-- page (default = 20)
-- item_per_page (default = 1)
+- page (default = 1)
+- item_per_page (default = 20)
+- before (default = null, e.g. 2018-12-31 23:34:12)
 
 JSON Response
 ```
@@ -431,7 +434,8 @@ JSON Response
  ],
  "total":"2",
  "page":1,
- "item_per_page":20
+ "item_per_page":20,
+ "time_server":"2018-12-31 23:34:12"
 }
 ```
 
