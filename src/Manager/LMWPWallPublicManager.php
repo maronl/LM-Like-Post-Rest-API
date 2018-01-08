@@ -80,9 +80,9 @@ class LMWPWallPublicManager
         if (!empty($authors)) {
             $params['authors'] = $authors;
         }
-        $likedByUser = $request->get_param('liked_by_user');
-        if (!empty($likedByUser)) {
-            $params['liked_by_user'] = $likedByUser;
+        $savedByUser = $request->get_param('saved_by_user');
+        if (!empty($savedByUser)) {
+            $params['saved_by_user'] = $savedByUser;
         }
         $before = $request->get_param('before');
         if (!empty($before)) {
