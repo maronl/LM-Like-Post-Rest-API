@@ -20,4 +20,6 @@ interface LMLikePostService
     public function checkUserPostLike($userId, $postId);
 
     public function getUsersLikePost($postId);
+
+    public function getPostIdsLikeByUser($userId);
 }

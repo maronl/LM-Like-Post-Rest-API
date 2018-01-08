@@ -50,8 +50,9 @@ class LMWPSavedPostPublicManager
 
         register_rest_route($this->namespace, 'posts/(?P<id>\d+)/saved', [
             'methods' => 'GET',
-            'callback' => array($this, 'listUserSavedPost'),
+            'callback' => array($this, 'listUsersSavedPost'),
         ]);
+
     }
 
     public function addSaved($request)
@@ -102,7 +103,7 @@ class LMWPSavedPostPublicManager
         return $res;
     }
 
-    public function listUserSavedPost($request)
+    public function listUsersSavedPost($request)
     {
         $postId = $request->get_param('id');
 
@@ -112,4 +113,5 @@ class LMWPSavedPostPublicManager
 
         return $res;
     }
+
 }

@@ -78,4 +78,10 @@ class LMLikePostWordpressService implements LMLikePostService
     {
         return $this->repository->findUserLikePost($postId);
     }
+
+    public function getPostIdsLikeByUser($userId)
+    {
+        return $this->repository->findPostIdsLikeByUser($userId);
+    }
+
 }

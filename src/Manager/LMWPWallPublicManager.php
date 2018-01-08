@@ -80,6 +80,10 @@ class LMWPWallPublicManager
         if (!empty($authors)) {
             $params['authors'] = $authors;
         }
+        $likedByUser = $request->get_param('liked_by_user');
+        if (!empty($likedByUser)) {
+            $params['liked_by_user'] = $likedByUser;
+        }
         $before = $request->get_param('before');
         if (!empty($before)) {
             // aggiungo un secondo così da poter conteggiare anche il post con la data indicata

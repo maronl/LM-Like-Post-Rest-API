@@ -83,6 +83,23 @@ class LMLikePostWordpressRepository implements LMLikePostRepository
 
     }
 
+    public function findPostIdsLikeByUser($userId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT post_id 
+            FROM " . $this->table. "  
+            WHERE user_id = %d ORDER BY created_at DESC;", $userId);
+
+        $users = $wpdb->get_results($sql, ARRAY_N);
+
+        $users = array_reduce($users, 'array_merge', array());
+
+        return $users;
+
+    }
+
+
     public function getTableName()
     {
         return $this->table;

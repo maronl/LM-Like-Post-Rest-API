@@ -156,6 +156,11 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['tax_query'] = $params['tax_query'];
         }
 
+        if (array_key_exists('liked_by_user', $params)) {
+            $posts = $this->savedPostService->getPostIdsLikeByUser($params['liked_by_user']);
+            $paramsQuery['post__in'] = $posts;
+        }
+
         return $paramsQuery;
     }
 
