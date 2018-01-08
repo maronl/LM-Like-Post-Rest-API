@@ -110,11 +110,21 @@ trait LMWPPostWallDetails
      */
     private function retrieveAuthorInformation($authorId, $wpdb)
     {
-        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
-            FROM pld_users as u
-            WHERE u.ID = %d;", $authorId);
-
-        $userInfo = $wpdb->get_row($sql);
+//        $sql = $wpdb->prepare("SELECT u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
+//            FROM pld_users as u
+//            WHERE u.ID = %d;", $authorId);
+//
+//        $userInfo = $wpdb->get_row($sql);
+        $userData = get_user_by('id', $authorId);
+        $userInfo = array(
+            'ID' => $authorId,
+            'user_login' => $userData->ID,
+            'display_name' => $userData->display_name,
+            'user_email' => $userData->user_email,
+            'user_registered' => $userData->user_registered,
+            'user_status' => $userData->user_status,
+            'roles' => $userData->roles
+        );
         if (!empty($userInfo)) {
             if (has_filter('lm-sf-rest-api-get-wall-author-info')) {
                 $userInfo = apply_filters('lm-sf-rest-api-get-wall-author-info', $userInfo);
