@@ -56,7 +56,7 @@ trait LMWPPostWallDetails
 
         $post->featured_image = $this->getFeaturedMedia($post, $pictureRepository);
 
-        if($post->post_format === 'video') {
+        if ($post->post_format === 'video') {
             $post->featured_video = $this->getFeaturedVideo($post, $movieRepository);
         }
 
@@ -116,14 +116,15 @@ trait LMWPPostWallDetails
 //
 //        $userInfo = $wpdb->get_row($sql);
         $userData = get_user_by('id', $authorId);
+
         $userInfo = new \stdClass;
         $userInfo->ID = $authorId;
-        $userInfo->user_login= $userData->ID;
-        $userInfo->display_name = $userData->display_name;
-        $userInfo->user_email = $userData->user_email;
-        $userInfo->user_registered = $userData->user_registered;
-        $userInfo->user_status = $userData->user_status;
-        $userInfo->roles = $userData->roles;
+        $userInfo->user_login = (empty($userData)) ? '' : $userData->ID;
+        $userInfo->display_name =  (empty($userData)) ? '' : $userData->display_name;
+        $userInfo->user_email =  (empty($userData)) ? '' : $userData->user_email;
+        $userInfo->user_registered =  (empty($userData)) ? '' : $userData->user_registered;
+        $userInfo->user_status =  (empty($userData)) ? '' : $userData->user_status;
+        $userInfo->roles =  (empty($userData)) ? '' : $userData->roles;
         if (!empty($userInfo)) {
             if (has_filter('lm-sf-rest-api-get-wall-author-info')) {
                 $userInfo = apply_filters('lm-sf-rest-api-get-wall-author-info', $userInfo);
