@@ -164,12 +164,14 @@ $builder->addDefinitions([
         return new LMWPFollowerPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
     },
     'LMWPWallPublicManager' => function (ContainerInterface $c) {
-        $service = $c->get('LMWallWordpressService');
+        $wallService = $c->get('LMWallWordpressService');
+        $sharingService = $c->get('LMSharingWordpressService');
 
-        return new LMWPWallPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
+        return new LMWPWallPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $wallService, $sharingService);
     },
     'LMWPProfilePublicManager' => function (ContainerInterface $c) {
         $service = $c->get('LMProfileWordpressService');
+
         return new LMWPProfilePublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
     },
 

@@ -72,6 +72,9 @@ Endpoint | HTTP Verb
 *[/wp-json/lm-sf-rest-api/v1.0.0/wall/{post-id}](#wall-post)* | GET
 
 
+*[/wp-json/lm-sf-rest-api/v1.0.0/post/{post-id}/shared/users](#post-shared-users)* | GET
+
+
 ## <a name="like-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/add
 Add user like to a specific post
 
@@ -769,5 +772,40 @@ JSON Response
     "liked": false,
     "saved": true
   }
+}
+```
+
+## <a name="post-shared-users"></a> /wp-json/lm-sf-rest-api/v1.0.0/posts/{post_id}/shared/users
+get the list of users sharing a post
+
+METHOD: GET
+
+Parameters mandatory are:
+- post_id
+
+JSON Response:
+```
+{
+  "status": true,
+  "data": [
+    {
+      "ID": "1",
+      "user_login": "playdoc-admin",
+      "display_name": "Mario Rossi",
+      "user_email": "mario.rossi@gmail.com",
+      "user_registered": "2017-10-05 07:10:31",
+      "user_status": "0",
+      "user_picture": "http://playdoc.luc/cn/uploads/axe-accounts-profile/1/ab1fff92440ebe1791c03ad02af1119b.jpg"
+    },
+        {
+          "ID": "2",
+          "user_login": "playdoc-staff",
+          "display_name": "Paolo Rossi",
+          "user_email": "paolo.rossi@gmail.com",
+          "user_registered": "2017-10-06 07:10:31",
+          "user_status": "0",
+          "user_picture": "http://playdoc.luc/cn/uploads/axe-accounts-profile/1/ab1fff92440ebe1791c03ad02af1119b.jpg"
+        }
+  ]
 }
 ```

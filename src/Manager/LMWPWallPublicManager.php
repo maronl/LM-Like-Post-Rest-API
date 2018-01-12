@@ -9,6 +9,7 @@
 namespace LM\WPPostLikeRestApi\Manager;
 
 
+use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
 use LM\WPPostLikeRestApi\Service\LMWallService;
 
 class LMWPWallPublicManager
@@ -17,16 +18,29 @@ class LMWPWallPublicManager
      * @var LMWallService
      */
     private $wallService;
+    /**
+     * @var LMSharingWordpressService
+     */
+    private $sharingWordpressService;
 
+    /**
+     * LMWPWallPublicManager constructor.
+     * @param $plugin_slug
+     * @param $version
+     * @param LMWallService $wallService
+     * @param LMSharingWordpressService $sharingWordpressService
+     */
     public function __construct(
         $plugin_slug,
         $version,
-        LMWallService $wallService
+        LMWallService $wallService,
+        LMSharingWordpressService $sharingWordpressService
     ) {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
         $this->namespace = $this->plugin_slug . '/v' . $this->version;
         $this->wallService = $wallService;
+        $this->sharingWordpressService = $sharingWordpressService;
     }
 
     /**
@@ -53,6 +67,12 @@ class LMWPWallPublicManager
             'methods' => 'POST',
             'callback' => array($this, 'updatePost'),
         ]);
+
+        register_rest_route($this->namespace, 'posts/(?P<id>\d+)/shared/users', [
+            'methods' => 'GET',
+            'callback' => array($this, 'listUsersSharedPost'),
+        ]);
+
     }
 
     public function getWall($request)
@@ -170,6 +190,17 @@ class LMWPWallPublicManager
             $post->post_parent);
         $count = $wpdb->get_var($sql);
         return update_post_meta($post_id, 'lm-shared-post-counter', $count);
+    }
+
+    public function listUsersSharedPost($request)
+    {
+        $postId = $request->get_param('id');
+
+        $users = $this->sharingWordpressService->getUsersSharedPost($postId);
+
+        $res = array('status' => true, 'data' => $users);
+
+        return $res;
     }
 
 }

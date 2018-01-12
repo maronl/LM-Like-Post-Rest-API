@@ -40,4 +40,25 @@ class LMSharingWordpressService implements LMSharingService
     {
         return $this->repository->deleteSharing($sharedId, $sharingId);
     }
+
+    public function getUsersSharedPost($postId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT distinct u.ID, u.user_login, u.display_name, u.user_email, u.user_registered, u.user_status
+            FROM " . $this->repository->getTableName() . " AS l 
+              INNER JOIN " . $wpdb->prefix . "posts as p
+                ON p.ID = l.sharing_post_id and l.shared_post_id = %d
+              INNER JOIN " . $wpdb->prefix . "users as u
+                ON p.post_author = u.ID;", $postId);
+
+        //no shared join posts join users
+        $users = $wpdb->get_results($sql);
+
+        if (has_filter('lm-sf-rest-api-get-user-like-post')) {
+            $users = apply_filters('lm-sf-rest-api-get-user-like-post', $users);
+        }
+
+        return $users;
+    }
 }

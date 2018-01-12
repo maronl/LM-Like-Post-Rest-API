@@ -18,4 +18,7 @@ interface LMSharingService
     public function findSharedPost($sharingId);
 
     public function getSharedCount($sharedId);
+
+    public function getUsersSharedPost($postId);
+
 }
