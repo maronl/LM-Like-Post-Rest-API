@@ -11,6 +11,7 @@ namespace LM\WPPostLikeRestApi\Manager;
 
 use LM\WPPostLikeRestApi\Service\LMSharingWordpressService;
 use LM\WPPostLikeRestApi\Service\LMWallService;
+use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 
 class LMWPWallPublicManager
 {
@@ -22,6 +23,10 @@ class LMWPWallPublicManager
      * @var LMSharingWordpressService
      */
     private $sharingWordpressService;
+    /**
+     * @var LMWPJWTFirebaseHeaderAuthorization
+     */
+    private $headerAuthorization;
 
     /**
      * LMWPWallPublicManager constructor.
@@ -34,13 +39,16 @@ class LMWPWallPublicManager
         $plugin_slug,
         $version,
         LMWallService $wallService,
-        LMSharingWordpressService $sharingWordpressService
+        LMSharingWordpressService $sharingWordpressService,
+        LMWPJWTFirebaseHeaderAuthorization $headerAuthorization
+
     ) {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
         $this->namespace = $this->plugin_slug . '/v' . $this->version;
         $this->wallService = $wallService;
         $this->sharingWordpressService = $sharingWordpressService;
+        $this->headerAuthorization = $headerAuthorization;
     }
 
     /**
@@ -66,6 +74,11 @@ class LMWPWallPublicManager
         register_rest_route($this->namespace, 'wall/(?P<id>\d+)', [
             'methods' => 'POST',
             'callback' => array($this, 'updatePost'),
+        ]);
+
+        register_rest_route($this->namespace, 'wall/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => array($this, 'deletePost'),
         ]);
 
         register_rest_route($this->namespace, 'posts/(?P<id>\d+)/shared/users', [
@@ -175,6 +188,29 @@ class LMWPWallPublicManager
         do_action('lm-sf-updated-post', $post);
 
         return new \WP_REST_Response(array('status' => true, 'data' => $post), 200);
+    }
+
+    public function deletePost($request)
+    {
+        $userId = $this->headerAuthorization->getUser();
+
+        $postId = $request->get_param('id', $userId);
+
+        $post = $this->wallService->getPost($postId);
+
+        if(empty($post)) {
+            return new \WP_REST_Response(array('status' => false, 'msg' => 'post not found'), 404);
+        }
+
+        if($userId != $post->post_author) {
+            return new \WP_REST_Response(array('status' => false, 'msg' => 'action forbidden'), 403);
+        }
+
+        if(wp_delete_post( $postId, true ) === false) {
+            return new \WP_REST_Response(array('status' => true, 'msg' => 'Error deleting the post'), 500);
+        }
+
+        return new \WP_REST_Response(array('status' => true), 200);
     }
 
     public function incrementCountSharedPost($post_id, $post, $update)
