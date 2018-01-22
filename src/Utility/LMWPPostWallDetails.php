@@ -72,7 +72,7 @@ trait LMWPPostWallDetails
                 $post->sharedPostDetails = $postShared;
                 $post->sharedPostDetails->post_content_rendered = apply_filters('the_content',
                     $postShared->post_content);
-                $post->sharedPostDetails->featured_image = get_the_post_thumbnail_url($postShared->ID);
+                $post->sharedPostDetails->featured_image = $this->getFeaturedMedia($postShared, $pictureRepository);
                 $post->sharedPostDetails->author = $this->retrieveAuthorPostInformation($postShared, $wpdb);
 
             }
