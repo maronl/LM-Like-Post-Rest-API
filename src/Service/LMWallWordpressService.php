@@ -69,19 +69,32 @@ class LMWallWordpressService implements LMWallService
 
     public function getWall(Array $params)
     {
+        global $wpdb;
+
         $paramsQuery = $this->setWallQueryParameters($params);
-        return $this->completePostsInformation(get_posts($paramsQuery));
+
+        $paramsQuery['suppress_filters'] = false;
+
+        add_filter('posts_join', array($this, 'filterJoinUserHiddenPost'));
+        add_filter('posts_where', array($this, 'filterWhereUserHiddenPost'));
+
+        $posts = get_posts($paramsQuery);
+
+        remove_filter('posts_join', array($this, 'filterJoinUserHiddenPost'));
+        remove_filter('posts_where', array($this, 'filterWhereUserHiddenPost'));
+
+        return $this->completePostsInformation($posts);
     }
 
     public function getPost($postId)
     {
         $post = get_post($postId);
 
-        if(empty($post)) {
+        if (empty($post)) {
             return false;
         }
 
-        if($post->post_status !== 'publish') {
+        if ($post->post_status !== 'publish') {
             return false;
         }
 
@@ -186,7 +199,6 @@ class LMWallWordpressService implements LMWallService
         // return redazione todo mettere come paramentro configurabile
         $authors = array(1);
 
-
         $userAuthorized = $this->headerAuthorization->getUser();
 
         $authors = array_merge($authors, array($userAuthorized));
@@ -224,6 +236,19 @@ class LMWallWordpressService implements LMWallService
         }
 
         return true;
+    }
+
+    public function filterJoinUserHiddenPost($join)
+    {
+        $userQuerying = $this->headerAuthorization->getUser();
+        $join .= " LEFT JOIN pld_lm_post_hidden as ph ON ph.post_id = pld_posts.ID AND ph.user_id = $userQuerying ";
+        return $join;
+    }
+
+    public function filterWhereUserHiddenPost($where)
+    {
+        $where .= " AND ph.created_at IS NULL ";
+        return $where;
     }
 
 }

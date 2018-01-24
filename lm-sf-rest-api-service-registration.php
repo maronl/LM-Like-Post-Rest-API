@@ -2,8 +2,11 @@
 
 use Interop\Container\ContainerInterface;
 use LM\WPPostLikeRestApi\Manager\LMWPFollowerPublicManager;
+use LM\WPPostLikeRestApi\Manager\LMWPHiddenPostPublicManager;
+use LM\WPPostLikeRestApi\Repository\LMHiddenPostWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMWallPostsMovieWordpressRepository;
 use LM\WPPostLikeRestApi\Request\LMWallPostsMovieUpdateRequest;
+use LM\WPPostLikeRestApi\Service\LMHiddenPostWordpressService;
 use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostAdminManager;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostPublicManager;
@@ -40,6 +43,7 @@ $builder->addDefinitions([
     'post-like-table' => 'lm_post_like',
     'post-saved-table' => 'lm_post_saved',
     'post-shared-table' => 'lm_post_shared',
+    'post-hidden-table' => 'lm_post_hidden',
     'follower-table' => 'lm_followers',
     'plugin-slug' => 'lm-sf-rest-api',
     'plugin-version' => '1.0.0',
@@ -66,13 +70,16 @@ $builder->addDefinitions([
 
     // repositories
     'LMLikePostWordpressRepository' => function (ContainerInterface $c) {
-        return new LMLikePostWordpressRepository('lm_post_like', '1.0.0');
+        return new LMLikePostWordpressRepository($c->get('post-like-table'),  $c->get('plugin-version'));
     },
     'LMSavedPostWordpressRepository' => function (ContainerInterface $c) {
         return new LMLikePostWordpressRepository($c->get('post-saved-table'), $c->get('plugin-version'));
     },
     'LMSharingWordpressRepository' => function (ContainerInterface $c) {
         return new LMSharingWordpressRepository($c->get('post-shared-table'), $c->get('plugin-version'));
+    },
+    'LMHiddenPostWordpressRepository' => function (ContainerInterface $c) {
+        return new LMHiddenPostWordpressRepository($c->get('post-hidden-table'), $c->get('plugin-version'));
     },
     'LMFollowerWordpressRepository' => function (ContainerInterface $c) {
         return new LMFollowerWordpressRepository($c->get('follower-table'), $c->get('plugin-version'));
@@ -111,6 +118,10 @@ $builder->addDefinitions([
     'LMSharingWordpressService' => function (ContainerInterface $c) {
         $repo = $c->get('LMSharingWordpressRepository');
         return new LMSharingWordpressService($repo);
+    },
+    'LMHiddenPostWordpressService' => function (ContainerInterface $c) {
+        $repo = $c->get('LMHiddenPostWordpressRepository');
+        return new LMHiddenPostWordpressService($repo);
     },
     'LMFollowerWordpressService' => function (ContainerInterface $c) {
         $repo = $c->get('LMFollowerWordpressRepository');
@@ -159,6 +170,11 @@ $builder->addDefinitions([
         $service = $c->get('LMSavedPostWordpressService');
         return new LMWPSavedPostPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
     },
+    'LMWPHiddenPostPublicManager' => function (ContainerInterface $c) {
+        $service = $c->get('LMHiddenPostWordpressService');
+        return new LMWPHiddenPostPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
+    },
+
     'LMWPFollowerPublicManager' => function (ContainerInterface $c) {
         $service = $c->get('LMFollowerWordpressService');
         return new LMWPFollowerPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
