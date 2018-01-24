@@ -1,11 +1,15 @@
 <?php
 
 use Interop\Container\ContainerInterface;
+use LM\WPPostLikeRestApi\Manager\LMAbuseReportPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPFollowerPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPHiddenPostPublicManager;
+use LM\WPPostLikeRestApi\Repository\LMAbuseReportWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMHiddenPostWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMWallPostsMovieWordpressRepository;
+use LM\WPPostLikeRestApi\Request\LMAbuseReportInsertRequest;
 use LM\WPPostLikeRestApi\Request\LMWallPostsMovieUpdateRequest;
+use LM\WPPostLikeRestApi\Service\LMAbuseReportWordpressService;
 use LM\WPPostLikeRestApi\Service\LMHiddenPostWordpressService;
 use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostAdminManager;
@@ -44,6 +48,7 @@ $builder->addDefinitions([
     'post-saved-table' => 'lm_post_saved',
     'post-shared-table' => 'lm_post_shared',
     'post-hidden-table' => 'lm_post_hidden',
+    'abuse-report-table' => 'lm_abuse_reports',
     'follower-table' => 'lm_followers',
     'plugin-slug' => 'lm-sf-rest-api',
     'plugin-version' => '1.0.0',
@@ -61,6 +66,9 @@ $builder->addDefinitions([
     },
     'LMWallPostsMovieUpdateRequest' => function (ContainerInterface $c) {
         return new LMWallPostsMovieUpdateRequest();
+    },
+    'LMAbuseReportInsertRequest' => function () {
+        return new LMAbuseReportInsertRequest();
     },
 
     // model
@@ -93,6 +101,9 @@ $builder->addDefinitions([
         $updateRequest = $c->get('LMWallPostsMovieUpdateRequest');
 
         return new LMWallPostsMovieWordpressRepository($updateRequest, $c->get('post-movie-folder'));
+    },
+    'LMAbuseReportWordpressRepository' => function (ContainerInterface $c) {
+        return new LMAbuseReportWordpressRepository($c->get('abuse-report-table'), $c->get('plugin-version'));
     },
 
     'LMWallPostWordpressRepository' => function (ContainerInterface $c) {
@@ -146,6 +157,11 @@ $builder->addDefinitions([
         $savedPostService = $c->get('LMSavedPostWordpressService');
         return new LMProfileWordpressService($header, $followerService, $likePostService, $savedPostService);
     },
+    'LMAbuseReportWordpressService' => function (ContainerInterface $c) {
+        $repo = $c->get('LMAbuseReportWordpressRepository');
+        $validator = $c->get('LMAbuseReportInsertRequest');
+        return new LMAbuseReportWordpressService($repo, $validator);
+    },
 
 
     // managers
@@ -190,6 +206,12 @@ $builder->addDefinitions([
         $service = $c->get('LMProfileWordpressService');
 
         return new LMWPProfilePublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
+    },
+    'LMAbuseReportPublicManager' => function (ContainerInterface $c) {
+        $service = $c->get('LMAbuseReportWordpressService');
+        $header = $c->get('LMWPJWTFirebaseHeaderAuthorization');
+
+        return new LMAbuseReportPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service, $header);
     },
 
     // utility

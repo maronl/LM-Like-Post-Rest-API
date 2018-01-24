@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/Utility/LMWPPluginLoader.php';
 require_once dirname(__FILE__) . '/Utility/LMWPPostWallDetails.php';
 
 require_once dirname(__FILE__) . '/Model/LMWallPostModel.php';
+require_once dirname(__FILE__) . '/Model/LMAbuseReport.php';
 
 require_once dirname(__FILE__) . '/Manager/LMWPPluginManager.php';
 
@@ -13,6 +14,7 @@ require_once dirname(__FILE__) . '/Request/LMWallPostInsertRequest.php';
 require_once dirname(__FILE__) . '/Request/LMWallPostUpdateRequest.php';
 require_once dirname(__FILE__) . '/Request/LMWallPostsPictureUpdateRequest.php';
 require_once dirname(__FILE__) . '/Request/LMWallPostsMovieUpdateRequest.php';
+require_once dirname(__FILE__) . '/Request/LMAbuseReportInsertRequest.php';
 
 require_once dirname(__FILE__) . '/Repository/LMFollowerRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMFollowerWordpressRepository.php';
@@ -27,6 +29,8 @@ require_once dirname(__FILE__) . '/Repository/LMWallPostWordpressRepository.php'
 require_once dirname(__FILE__) . '/Repository/LMWallPostsPictureRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMWallPostsPictureWordpressRepository.php';
 require_once dirname(__FILE__) . '/Repository/LMWallPostsMovieWordpressRepository.php';
+require_once dirname(__FILE__) . '/Repository/LMAbuseReportRepository.php';
+require_once dirname(__FILE__) . '/Repository/LMAbuseReportWordpressRepository.php';
 
 require_once dirname(__FILE__) . '/Service/LMFollowerService.php';
 require_once dirname(__FILE__) . '/Service/LMFollowerWordpressService.php';
@@ -41,6 +45,8 @@ require_once dirname(__FILE__) . '/Service/LMWallService.php';
 require_once dirname(__FILE__) . '/Service/LMWallWordpressService.php';
 require_once dirname(__FILE__) . '/Service/LMProfileService.php';
 require_once dirname(__FILE__) . '/Service/LMProfileWordpressService.php';
+require_once dirname(__FILE__) . '/Service/LMAbuseReportService.php';
+require_once dirname(__FILE__) . '/Service/LMAbuseReportWordpressService.php';
 
 require_once dirname(__FILE__) . '/Manager/LMWPFollowerPublicManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPLikePostPublicManager.php';
@@ -48,6 +54,7 @@ require_once dirname(__FILE__) . '/Manager/LMWPHiddenPostPublicManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPSavedPostPublicManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPWallPublicManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPProfilePublicManager.php';
+require_once dirname(__FILE__) . '/Manager/LMAbuseReportPublicManager.php';
 
 require_once dirname(__FILE__) . '/Manager/LMWPLikePostAdminManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPSavedPostAdminManager.php';

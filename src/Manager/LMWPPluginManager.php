@@ -125,6 +125,7 @@ class LMWPPluginManager
         $hiddenPublic = $containerLmSfRestAPI->get('LMWPHiddenPostPublicManager');
         $followerPublic = $containerLmSfRestAPI->get('LMWPFollowerPublicManager');
         $wallPublic = $containerLmSfRestAPI->get('LMWPWallPublicManager');
+        $abusePublic = $containerLmSfRestAPI->get('LMAbuseReportPublicManager');
         $profilePublic = $containerLmSfRestAPI->get('LMWPProfilePublicManager');
 
         $this->loader->add_action('rest_api_init', $likePublic, 'add_api_routes');
@@ -132,6 +133,7 @@ class LMWPPluginManager
         $this->loader->add_action('rest_api_init', $hiddenPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $followerPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $wallPublic, 'add_api_routes');
+        $this->loader->add_action('rest_api_init', $abusePublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $profilePublic, 'add_api_routes');
 
         $this->loader->add_action('wp_insert_post', $wallPublic, 'incrementCountSharedPost', 10, 3);
@@ -151,6 +153,7 @@ class LMWPPluginManager
         $hiddenPostRepository = $containerLmSfRestAPI->get('LMHiddenPostWordpressRepository');
         $followerRepository = $containerLmSfRestAPI->get('LMFollowerWordpressRepository');
         $sharingRepository = $containerLmSfRestAPI->get('LMSharingWordpressRepository');
+        $abuseRepository = $containerLmSfRestAPI->get('LMAbuseReportWordpressRepository');
         $wallPostModel = $containerLmSfRestAPI->get('LMWallPostModel');
 
         register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
@@ -163,6 +166,8 @@ class LMWPPluginManager
             array($followerRepository, 'createDBStructure'));
         register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
             array($sharingRepository, 'createDBStructure'));
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($abuseRepository, 'createDBStructure'));
         register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
             array($wallPostModel, 'setCustomPostWallCapabilities'));
     }
