@@ -69,8 +69,6 @@ class LMWallWordpressService implements LMWallService
 
     public function getWall(Array $params)
     {
-        global $wpdb;
-
         $paramsQuery = $this->setWallQueryParameters($params);
 
         $paramsQuery['suppress_filters'] = false;
