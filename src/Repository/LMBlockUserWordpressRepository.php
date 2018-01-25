@@ -9,7 +9,7 @@
 namespace LM\WPPostLikeRestApi\Repository;
 
 
-class LMHiddenPostWordpressRepository implements LMHiddenPostRepository
+class LMBlockUserWordpressRepository implements LMBlockUserRepository
 {
     private $table;
 
@@ -25,13 +25,13 @@ class LMHiddenPostWordpressRepository implements LMHiddenPostRepository
         $this->version = $version;
     }
 
-    public function hidePost($userId, $postId)
+    public function blockUser($blockingId, $blockedId)
     {
         global $wpdb;
 
         $data = array(
-            'user_id' => $userId,
-            'post_id' => $postId,
+            'user_id' => $blockingId,
+            'blocked_user_id' => $blockedId,
             'created_at' => date('Y-m-d H:i:s')
         );
 
@@ -40,18 +40,28 @@ class LMHiddenPostWordpressRepository implements LMHiddenPostRepository
         return $wpdb->replace($this->table, $data, $format);
     }
 
-    public function showPost($userId, $postId)
+    public function unblockUser($blockingId, $blockedId)
     {
         global $wpdb;
 
         $data = array(
-            'user_id' => $userId,
-            'post_id' => $postId
+            'user_id' => $blockingId,
+            'blocked_user_id' => $blockedId
         );
 
         $format = array('%d', '%d');
 
         return $wpdb->delete($this->table, $data, $format);
+    }
+
+    public function isBlocked($blockingId, $blockedId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE user_id = %d AND blocked_user_id = %d", $blockingId,
+            $blockedId);
+
+        return $wpdb->get_var($sql);
     }
 
     public function getTableName()
@@ -77,7 +87,7 @@ class LMHiddenPostWordpressRepository implements LMHiddenPostRepository
 
         $sql = "CREATE TABLE IF NOT EXISTS $tableName (
           user_id BIGINT(11) NOT NULL,
-          post_id BIGINT(11) NOT NULL,
+          blocked_user_id BIGINT(11) NOT NULL,
           created_at DATETIME NOT NULL,
           PRIMARY KEY (user_id, post_id),
           KEY `".$this->tableNoPrefix."_created_at` (`created_at`)
@@ -90,13 +100,4 @@ class LMHiddenPostWordpressRepository implements LMHiddenPostRepository
         add_option($this->tableNoPrefix . '_db_version', $this->version);
     }
 
-    public function isHidden($userId, $postId)
-    {
-        global $wpdb;
-
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM $this->table WHERE post_id = %d AND user_id = %d", $postId,
-            $userId);
-
-        return $wpdb->get_var($sql);
-    }
 }

@@ -123,6 +123,7 @@ class LMWPPluginManager
         $likePublic = $containerLmSfRestAPI->get('LMWPLikePostPublicManager');
         $savedPublic = $containerLmSfRestAPI->get('LMWPSavedPostPublicManager');
         $hiddenPublic = $containerLmSfRestAPI->get('LMWPHiddenPostPublicManager');
+        $blockUserPublic = $containerLmSfRestAPI->get('LMWPBlockUserPublicManager');
         $followerPublic = $containerLmSfRestAPI->get('LMWPFollowerPublicManager');
         $wallPublic = $containerLmSfRestAPI->get('LMWPWallPublicManager');
         $abusePublic = $containerLmSfRestAPI->get('LMAbuseReportPublicManager');
@@ -131,6 +132,7 @@ class LMWPPluginManager
         $this->loader->add_action('rest_api_init', $likePublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $savedPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $hiddenPublic, 'add_api_routes');
+        $this->loader->add_action('rest_api_init', $blockUserPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $followerPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $wallPublic, 'add_api_routes');
         $this->loader->add_action('rest_api_init', $abusePublic, 'add_api_routes');
@@ -151,6 +153,7 @@ class LMWPPluginManager
         $likePostRepository = $containerLmSfRestAPI->get('LMLikePostWordpressRepository');
         $savedPostRepository = $containerLmSfRestAPI->get('LMSavedPostWordpressRepository');
         $hiddenPostRepository = $containerLmSfRestAPI->get('LMHiddenPostWordpressRepository');
+        $blockUserRepository = $containerLmSfRestAPI->get('LMBlockUserWordpressRepository');
         $followerRepository = $containerLmSfRestAPI->get('LMFollowerWordpressRepository');
         $sharingRepository = $containerLmSfRestAPI->get('LMSharingWordpressRepository');
         $abuseRepository = $containerLmSfRestAPI->get('LMAbuseReportWordpressRepository');
@@ -162,6 +165,8 @@ class LMWPPluginManager
             array($savedPostRepository, 'createDBStructure'));
         register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
             array($hiddenPostRepository, 'createDBStructure'));
+        register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
+            array($blockUserRepository, 'createDBStructure'));
         register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',
             array($followerRepository, 'createDBStructure'));
         register_activation_hook(dirname(dirname(dirname(__FILE__))) . '/lm-sf-rest-api.php',

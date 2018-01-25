@@ -2,14 +2,17 @@
 
 use Interop\Container\ContainerInterface;
 use LM\WPPostLikeRestApi\Manager\LMAbuseReportPublicManager;
+use LM\WPPostLikeRestApi\Manager\LMWPBlockUserPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPFollowerPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPHiddenPostPublicManager;
 use LM\WPPostLikeRestApi\Repository\LMAbuseReportWordpressRepository;
+use LM\WPPostLikeRestApi\Repository\LMBlockUserWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMHiddenPostWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMWallPostsMovieWordpressRepository;
 use LM\WPPostLikeRestApi\Request\LMAbuseReportInsertRequest;
 use LM\WPPostLikeRestApi\Request\LMWallPostsMovieUpdateRequest;
 use LM\WPPostLikeRestApi\Service\LMAbuseReportWordpressService;
+use LM\WPPostLikeRestApi\Service\LMBlockUserWordpressService;
 use LM\WPPostLikeRestApi\Service\LMHiddenPostWordpressService;
 use LM\WPPostLikeRestApi\Utility\LMWPJWTFirebaseHeaderAuthorization;
 use LM\WPPostLikeRestApi\Manager\LMWPLikePostAdminManager;
@@ -48,6 +51,7 @@ $builder->addDefinitions([
     'post-saved-table' => 'lm_post_saved',
     'post-shared-table' => 'lm_post_shared',
     'post-hidden-table' => 'lm_post_hidden',
+    'user-blocked-table' => 'lm_blocked_users',
     'abuse-report-table' => 'lm_abuse_reports',
     'follower-table' => 'lm_followers',
     'plugin-slug' => 'lm-sf-rest-api',
@@ -88,6 +92,9 @@ $builder->addDefinitions([
     },
     'LMHiddenPostWordpressRepository' => function (ContainerInterface $c) {
         return new LMHiddenPostWordpressRepository($c->get('post-hidden-table'), $c->get('plugin-version'));
+    },
+    'LMBlockUserWordpressRepository' => function (ContainerInterface $c) {
+        return new LMBlockUserWordpressRepository($c->get('user-blocked-table'), $c->get('plugin-version'));
     },
     'LMFollowerWordpressRepository' => function (ContainerInterface $c) {
         return new LMFollowerWordpressRepository($c->get('follower-table'), $c->get('plugin-version'));
@@ -133,6 +140,10 @@ $builder->addDefinitions([
     'LMHiddenPostWordpressService' => function (ContainerInterface $c) {
         $repo = $c->get('LMHiddenPostWordpressRepository');
         return new LMHiddenPostWordpressService($repo);
+    },
+    'LMBlockUserWordpressService' => function (ContainerInterface $c) {
+        $repo = $c->get('LMBlockUserWordpressRepository');
+        return new LMBlockUserWordpressService($repo);
     },
     'LMFollowerWordpressService' => function (ContainerInterface $c) {
         $repo = $c->get('LMFollowerWordpressRepository');
@@ -189,6 +200,10 @@ $builder->addDefinitions([
     'LMWPHiddenPostPublicManager' => function (ContainerInterface $c) {
         $service = $c->get('LMHiddenPostWordpressService');
         return new LMWPHiddenPostPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
+    },
+    'LMWPBlockUserPublicManager' => function (ContainerInterface $c) {
+        $service = $c->get('LMBlockUserWordpressService');
+        return new LMWPBlockUserPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
     },
 
     'LMWPFollowerPublicManager' => function (ContainerInterface $c) {
