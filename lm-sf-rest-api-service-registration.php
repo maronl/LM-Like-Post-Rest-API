@@ -204,8 +204,10 @@ $builder->addDefinitions([
         return new LMWPHiddenPostPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
     },
     'LMWPBlockUserPublicManager' => function (ContainerInterface $c) {
-        $service = $c->get('LMBlockUserWordpressService');
-        return new LMWPBlockUserPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $service);
+        $serviceBlockUser = $c->get('LMBlockUserWordpressService');
+        $serviceFollower = $c->get('LMFollowerWordpressService');
+
+        return new LMWPBlockUserPublicManager($c->get('plugin-slug'), $c->get('plugin-version'), $serviceBlockUser, $serviceFollower);
     },
 
     'LMWPFollowerPublicManager' => function (ContainerInterface $c) {

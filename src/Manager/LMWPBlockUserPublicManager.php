@@ -10,6 +10,7 @@ namespace LM\WPPostLikeRestApi\Manager;
 
 
 use LM\WPPostLikeRestApi\Service\LMBlockUserService;
+use LM\WPPostLikeRestApi\Service\LMFollowerService;
 
 class LMWPBlockUserPublicManager
 {
@@ -21,6 +22,10 @@ class LMWPBlockUserPublicManager
     private $version;
     private $namespace;
     private $plugin_slug;
+    /**
+     * @var LMFollowerService
+     */
+    private $followerService;
 
     /**
      * LMWPLikePostPublicManager constructor.
@@ -28,12 +33,13 @@ class LMWPBlockUserPublicManager
      * @param $version
      * @param LMBlockUserService $blockUserService
      */
-    public function __construct($plugin_slug, $version, LMBlockUserService $blockUserService)
+    public function __construct($plugin_slug, $version, LMBlockUserService $blockUserService, LMFollowerService $followerService)
     {
         $this->plugin_slug = $plugin_slug;
         $this->version = $version;
         $this->namespace = $this->plugin_slug . '/v' . $this->version;
         $this->blockUserService = $blockUserService;
+        $this->followerService = $followerService;
     }
 
     /**
@@ -63,6 +69,10 @@ class LMWPBlockUserPublicManager
         }
 
         $status = $this->blockUserService->blockUser($blockingId, $blockedId);
+
+        // rimuovo eventuali relazioni di following
+        $this->followerService->removeFollower($blockingId,$blockedId);
+        $this->followerService->removeFollower($blockedId,$blockingId);
 
         do_action('lm-sf-blocked-user', $blockingId, $blockedId);
 
