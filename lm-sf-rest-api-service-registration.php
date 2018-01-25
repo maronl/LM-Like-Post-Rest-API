@@ -157,9 +157,11 @@ $builder->addDefinitions([
         $savedPostService = $c->get('LMSavedPostWordpressService');
         $sharingService = $c->get('LMSharingWordpressService');
         $insertRequest = $c->get('LMWallPostInsertRequest');
+        $blockedUserService = $c->get('LMBlockUserWordpressService');
+
 
         return new LMWallWordpressService($header, $wallRepo, $followerService, $likePostService, $savedPostService,
-            $insertRequest, $sharingService);
+            $insertRequest, $sharingService, $blockedUserService);
     },
     'LMProfileWordpressService' => function (ContainerInterface $c) {
         $header = $c->get('LMWPJWTFirebaseHeaderAuthorization');

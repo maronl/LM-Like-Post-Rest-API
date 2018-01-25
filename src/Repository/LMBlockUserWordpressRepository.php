@@ -64,6 +64,22 @@ class LMBlockUserWordpressRepository implements LMBlockUserRepository
         return $wpdb->get_var($sql);
     }
 
+    public function getBlockedUsers($userId)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT blocked_user_id FROM $this->table WHERE user_id = %d", $userId);
+        $blocked = $wpdb->get_results($sql, ARRAY_A);
+
+        $sql = $wpdb->prepare("SELECT user_id FROM $this->table WHERE blocked_user_id = %d", $userId);
+        $blocking = $wpdb->get_results($sql, ARRAY_A);
+
+        $blocked = array_column($blocked, 'blocked_user_id');
+        $blocking = array_column($blocking, 'user_id');
+
+        return array_merge($blocked, $blocking);
+    }
+
     public function getTableName()
     {
         return $this->table;

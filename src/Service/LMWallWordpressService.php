@@ -48,7 +48,22 @@ class LMWallWordpressService implements LMWallService
      * @var LMSharingService
      */
     private $sharingService;
+    /**
+     * @var LMBlockUserService
+     */
+    private $blockUserService;
 
+    /**
+     * LMWallWordpressService constructor.
+     * @param LMHeaderAuthorization $headerAuthorization
+     * @param LMWallPostWordpressRepository $wallPostWordpressRepository
+     * @param LMFollowerService $followerService
+     * @param LMLikePostService $likePostService
+     * @param LMLikePostService $savedPostService
+     * @param LMWallPostInsertRequest $insertRequest
+     * @param LMSharingService $sharingService
+     * @param LMBlockUserService $blockUserService
+     */
     function __construct(
         LMHeaderAuthorization $headerAuthorization,
         LMWallPostWordpressRepository $wallPostWordpressRepository,
@@ -56,7 +71,8 @@ class LMWallWordpressService implements LMWallService
         LMLikePostService $likePostService,
         LMLikePostService $savedPostService,
         LMWallPostInsertRequest $insertRequest,
-        LMSharingService $sharingService
+        LMSharingService $sharingService,
+        LMBlockUserService $blockUserService
     ) {
         $this->headerAuthorization = $headerAuthorization;
         $this->likePostService = $likePostService;
@@ -65,6 +81,7 @@ class LMWallWordpressService implements LMWallService
         $this->wallPostWordpressRepository = $wallPostWordpressRepository;
         $this->insertRequest = $insertRequest;
         $this->sharingService = $sharingService;
+        $this->blockUserService = $blockUserService;
     }
 
     public function getWall(Array $params)
@@ -73,8 +90,12 @@ class LMWallWordpressService implements LMWallService
 
         $paramsQuery['suppress_filters'] = false;
 
+        // exclude hidden post
         add_filter('posts_join', array($this, 'filterJoinUserHiddenPost'));
         add_filter('posts_where', array($this, 'filterWhereUserHiddenPost'));
+
+        // exclude users blocked
+        $paramsQuery = $this->excludeBlockedUsersContent($paramsQuery);
 
         $posts = get_posts($paramsQuery);
 
@@ -206,6 +227,8 @@ class LMWallWordpressService implements LMWallService
             $authors = array_merge($authors, $followings);
         }
 
+        $authors = array_unique($authors);
+
         return $authors;
     }
 
@@ -238,6 +261,7 @@ class LMWallWordpressService implements LMWallService
 
     public function filterJoinUserHiddenPost($join)
     {
+        // todo rimuove riferienti alla tabella codificati
         $userQuerying = $this->headerAuthorization->getUser();
         $join .= " LEFT JOIN pld_lm_post_hidden as ph ON ph.post_id = pld_posts.ID AND ph.user_id = $userQuerying ";
         return $join;
@@ -247,6 +271,24 @@ class LMWallWordpressService implements LMWallService
     {
         $where .= " AND ph.created_at IS NULL ";
         return $where;
+    }
+
+    private function excludeBlockedUsersContent($paramsQuery)
+    {
+        if (array_key_exists('author', $paramsQuery)) {
+            $authors = $paramsQuery['author'];
+            $authors = explode(',', $authors);
+            $blockedUsers = $this->blockUserService->getBlockedUsers($this->headerAuthorization->getUser());
+            $authors = array_diff($authors, $blockedUsers);
+
+            if(empty($authors)) {
+                // imposto id utente che non esisterà mai (si spera) per non avere risultati
+                $authors[] = 999999999999999999999;
+            }
+
+            $paramsQuery['author'] = implode(',',$authors);
+            return $paramsQuery;
+        }
     }
 
 }

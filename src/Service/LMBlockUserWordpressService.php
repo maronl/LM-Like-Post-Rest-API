@@ -50,4 +50,9 @@ class LMBlockUserWordpressService implements LMBlockUserService
         return false;
     }
 
+    public function getBlockedUsers($userId)
+    {
+        return $this->repository->getBlockedUsers($userId);
+    }
+
 }
