@@ -171,13 +171,24 @@ trait LMWPPostWallDetails
     private function retrieveLatestComments(\WP_Post $post, $latestComments)
     {
         global $wpdb;
+        global $containerLmSfRestAPI;
 
-        $post->latest_comment = get_comments(array(
+        $authorizationHeader = $containerLmSfRestAPI->get('LMWPJWTFirebaseHeaderAuthorization');
+        $blockedUserService = $containerLmSfRestAPI->get('LMBlockUserWordpressService');
+
+        $userId = $authorizationHeader->getUser();
+
+        $prepared_args['author__not_in'] = playdocGetBlockedUsersRestAPIRequest();
+
+        $args = array(
             'post_id' => $post->ID,
             'number' => $latestComments,
             'orderby' => 'comment_date',
-            'order' => 'DESC'
-        ));
+            'order' => 'DESC',
+            'author__not_in' => $blockedUserService->getBlockedUsers($userId)
+        );
+
+        $post->latest_comment = get_comments($args);
 
         foreach ($post->latest_comment as $comment) {
             $comment->author = $this->retrieveAuthorCommentInformation($comment, $wpdb);
