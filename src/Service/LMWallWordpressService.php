@@ -176,7 +176,7 @@ class LMWallWordpressService implements LMWallService
 
         if (array_key_exists('authors', $params)) {
             $paramsQuery['author'] = $params['authors'];
-        } else {
+        } elseif(!$this->isRedazioneUser()){
             $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
         }
 
@@ -289,6 +289,19 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['author'] = implode(',',$authors);
             return $paramsQuery;
         }
+    }
+
+    private function isRedazioneUser()
+    {
+        // todo id della redazione dovrebbe essere sempre una configurazione esterna come già segnato in altri punti
+        $userAuthorized = $this->headerAuthorization->getUser();
+
+        $redazioneUsers = array(1);
+        if(in_array($userAuthorized, $redazioneUsers)) {
+            return true;
+        }
+
+        return false;
     }
 
 }
