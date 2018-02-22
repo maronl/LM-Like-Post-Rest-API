@@ -289,6 +289,8 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['author'] = implode(',',$authors);
             return $paramsQuery;
         }
+
+        return $paramsQuery;
     }
 
     private function isRedazioneUser()
