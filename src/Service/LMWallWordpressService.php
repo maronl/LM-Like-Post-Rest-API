@@ -176,14 +176,12 @@ class LMWallWordpressService implements LMWallService
 
         if (array_key_exists('authors', $params)) {
             $paramsQuery['author'] = $params['authors'];
+        } elseif (!$this->isRedazioneUser()) {
+            // const PLAYDOC_WALL_POST_WITHOUT_FILTER used to remove filters on wall
+            if (!defined('PLAYDOC_WALL_POST_WITHOUT_FILTER') || PLAYDOC_WALL_POST_WITHOUT_FILTER !== true) {
+                $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
+            }
         }
-
-        // todo riabilitare questo codice se si vuole fare in modo che gli utenti non vedano i post di tutti
-        // ma solo quelli della redazione e dei collaboratori e di chi seguono
-
-        //elseif(!$this->isRedazioneUser()){
-        //    $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
-        //}
 
         if (array_key_exists('date_query', $params)) {
             $paramsQuery['date_query'] = $params['date_query'];
@@ -296,12 +294,12 @@ class LMWallWordpressService implements LMWallService
             $blockedUsers = $this->blockUserService->getBlockedUsers($this->headerAuthorization->getUser());
             $authors = array_diff($authors, $blockedUsers);
 
-            if(empty($authors)) {
+            if (empty($authors)) {
                 // imposto id utente che non esisterà mai (si spera) per non avere risultati
                 $authors[] = 999999999999999999999;
             }
 
-            $paramsQuery['author'] = implode(',',$authors);
+            $paramsQuery['author'] = implode(',', $authors);
             return $paramsQuery;
         }
 
@@ -314,7 +312,7 @@ class LMWallWordpressService implements LMWallService
         $userAuthorized = $this->headerAuthorization->getUser();
 
         $redazioneUsers = array(1);
-        if(in_array($userAuthorized, $redazioneUsers)) {
+        if (in_array($userAuthorized, $redazioneUsers)) {
             return true;
         }
 
