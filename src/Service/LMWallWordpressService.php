@@ -176,9 +176,14 @@ class LMWallWordpressService implements LMWallService
 
         if (array_key_exists('authors', $params)) {
             $paramsQuery['author'] = $params['authors'];
-        } elseif(!$this->isRedazioneUser()){
-            $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
         }
+
+        // todo riabilitare questo codice se si vuole fare in modo che gli utenti non vedano i post di tutti
+        // ma solo quelli della redazione e dei collaboratori e di chi seguono
+
+        //elseif(!$this->isRedazioneUser()){
+        //    $paramsQuery['author'] = implode(',', $this->getDefaultAuthorsPerUser());
+        //}
 
         if (array_key_exists('date_query', $params)) {
             $paramsQuery['date_query'] = $params['date_query'];
@@ -215,8 +220,18 @@ class LMWallWordpressService implements LMWallService
 
     private function getDefaultAuthorsPerUser()
     {
-        // return redazione todo mettere come paramentro configurabile
-        $authors = array(1);
+        $authors = [];
+
+        if (defined('PLAYDOC_FORCE_USERS_ID_ON_WALL')) {
+            $forceIds = explode(',', PLAYDOC_FORCE_USERS_ID_ON_WALL);
+            $authors = array_merge($authors, $forceIds);
+        }
+
+        if (defined('PLAYDOC_FORCE_USERS_ROLES_ON_WALL')) {
+            $roles = explode(',', PLAYDOC_FORCE_USERS_ROLES_ON_WALL);
+            $forceIds = get_users(array('role__in' => $roles, 'fields' => 'ID'));
+            $authors = array_merge($authors, $forceIds);
+        }
 
         $userAuthorized = $this->headerAuthorization->getUser();
 
