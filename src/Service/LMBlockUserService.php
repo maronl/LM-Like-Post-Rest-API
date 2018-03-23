@@ -16,4 +16,9 @@ interface LMBlockUserService
     public function unblockUser($blockingId, $blockedId);
 
     public function getBlockedUsers($userId);
+
+    public function getBlockedUsersList($userId, $page, $item_per_page, $before);
+
+    public function getBlockedUsersCount($userId);
+
 }

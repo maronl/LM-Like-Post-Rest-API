@@ -75,6 +75,15 @@ Endpoint | HTTP Verb
 *[/wp-json/lm-sf-rest-api/v1.0.0/post/{post-id}/shared/users](#post-shared-users)* | GET
 
 
+*[/wp-json/lm-sf-rest-api/v1.0.0/users/block](#users-block)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/users/unblock](#users-unblock)* | POST
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/users/blocked](#users-blocked)* | GET
+
+*[/wp-json/lm-sf-rest-api/v1.0.0/users/blocked/count](#users-blocked-count)* | GET
+
+
 ## <a name="like-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/like/add
 Add user like to a specific post
 
@@ -807,5 +816,137 @@ JSON Response:
           "user_picture": "http://playdoc.luc/cn/uploads/axe-accounts-profile/1/ab1fff92440ebe1791c03ad02af1119b.jpg"
         }
   ]
+}
+```
+
+## <a name="follower-add"></a> /wp-json/lm-sf-rest-api/v1.0.0/follower/add
+Add an user A as follower of user B
+
+METHOD: POST
+
+Parameters mandatory are:
+- follower_id
+- following_id
+
+JSON Response:
+```
+{
+ "status":true
+}
+```
+
+```
+{
+ "status":false
+}
+```
+
+
+## <a name="users-block"></a> /wp-json/lm-sf-rest-api/v1.0.0/users/block
+Block an user
+
+METHOD: POST
+
+Parameters mandatory are:
+- user_id
+- blocked_user_id
+
+JSON Response:
+```
+{
+ "status":true
+}
+```
+
+```
+{
+ "status":false
+}
+```
+
+## <a name="users-unblock"></a> /wp-json/lm-sf-rest-api/v1.0.0/users/unblock
+Unblock an user
+
+METHOD: POST
+
+Parameters mandatory are:
+- user_id
+- blocked_user_id
+
+JSON Response:
+```
+{
+ "status":true
+}
+```
+
+```
+{
+ "status":false
+}
+```
+
+## <a name="users-blocked"></a> /wp-json/lm-sf-rest-api/v1.0.0/users/blocked
+Return list of users blocked by a specific user
+
+METHOD: GET
+
+Parameters mandatory are:
+- user_id
+
+Optional parameters
+- page (default = 1)
+- item_per_page (default = 20)
+- before (default = null, e.g. 2018-12-31 23:34:12)
+
+JSON Response
+```
+{
+ "status":true,
+ "data":[
+   {
+     "ID":"1",
+     "user_login":"playdoc-admin",
+     "display_name":"playdoc-admin",
+     "user_email":"lcmaroni77@gmail.com",
+     "user_registered":"2017-10-05 07:10:31",
+     "user_status":"0"
+   },
+   {
+     "ID":"2",
+     "user_login":"playdoc-test",
+     "display_name":"playdoc-test",
+     "user_email":"lcmaron.i77@gmail.com",
+     "user_registered":"2017-10-05 09:10:31",
+     "user_status":"0"
+   }   
+ ],
+ "total":"2",
+ "page":1,
+ "item_per_page":20,
+ "time_server":"2018-12-31 23:34:12" 
+}
+```
+
+```
+{
+ "status":false
+}
+```
+
+
+## <a name="users-blocked-count"></a> /wp-json/lm-sf-rest-api/v1.0.0/users/blocked/count
+Return the number of user blocked by a specific user
+
+METHOD: GET
+
+Parameters mandatory are:
+- user_id
+
+JSON Response
+```
+{
+  "status": true,
+  "data": "1"
 }
 ```

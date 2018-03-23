@@ -19,6 +19,10 @@ interface LMBlockUserRepository
 
     public function getBlockedUsers($userId);
 
+    public function getBlockedUsersList($userId, $page, $item_per_page, $before = null);
+
+    public function getBlockedUsersCount($userId);
+
     public function getTableName();
 
     public function createDBStructure();
