@@ -127,7 +127,8 @@ class LMWPWallPublicManager
                 array('before' => $before)
             );
         }
-        if (defined('LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES')) {
+
+        if (defined('LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES') && $request->get_param('disable_force_exclude_wall_cat') !== 'true') {
             $params['tax_query'] = array(
                 array(
                     'taxonomy' => 'lm_wall_category',
