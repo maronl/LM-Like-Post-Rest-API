@@ -127,6 +127,16 @@ class LMWPWallPublicManager
                 array('before' => $before)
             );
         }
+        if (defined('LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES')) {
+            $params['tax_query'] = array(
+                array(
+                    'taxonomy' => 'lm_wall_category',
+                    'field' => 'id',
+                    'terms' => explode(',', LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES),
+                    'operator' => 'NOT IN',
+                ),
+            );
+        }
 
         if (has_filter('lm-sf-rest-api-wall-query-params')) {
             $params = apply_filters('lm-sf-rest-api-wall-query-params', $params);
@@ -198,15 +208,15 @@ class LMWPWallPublicManager
 
         $post = $this->wallService->getPost($postId);
 
-        if(empty($post)) {
+        if (empty($post)) {
             return new \WP_REST_Response(array('status' => false, 'msg' => 'post not found'), 404);
         }
 
-        if($userId != $post->post_author) {
+        if ($userId != $post->post_author) {
             return new \WP_REST_Response(array('status' => false, 'msg' => 'action forbidden'), 403);
         }
 
-        if(wp_delete_post( $postId, true ) === false) {
+        if (wp_delete_post($postId, true) === false) {
             return new \WP_REST_Response(array('status' => true, 'msg' => 'Error deleting the post'), 500);
         }
 
