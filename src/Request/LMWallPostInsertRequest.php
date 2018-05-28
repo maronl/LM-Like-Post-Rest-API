@@ -33,9 +33,10 @@ class LMWallPostInsertRequest
         $categories = array_key_exists('categories', $data) ? $data['categories'] : null;
         $format = array_key_exists('format', $data) ? $data['format'] : null;
         $file = array_key_exists('file', $data) ? $data['file'] : null;
+        $sharedPost = array_key_exists('shared_post', $data) ? $data['shared_post'] : null;
 
         $this->validateTitle($title);
-        $this->validateContent($content, $format);
+        $this->validateContent($content, $format, $sharedPost);
         $this->validateAuthor($author);
         $this->validateStatus($status);
         $this->validateCategories($categories);
@@ -69,9 +70,9 @@ class LMWallPostInsertRequest
         // il testo viene già ripulito con sanitize_text_field
     }
 
-    private function validateContent($content, $format)
+    private function validateContent($content, $format, $sharedPost = null)
     {
-        if (empty($content) && (!in_array($format, array('image', 'video')))) {
+        if (empty($content) && (!in_array($format, array('image', 'video')) || !empty($sharedPost))) {
             $this->errors[] = array('content' => 'il contenuto di un nuovo post non può essere vuoto');
         }
     }
