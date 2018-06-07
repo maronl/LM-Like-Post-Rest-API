@@ -64,6 +64,8 @@ require_once dirname(__FILE__) . '/Manager/LMAbuseReportPublicManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPLikePostAdminManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPSavedPostAdminManager.php';
 require_once dirname(__FILE__) . '/Manager/LMWPSharingAdminManager.php';
+require_once dirname(__FILE__) . '/Manager/LMWPWallAdminManager.php';
+
 
 require_once dirname(__FILE__) . '/Utility/LMHeaderAuthorization.php';
 require_once dirname(__FILE__) . '/Utility/LMWPJWTFirebaseHeaderAuthorization.php';

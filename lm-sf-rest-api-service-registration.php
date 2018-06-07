@@ -5,6 +5,7 @@ use LM\WPPostLikeRestApi\Manager\LMAbuseReportPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPBlockUserPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPFollowerPublicManager;
 use LM\WPPostLikeRestApi\Manager\LMWPHiddenPostPublicManager;
+use LM\WPPostLikeRestApi\Manager\LMWPWallAdminManager;
 use LM\WPPostLikeRestApi\Repository\LMAbuseReportWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMBlockUserWordpressRepository;
 use LM\WPPostLikeRestApi\Repository\LMHiddenPostWordpressRepository;
@@ -189,6 +190,10 @@ $builder->addDefinitions([
     'LMWPSharingAdminManager' => function (ContainerInterface $c) {
         $service = $c->get('LMSharingWordpressService');
         return new LMWPSharingAdminManager($service, $c->get('plugin-version'));
+    },
+    'LMWPWallAdminManager' => function (ContainerInterface $c) {
+        $postModel = $c->get('LMWallPostModel');
+        return new LMWPWallAdminManager($postModel);
     },
 
     'LMWPLikePostPublicManager' => function (ContainerInterface $c) {

@@ -95,6 +95,8 @@ class LMWPPluginManager
         $likeAdmin = $containerLmSfRestAPI->get('LMWPLikePostAdminManager');
         $savedAdmin = $containerLmSfRestAPI->get('LMWPSavedPostAdminManager');
         $sharingAdmin = $containerLmSfRestAPI->get('LMWPSharingAdminManager');
+        $wallAdmin= $containerLmSfRestAPI->get('LMWPWallAdminManager');
+
 
         $this->loader->add_filter('manage_lm_wall_posts_columns', $likeAdmin, 'columnHeader');
         $this->loader->add_filter('manage_lm_wall_posts_columns', $savedAdmin, 'columnHeader');
@@ -108,6 +110,7 @@ class LMWPPluginManager
         $this->loader->add_action('init', $wallPostModel, 'defineCustomPostWall', 0);
         $this->loader->add_action('init', $wallPostModel, 'defineCustomPostWallTaxonomy', 0);
 
+        $this->loader->add_action('restrict_manage_posts', $wallAdmin, 'filter_posts', 10, 2);
     }
 
     /**
