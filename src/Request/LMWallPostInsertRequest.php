@@ -72,7 +72,7 @@ class LMWallPostInsertRequest
 
     private function validateContent($content, $format, $sharedPost = null)
     {
-        if (empty($content) && (!in_array($format, array('image', 'video')) || !empty($sharedPost))) {
+        if (empty($content) && (!in_array($format, array('image', 'video')) && empty($sharedPost))) {
             $this->errors[] = array('content' => 'il contenuto di un nuovo post non può essere vuoto');
         }
     }
