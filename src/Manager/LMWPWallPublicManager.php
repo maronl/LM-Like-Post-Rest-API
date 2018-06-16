@@ -128,15 +128,24 @@ class LMWPWallPublicManager
             );
         }
 
+        $inWallCategoryId = $request->get_param('in_wall_category_id');
+        if (!empty($inWallCategoryId)) {
+            $params['in_wall_category_id'] = explode(',', $inWallCategoryId);
+        }
+
+        $inWallCategorySlug = $request->get_param('in_wall_category_slug');
+        if (!empty($inWallCategorySlug)) {
+            $params['in_wall_category_slug'] = explode(',', $inWallCategorySlug);
+        }
+
         if (defined('LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES') && $request->get_param('disable_force_exclude_wall_cat') !== 'true') {
-            $params['tax_query'] = array(
-                array(
-                    'taxonomy' => 'lm_wall_category',
-                    'field' => 'id',
-                    'terms' => explode(',', LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES),
-                    'operator' => 'NOT IN',
-                ),
-            );
+            $excludeId = explode(',', LM_REST_API_FORCE_EXCLUDE_WALL_CATEGORIES);
+            if(!array_key_exists('not_in_wall_category_id', $params)) {
+                $params['not_in_wall_category_id'] = $excludeId;
+            }else{
+                $params['not_in_wall_category_id'] = array_merge($params['not_in_wall_category_id'], $excludeId);
+                $params['not_in_wall_category_id'] = array_unique($params['not_in_wall_category_id']);
+            }
         }
 
         if (has_filter('lm-sf-rest-api-wall-query-params')) {

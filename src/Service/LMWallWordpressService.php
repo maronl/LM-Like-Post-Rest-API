@@ -187,8 +187,61 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['date_query'] = $params['date_query'];
         }
 
+        if (array_key_exists('in_wall_category_id', $params)) {
+            unset($params['not_in_wall_category_id']);
+            $condition = array(
+                'taxonomy' => 'lm_wall_category',
+                'field' => 'id',
+                'terms' => $params['in_wall_category_id'],
+                'operator' => 'IN',
+            );
+
+            if (!array_key_exists('tax_query', $paramsQuery)) {
+                $paramsQuery['tax_query'] = array($condition);
+            } else {
+                $paramsQuery['tax_query'][] = $condition;
+            }
+
+        }
+
+        if (array_key_exists('in_wall_category_slug', $params)) {
+            unset($params['not_in_wall_category_id']);
+            $condition = array(
+                'taxonomy' => 'lm_wall_category',
+                'field' => 'slug',
+                'terms' => $params['in_wall_category_slug'],
+                'operator' => 'IN',
+            );
+
+            if (!array_key_exists('tax_query', $paramsQuery)) {
+                $paramsQuery['tax_query'] = array($condition);
+            } else {
+                $paramsQuery['tax_query'][] = $condition;
+            }
+
+        }
+
+        if (array_key_exists('not_in_wall_category_id', $params)) {
+            $condition = array(
+                'taxonomy' => 'lm_wall_category',
+                'field' => 'id',
+                'terms' => $params['not_in_wall_category_id'],
+                'operator' => 'NOT IN',
+            );
+
+            if (!array_key_exists('tax_query', $paramsQuery)) {
+                $paramsQuery['tax_query'] = array($condition);
+            } else {
+                $paramsQuery['tax_query'][] = $condition;
+            }
+        }
+
         if (array_key_exists('tax_query', $params)) {
-            $paramsQuery['tax_query'] = $params['tax_query'];
+            if (!array_key_exists('tax_query', $paramsQuery)) {
+                $paramsQuery['tax_query'] = $params['tax_query'];
+            } else {
+                $paramsQuery['tax_query'] = array_merge($paramsQuery['tax_query'], $params['tax_query']);
+            }
         }
 
         if (array_key_exists('saved_by_user', $params)) {
