@@ -148,6 +148,21 @@ class LMWPWallPublicManager
             }
         }
 
+        if (defined('LM_REST_API_NOT_IN_WALL_CATEGORIES')) {
+            $excludeId = explode(',', LM_REST_API_NOT_IN_WALL_CATEGORIES);
+            if(!array_key_exists('not_in_wall_category_id', $params)) {
+                $params['not_in_wall_category_id'] = $excludeId;
+            }else{
+                $params['not_in_wall_category_id'] = array_merge($params['not_in_wall_category_id'], $excludeId);
+                $params['not_in_wall_category_id'] = array_unique($params['not_in_wall_category_id']);
+            }
+        }
+
+        $mostActiveOrderBy = $request->get_param('most_active_order_by');
+        if (!empty($mostActiveOrderBy)) {
+            $params['most_active_order_by'] = $mostActiveOrderBy;
+        }
+
         if (has_filter('lm-sf-rest-api-wall-query-params')) {
             $params = apply_filters('lm-sf-rest-api-wall-query-params', $params);
         }

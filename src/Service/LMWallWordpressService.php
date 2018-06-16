@@ -93,6 +93,10 @@ class LMWallWordpressService implements LMWallService
         // exclude hidden post
         add_filter('posts_join', array($this, 'filterJoinUserHiddenPost'));
         add_filter('posts_where', array($this, 'filterWhereUserHiddenPost'));
+        if(array_key_exists('most_active_order_by', $params) && $params['most_active_order_by']) {
+            add_filter('posts_join', array($this, 'filterJoinMostActive'));
+            add_filter('posts_orderby', array($this, 'filterOrderByMostActive'));
+        }
 
         // exclude users blocked
         $paramsQuery = $this->excludeBlockedUsersContent($paramsQuery);
@@ -101,6 +105,10 @@ class LMWallWordpressService implements LMWallService
 
         remove_filter('posts_join', array($this, 'filterJoinUserHiddenPost'));
         remove_filter('posts_where', array($this, 'filterWhereUserHiddenPost'));
+        if(array_key_exists('most_active_order_by', $params) && $params['most_active_order_by']) {
+            remove_filter('posts_join', array(  $this, 'filterJoinMostActive'));
+            remove_filter('posts_orderby', array($this, 'filterOrderByMostActive'));
+        }
 
         return $this->completePostsInformation($posts);
     }
@@ -327,9 +335,18 @@ class LMWallWordpressService implements LMWallService
 
     public function filterJoinUserHiddenPost($join)
     {
-        // todo rimuove riferienti alla tabella codificati
+        global $wpdb;
+
         $userQuerying = $this->headerAuthorization->getUser();
-        $join .= " LEFT JOIN pld_lm_post_hidden as ph ON ph.post_id = pld_posts.ID AND ph.user_id = $userQuerying ";
+        $join .= " LEFT JOIN " . $wpdb->prefix . "lm_post_hidden as ph ON ph.post_id = " . $wpdb->prefix . "posts.ID AND ph.user_id = $userQuerying ";
+        return $join;
+    }
+
+    public function filterJoinMostActive($join)
+    {
+        global $wpdb;
+
+        $join .= " LEFT JOIN " . $wpdb->prefix . "postmeta as lc ON lc.post_id = " . $wpdb->prefix . "posts.ID AND lc.meta_key = 'lm-like-counter' ";
         return $join;
     }
 
@@ -337,6 +354,13 @@ class LMWallWordpressService implements LMWallService
     {
         $where .= " AND ph.created_at IS NULL ";
         return $where;
+    }
+
+    public function filterOrderByMostActive($order)
+    {
+        $order = ' (lc.meta_value + pld_posts.comment_count) DESC ';
+
+        return $order;
     }
 
     private function excludeBlockedUsersContent($paramsQuery)
