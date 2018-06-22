@@ -62,6 +62,13 @@ class LMWallPostWordpressRepository implements LMWallPostRepository
         $newPost = $this->createNewPostData($request);
         $postId = wp_insert_post($newPost);
 
+        // assegno le taxonomies con  wp_set_object_terms per non incappare in problemi di permessi
+        if(array_key_exists('tax_input', $newPost)) {
+            foreach($newPost['tax_input'] as $key => $values) {
+                wp_set_object_terms( $postId, $values, $key);
+            }
+        }
+
         if (is_wp_error($postId)) {
             return $postId;
         }
