@@ -501,6 +501,7 @@ Parameters NOT mandatory are:
 - authors
 - before
 - q
+- not_in
 
 JSON Response
 ```

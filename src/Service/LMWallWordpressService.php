@@ -182,6 +182,10 @@ class LMWallWordpressService implements LMWallService
             $paramsQuery['cat'] = $params['categories'];
         }
 
+        if (array_key_exists('not_in', $params)) {
+            $paramsQuery['post__not_in'] = explode(',',$params['not_in']);
+        }
+
         if (array_key_exists('authors', $params)) {
             $paramsQuery['author'] = $params['authors'];
         } elseif (!$this->isRedazioneUser()) {
@@ -358,7 +362,7 @@ class LMWallWordpressService implements LMWallService
 
     public function filterOrderByMostActive($order)
     {
-        $order = ' (lc.meta_value + pld_posts.comment_count) DESC ';
+        $order = ' (lc.meta_value + pld_posts.comment_count) DESC,  pld_posts.post_date DESC';
 
         return $order;
     }

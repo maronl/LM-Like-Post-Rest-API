@@ -113,6 +113,10 @@ class LMWPWallPublicManager
         if (!empty($authors)) {
             $params['authors'] = $authors;
         }
+        $notIn = $request->get_param('not_in');
+        if (!empty($notIn)) {
+            $params['not_in'] = $notIn;
+        }
         $savedByUser = $request->get_param('saved_by_user');
         if (!empty($savedByUser)) {
             $params['saved_by_user'] = $savedByUser;
